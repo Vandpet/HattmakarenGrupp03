@@ -22,6 +22,8 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<MaterialOrder> MaterialOrders { get; set; }
         public DbSet<CustomerManager> CustomerManagers { get; set; }
 
+        public DbSet<AssignedOrders> AssignedOrders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -44,7 +46,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasForeignKey(o => o.CustomerId);
 
             modelBuilder.Entity<CustomerManager>()
-            .HasKey(ec => new { ec.EId, ec.Cid });
+            .HasKey(ec => new { ec.EId, ec.CId });
 
             modelBuilder.Entity<CustomerManager>()
                 .HasOne(ec => ec.Employee)
@@ -54,8 +56,21 @@ namespace HattmakarenWebbAppGrupp03.Data
             modelBuilder.Entity<CustomerManager>()
                 .HasOne(ec => ec.Customer)
                 .WithMany(c => c.Managed)
-                .HasForeignKey(ec => ec.Cid);
+                .HasForeignKey(ec => ec.CId);
 
+
+            modelBuilder.Entity<AssignedOrders>()
+                .HasKey(ao => new { ao.EId, ao.OId });
+
+            modelBuilder.Entity<AssignedOrders>()
+                .HasOne(ao => ao.Employee)
+                .WithMany(e => e.TakenOrders)
+                .HasForeignKey(ao => ao.EId);
+
+            modelBuilder.Entity<AssignedOrders>()
+                .HasOne(ao => ao.Order)
+                .WithMany(o => o.AssignedEmployees)
+                .HasForeignKey(ao => ao.OId);
         }
     }
 }

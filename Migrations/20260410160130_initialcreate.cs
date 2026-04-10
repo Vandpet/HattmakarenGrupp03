@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HattmakarenWebbAppGrupp03.Migrations
 {
     /// <inheritdoc />
-    public partial class initialcreateandHatRelationsAndCustomerManager : Migration
+    public partial class initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 name: "Customers",
                 columns: table => new
                 {
-                    Cid = table.Column<int>(type: "int", nullable: false)
+                    CId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Adress = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -26,7 +26,7 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Cid);
+                    table.PrimaryKey("PK_Customers", x => x.CId);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,7 +49,8 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 name: "Materials",
                 columns: table => new
                 {
-                    MID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MeasuringUnits = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -57,7 +58,7 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Materials", x => x.MID);
+                    table.PrimaryKey("PK_Materials", x => x.MId);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,17 +66,17 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 columns: table => new
                 {
                     EId = table.Column<int>(type: "int", nullable: false),
-                    Cid = table.Column<int>(type: "int", nullable: false),
+                    CId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerManagers", x => new { x.EId, x.Cid });
+                    table.PrimaryKey("PK_CustomerManagers", x => new { x.EId, x.CId });
                     table.ForeignKey(
-                        name: "FK_CustomerManagers_Customers_Cid",
-                        column: x => x.Cid,
+                        name: "FK_CustomerManagers_Customers_CId",
+                        column: x => x.CId,
                         principalTable: "Customers",
-                        principalColumn: "Cid",
+                        principalColumn: "CId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CustomerManagers_Employees_EId",
@@ -89,13 +90,14 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 name: "MaterialOrders",
                 columns: table => new
                 {
-                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Utskriven = table.Column<bool>(type: "bit", nullable: false),
+                    MoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Printed = table.Column<bool>(type: "bit", nullable: false),
                     EmployeeEId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MaterialOrders", x => x.ID);
+                    table.PrimaryKey("PK_MaterialOrders", x => x.MoId);
                     table.ForeignKey(
                         name: "FK_MaterialOrders_Employees_EmployeeEId",
                         column: x => x.EmployeeEId,
@@ -107,26 +109,27 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    OId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Express = table.Column<bool>(type: "bit", nullable: false),
-                    Rabatt = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    RabattBeskrivning = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BeställningsDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PreliminärtLeveransDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Anteckning = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DiscountDesc = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PrelDeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     EmployeeEId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.OrderId);
+                    table.PrimaryKey("PK_Orders", x => x.OId);
                     table.ForeignKey(
                         name: "FK_Orders_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Cid",
+                        principalColumn: "CId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Orders_Employees_EmployeeEId",
@@ -139,23 +142,48 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 name: "MaterialMaterialOrder",
                 columns: table => new
                 {
-                    MaterialOrdersID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaterialsMID = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    MaterialOrdersMoId = table.Column<int>(type: "int", nullable: false),
+                    MaterialsMId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MaterialMaterialOrder", x => new { x.MaterialOrdersID, x.MaterialsMID });
+                    table.PrimaryKey("PK_MaterialMaterialOrder", x => new { x.MaterialOrdersMoId, x.MaterialsMId });
                     table.ForeignKey(
-                        name: "FK_MaterialMaterialOrder_MaterialOrders_MaterialOrdersID",
-                        column: x => x.MaterialOrdersID,
+                        name: "FK_MaterialMaterialOrder_MaterialOrders_MaterialOrdersMoId",
+                        column: x => x.MaterialOrdersMoId,
                         principalTable: "MaterialOrders",
-                        principalColumn: "ID",
+                        principalColumn: "MoId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MaterialMaterialOrder_Materials_MaterialsMID",
-                        column: x => x.MaterialsMID,
+                        name: "FK_MaterialMaterialOrder_Materials_MaterialsMId",
+                        column: x => x.MaterialsMId,
                         principalTable: "Materials",
-                        principalColumn: "MID",
+                        principalColumn: "MId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AssignedOrders",
+                columns: table => new
+                {
+                    EId = table.Column<int>(type: "int", nullable: false),
+                    OId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AssignedOrders", x => new { x.EId, x.OId });
+                    table.ForeignKey(
+                        name: "FK_AssignedOrders_Employees_EId",
+                        column: x => x.EId,
+                        principalTable: "Employees",
+                        principalColumn: "EId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AssignedOrders_Orders_OId",
+                        column: x => x.OId,
+                        principalTable: "Orders",
+                        principalColumn: "OId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -163,7 +191,8 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 name: "Hats",
                 columns: table => new
                 {
-                    HatID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    HId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Size = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -171,56 +200,61 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     StandardHat = table.Column<bool>(type: "bit", nullable: false),
                     PicturePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmployeeEId = table.Column<int>(type: "int", nullable: true),
-                    OrderId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    OrderOId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Hats", x => x.HatID);
+                    table.PrimaryKey("PK_Hats", x => x.HId);
                     table.ForeignKey(
                         name: "FK_Hats_Employees_EmployeeEId",
                         column: x => x.EmployeeEId,
                         principalTable: "Employees",
                         principalColumn: "EId");
                     table.ForeignKey(
-                        name: "FK_Hats_Orders_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_Hats_Orders_OrderOId",
+                        column: x => x.OrderOId,
                         principalTable: "Orders",
-                        principalColumn: "OrderId");
+                        principalColumn: "OId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "HatMaterial",
                 columns: table => new
                 {
-                    HatsHatID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaterialsMID = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    HatsHId = table.Column<int>(type: "int", nullable: false),
+                    MaterialsMId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HatMaterial", x => new { x.HatsHatID, x.MaterialsMID });
+                    table.PrimaryKey("PK_HatMaterial", x => new { x.HatsHId, x.MaterialsMId });
                     table.ForeignKey(
-                        name: "FK_HatMaterial_Hats_HatsHatID",
-                        column: x => x.HatsHatID,
+                        name: "FK_HatMaterial_Hats_HatsHId",
+                        column: x => x.HatsHId,
                         principalTable: "Hats",
-                        principalColumn: "HatID",
+                        principalColumn: "HId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_HatMaterial_Materials_MaterialsMID",
-                        column: x => x.MaterialsMID,
+                        name: "FK_HatMaterial_Materials_MaterialsMId",
+                        column: x => x.MaterialsMId,
                         principalTable: "Materials",
-                        principalColumn: "MID",
+                        principalColumn: "MId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerManagers_Cid",
-                table: "CustomerManagers",
-                column: "Cid");
+                name: "IX_AssignedOrders_OId",
+                table: "AssignedOrders",
+                column: "OId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HatMaterial_MaterialsMID",
+                name: "IX_CustomerManagers_CId",
+                table: "CustomerManagers",
+                column: "CId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HatMaterial_MaterialsMId",
                 table: "HatMaterial",
-                column: "MaterialsMID");
+                column: "MaterialsMId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hats_EmployeeEId",
@@ -228,14 +262,14 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 column: "EmployeeEId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Hats_OrderId",
+                name: "IX_Hats_OrderOId",
                 table: "Hats",
-                column: "OrderId");
+                column: "OrderOId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MaterialMaterialOrder_MaterialsMID",
+                name: "IX_MaterialMaterialOrder_MaterialsMId",
                 table: "MaterialMaterialOrder",
-                column: "MaterialsMID");
+                column: "MaterialsMId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MaterialOrders_EmployeeEId",
@@ -256,6 +290,9 @@ namespace HattmakarenWebbAppGrupp03.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AssignedOrders");
+
             migrationBuilder.DropTable(
                 name: "CustomerManagers");
 

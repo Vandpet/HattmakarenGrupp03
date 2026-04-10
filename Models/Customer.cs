@@ -5,7 +5,7 @@ namespace HattmakarenWebbAppGrupp03.Models
     public class Customer
     {
         [Key]
-        public required int Cid { get; set; } // Markeras som Cid* i diagrammet
+        public required int CId { get; set; } // Markeras som Cid* i diagrammet
         public required string Name { get; set; }
         public required string Adress { get; set; }
         public required string PhoneNr { get; set; }
