@@ -6,23 +6,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HattmakarenWebbAppGrupp03.Migrations
 {
     /// <inheritdoc />
-    public partial class hattrelationer : Migration
+    public partial class initialcreateandHatRelationsAndCustomerManager : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "accesslevel",
-                table: "Employees",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
-                    Cid = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Cid = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Adress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNr = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -33,6 +27,62 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Cid);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    EId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Adress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNr = table.Column<int>(type: "int", nullable: false),
+                    accesslevel = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.EId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Materials",
+                columns: table => new
+                {
+                    MID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MeasuringUnits = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Materials", x => x.MID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomerManagers",
+                columns: table => new
+                {
+                    EId = table.Column<int>(type: "int", nullable: false),
+                    Cid = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerManagers", x => new { x.EId, x.Cid });
+                    table.ForeignKey(
+                        name: "FK_CustomerManagers_Customers_Cid",
+                        column: x => x.Cid,
+                        principalTable: "Customers",
+                        principalColumn: "Cid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomerManagers_Employees_EId",
+                        column: x => x.EId,
+                        principalTable: "Employees",
+                        principalColumn: "EId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,21 +104,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Materials",
-                columns: table => new
-                {
-                    MID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    MeasuringUnits = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Materials", x => x.MID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -81,7 +116,7 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     BeställningsDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PreliminärtLeveransDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Anteckning = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
                     EmployeeEId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -178,6 +213,11 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomerManagers_Cid",
+                table: "CustomerManagers",
+                column: "Cid");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HatMaterial_MaterialsMID",
                 table: "HatMaterial",
                 column: "MaterialsMID");
@@ -217,6 +257,9 @@ namespace HattmakarenWebbAppGrupp03.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CustomerManagers");
+
+            migrationBuilder.DropTable(
                 name: "HatMaterial");
 
             migrationBuilder.DropTable(
@@ -237,9 +280,8 @@ namespace HattmakarenWebbAppGrupp03.Migrations
             migrationBuilder.DropTable(
                 name: "Customers");
 
-            migrationBuilder.DropColumn(
-                name: "accesslevel",
-                table: "Employees");
+            migrationBuilder.DropTable(
+                name: "Employees");
         }
     }
 }

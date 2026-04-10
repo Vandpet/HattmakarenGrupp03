@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HattmakarenWebbAppGrupp03.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260410151128_CustomerManager")]
-    partial class CustomerManager
+    [Migration("20260410153024_initialcreateandHatRelationsAndCustomerManager")]
+    partial class initialcreateandHatRelationsAndCustomerManager
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
