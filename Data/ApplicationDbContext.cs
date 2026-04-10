@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using HattmakarenWebbAppGrupp03.Models; 
+using HattmakarenWebbAppGrupp03.Models;
 
 namespace HattmakarenWebbAppGrupp03.Data
 {
@@ -10,7 +10,37 @@ namespace HattmakarenWebbAppGrupp03.Data
         {
         }
 
+        // Tabeller baserade på dina entiteter i diagrammet
         public DbSet<Employee> Employees { get; set; }
+        
+        public DbSet<Customer> Customers { get; set; }
+       
+        public DbSet<Order> Orders { get; set; }
+       
+        public DbSet<Hat> Hats { get; set; }
+        public DbSet<Material> Materials { get; set; }
+        public DbSet<MaterialOrder> MaterialOrders { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Hat>()
+                .HasMany(h => h.Materials)
+                .WithMany(m => m.Hats);
+
+            modelBuilder.Entity<MaterialOrder>()
+                .HasMany(mo => mo.Materials)
+                .WithMany(m => m.MaterialOrders);
+
+            modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<Material>().Property(m => m.Price).HasPrecision(18, 2);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customer)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CustomerId);
+        }
     }
 }
