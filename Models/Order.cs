@@ -16,7 +16,7 @@ namespace HattmakarenWebbAppGrupp03.Models
         public required string Anteckning { get; set; }
 
         // Relation till Customer (BelongsTo)
-        public required string CustomerId { get; set; }
+        public required int CustomerId { get; set; }
         public required virtual Customer Customer { get; set; }
 
         // Relationer

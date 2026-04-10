@@ -4,6 +4,7 @@ using HattmakarenWebbAppGrupp03.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HattmakarenWebbAppGrupp03.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260410150736_ChangeCidToInt")]
+    partial class ChangeCidToInt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,25 +75,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.HasKey("Cid");
 
                     b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.CustomerManager", b =>
-                {
-                    b.Property<int>("EId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Cid")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EId", "Cid");
-
-                    b.HasIndex("Cid");
-
-                    b.ToTable("CustomerManagers");
                 });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Employee", b =>
@@ -284,25 +268,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.CustomerManager", b =>
-                {
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Customer", "Customer")
-                        .WithMany("Managed")
-                        .HasForeignKey("Cid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "Employee")
-                        .WithMany("ManagedCustomers")
-                        .HasForeignKey("EId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Hat", b =>
                 {
                     b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", null)
@@ -353,8 +318,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Customer", b =>
                 {
-                    b.Navigation("Managed");
-
                     b.Navigation("Orders");
                 });
 
@@ -365,8 +328,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Navigation("CreatedMaterialOrders");
 
                     b.Navigation("HandledOrders");
-
-                    b.Navigation("ManagedCustomers");
                 });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Order", b =>

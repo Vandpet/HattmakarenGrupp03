@@ -5,7 +5,7 @@ namespace HattmakarenWebbAppGrupp03.Models
     public class Customer
     {
         [Key]
-        public required string Cid { get; set; } // Markeras som Cid* i diagrammet
+        public required int Cid { get; set; } // Markeras som Cid* i diagrammet
         public required string Name { get; set; }
         public required string Adress { get; set; }
         public required string PhoneNr { get; set; }
@@ -15,5 +15,6 @@ namespace HattmakarenWebbAppGrupp03.Models
 
         // Relationer
         public  required virtual ICollection<Order> Orders { get; set; }
+        public List<CustomerManager> Managed { get; set; } = new();
     }
 }
