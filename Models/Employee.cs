@@ -14,6 +14,9 @@ namespace HattmakarenWebbAppGrupp03.Models
         public required virtual ICollection<Hat> CreatedHats { get; set; }
         public required virtual ICollection<MaterialOrder> CreatedMaterialOrders { get; set; }
         public required virtual ICollection<Order> HandledOrders { get; set; }
+        public List<CustomerManager> ManagedCustomers { get; set; } = new();
+
+        public List<AssignedOrders> TakenOrders { get; set; } = new();
 
     }
 }
