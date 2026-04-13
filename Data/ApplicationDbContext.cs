@@ -37,13 +37,6 @@ namespace HattmakarenWebbAppGrupp03.Data
             modelBuilder.Entity<Employee>()
                 .HasQueryFilter(e => !e.IsDeleted);
 
-            // modelBuilder.Entity<Hat>()
-            //.HasMany(h => h.Materials)
-            //.WithMany(m => m.Hats);
-
-            //modelBuilder.Entity<MaterialOrder>()
-            //    .HasMany(mo => mo.Materials)
-            //    .WithMany(m => m.MaterialOrders);
 
             modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
             modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);

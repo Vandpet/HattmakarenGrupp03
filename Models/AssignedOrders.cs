@@ -13,5 +13,7 @@ namespace HattmakarenWebbAppGrupp03.Models
         public Order Order { get; set; }
 
         public string Description { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public bool WholeOrder { get; set; }
     }
 }
