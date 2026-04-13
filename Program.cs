@@ -1,4 +1,5 @@
 using HattmakarenWebbAppGrupp03.Data;
+using HattmakarenWebbAppGrupp03.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
