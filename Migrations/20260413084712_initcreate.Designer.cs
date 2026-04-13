@@ -4,6 +4,7 @@ using HattmakarenWebbAppGrupp03.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HattmakarenWebbAppGrupp03.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260413084712_initcreate")]
+    partial class initcreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -328,21 +331,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.OrderOfMaterials", b =>
-                {
-                    b.Property<int>("OId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OId", "MoId");
-
-                    b.HasIndex("MoId");
-
-                    b.ToTable("OrderOfMaterials");
-                });
-
             modelBuilder.Entity("MaterialMaterialOrder", b =>
                 {
                     b.Property<int>("MaterialOrdersMoId")
@@ -444,25 +432,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.OrderOfMaterials", b =>
-                {
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.MaterialOrder", "MaterialOrder")
-                        .WithMany("Orders")
-                        .HasForeignKey("MoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Order", "Order")
-                        .WithMany("MaterialOrders")
-                        .HasForeignKey("OId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MaterialOrder");
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("MaterialMaterialOrder", b =>
                 {
                     b.HasOne("HattmakarenWebbAppGrupp03.Models.MaterialOrder", null)
@@ -494,18 +463,11 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Navigation("HandledOrders");
                 });
 
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.MaterialOrder", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Order", b =>
                 {
                     b.Navigation("AssignedEmployees");
 
                     b.Navigation("Hats");
-
-                    b.Navigation("MaterialOrders");
                 });
 #pragma warning restore 612, 618
         }
