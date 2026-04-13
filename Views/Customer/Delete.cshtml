@@ -1,0 +1,56 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.Customer
+
+@{
+    ViewData["Title"] = "Ta bort kund";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Ta bort kund</h3>
+                </div>
+
+                <div class="card-body">
+                    <p class="mb-4">
+                        Är du säker på att du vill ta bort denna kund?
+                    </p>
+
+                    <div class="alert alert-warning">
+                        Användaren tas inte bort ur databasen permanent, utan döljs bara från systemet.
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">ID</dt>
+                        <dd class="col-sm-8">@Model.CId</dd>
+
+                        <dt class="col-sm-4">Namn</dt>
+                        <dd class="col-sm-8">@Model.Name</dd>
+
+                        <dt class="col-sm-4">Adress</dt>
+                        <dd class="col-sm-8">@Model.Adress</dd>
+
+                        <dt class="col-sm-4">Telefon</dt>
+                        <dd class="col-sm-8">@Model.PhoneNr</dd>
+
+                        <dt class="col-sm-4">Land</dt>
+                        <dd class="col-sm-8">@Model.Country</dd>
+
+                        <dt class="col-sm-4">Stad</dt>
+                        <dd class="col-sm-8">@Model.City</dd>
+
+                        <dt class="col-sm-4">Språk</dt>
+                        <dd class="col-sm-8">@Model.Language</dd>
+                    </dl>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="id" value="@Model.CId" />
+                        <button type="submit" class="btn btn-danger">Ja, ta bort</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Avbryt</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,137 @@
+﻿using HattmakarenWebbAppGrupp03.Data;
+using HattmakarenWebbAppGrupp03.Models;
+using HattmakarenWebbAppGrupp03.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+
+namespace HattmakarenWebbAppGrupp03.Controllers
+{
+    public class CustomerController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public CustomerController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult Index()
+        {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var customers = _context.Customers.ToList();
+            return View(customers);
+        }
+
+        public IActionResult Create()
+        {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            return View();
+        }
+
+        private bool IsLoggedIn()
+        {
+            return HttpContext.Session.GetInt32("EmployeeId") != null;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(CustomerCreateViewModel model)
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            string name = model.Name.Trim();
+
+            bool nameExists = _context.Customers
+                .Any(c => c.Name.ToLower() == name.ToLower());
+
+            if (nameExists)
+            {
+                ModelState.AddModelError("Name", "Namnet är redan upptaget.");
+                return View(model);
+            }
+
+            var customer = new Customer
+            {
+                Name = model.Name.Trim(),
+                Adress = model.Adress.Trim(),
+                PhoneNr = model.PhoneNr.Trim(),
+                Country = model.Country.Trim(),
+                City = model.City.Trim(),
+                Language = model.Language.Trim()
+            };
+
+            _context.Customers.Add(customer);
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError(string.Empty, "Fel vid sparande av kund.");
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Delete(int id)
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var customer = _context.Customers.FirstOrDefault(c => c.CId == id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var customer = _context.Customers.FirstOrDefault(c => c.CId == id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            customer.Name = "";
+            customer.Adress = "";
+            customer.PhoneNr = "";
+            customer.Country = "";
+            customer.City = "";
+            customer.Language = "";
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}
