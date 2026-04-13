@@ -23,6 +23,7 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<CustomerManager> CustomerManagers { get; set; }
 
         public DbSet<AssignedOrders> AssignedOrders { get; set; }
+        public DbSet<OrderOfMaterials> OrderOfMaterials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,9 +40,9 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasMany(h => h.Materials)
                 .WithMany(m => m.Hats);
 
-            modelBuilder.Entity<MaterialOrder>()
-                .HasMany(mo => mo.Materials)
-                .WithMany(m => m.MaterialOrders);
+            //modelBuilder.Entity<MaterialOrder>()
+            //    .HasMany(mo => mo.Materials)
+            //    .WithMany(m => m.MaterialOrders);
 
             modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
             modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);
@@ -99,6 +100,20 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasOne(ao => ao.Order)
                 .WithMany(o => o.AssignedEmployees)
                 .HasForeignKey(ao => ao.OId);
+
+            //OrderOfMaterials
+            modelBuilder.Entity<OrderOfMaterials>()
+                .HasKey(om => new { om.OId, om.MoId });
+
+            modelBuilder.Entity<OrderOfMaterials>()
+                .HasOne(om => om.Order)
+                .WithMany(o => o.MaterialOrders)
+                .HasForeignKey(om => om.OId);
+
+            modelBuilder.Entity<OrderOfMaterials>()
+                .HasOne(om => om.MaterialOrder)
+                .WithMany(mo => mo.Orders)
+                .HasForeignKey(om => om.MoId);
         }
     }
 }
