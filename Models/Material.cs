@@ -13,5 +13,7 @@ namespace HattmakarenWebbAppGrupp03.Models
         // Relationer
         public required virtual ICollection<Hat> Hats { get; set; }
         public required virtual ICollection<MaterialOrder> MaterialOrders { get; set; }
+
+        public List<HatMaterial> MaterialsForHats { get; set; } = new(); // Förhindrar att man hämtar null
     }
 }

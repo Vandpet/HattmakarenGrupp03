@@ -24,6 +24,7 @@ namespace HattmakarenWebbAppGrupp03.Data
 
         public DbSet<AssignedOrders> AssignedOrders { get; set; }
         public DbSet<OrderOfMaterials> OrderOfMaterials { get; set; }
+        public DbSet<HatMaterial> HatMaterials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,9 +37,9 @@ namespace HattmakarenWebbAppGrupp03.Data
             modelBuilder.Entity<Employee>()
                 .HasQueryFilter(e => !e.IsDeleted);
 
-            modelBuilder.Entity<Hat>()
-                .HasMany(h => h.Materials)
-                .WithMany(m => m.Hats);
+           // modelBuilder.Entity<Hat>()
+                //.HasMany(h => h.Materials)
+                //.WithMany(m => m.Hats);
 
             //modelBuilder.Entity<MaterialOrder>()
             //    .HasMany(mo => mo.Materials)
@@ -114,6 +115,20 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasOne(om => om.MaterialOrder)
                 .WithMany(mo => mo.Orders)
                 .HasForeignKey(om => om.MoId);
+
+            //HatMaterial
+            modelBuilder.Entity<HatMaterial>()
+                .HasKey(hm => new { hm.HId, hm.MId });
+
+            modelBuilder.Entity<HatMaterial>()
+                .HasOne(hm => hm.Hat)
+                .WithMany(h => h.Materials)
+                .HasForeignKey(hm => hm.HId);
+
+            modelBuilder.Entity<HatMaterial>()
+                .HasOne(hm => hm.Material)
+                .WithMany(m => m.MaterialsForHats)
+                .HasForeignKey(hm => hm.MId);
         }
     }
 }

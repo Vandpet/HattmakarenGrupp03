@@ -43,18 +43,18 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Status = vm.Status ?? "Accepted",
                 StandardHat = vm.StandardHat,
 
-                Materials = new List<Material>
-        {
-            new Material
-            {
-                Name = "Standardmaterial",
-                Amount = 1,
-                MeasuringUnits = "st",
-                Price = 10,
-                Hats = new List<Hat>(),
-                MaterialOrders = new List<MaterialOrder>()
-            }
-        }
+        //        Materials = new List<Material>
+        //{
+        //    new Material
+        //    {
+        //        Name = "Standardmaterial",
+        //        Amount = 1,
+        //        MeasuringUnits = "st",
+        //        Price = 10,
+        //        Hats = new List<Hat>(),
+        //        MaterialOrders = new List<MaterialOrder>()
+        //    }
+        //}
             };
 
             await _hatRepository.AddAsync(hat);

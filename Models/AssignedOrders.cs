@@ -5,7 +5,7 @@ namespace HattmakarenWebbAppGrupp03.Models
 {
     public class AssignedOrders
     {
-        [Key]
+        
         public int EId { get; set; }
         public Employee Employee { get; set; }
 
