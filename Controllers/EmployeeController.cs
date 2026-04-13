@@ -1,0 +1,291 @@
+﻿using HattmakarenWebbAppGrupp03.Data;
+using HattmakarenWebbAppGrupp03.Models;
+using HattmakarenWebbAppGrupp03.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace HattmakarenWebbAppGrupp03.Controllers
+{
+    public class EmployeeController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly PasswordHasher<Employee> _passwordHasher;
+
+        public EmployeeController(ApplicationDbContext context)
+        {
+            _context = context;
+            _passwordHasher = new PasswordHasher<Employee>();
+        }
+
+        public IActionResult Index()
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var employees = _context.Employees.ToList();
+            return View(employees);
+        }
+
+        public IActionResult Create()
+        {
+            bool hasAnyUsers = _context.Employees.Any();
+
+            if (!hasAnyUsers)
+            {
+                return View();
+            }
+
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(EmployeeCreateViewModel model)
+        {
+            bool hasAnyUsers = _context.Employees.Any();
+
+            if (hasAnyUsers && !IsAdmin())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            string username = model.Username.Trim().ToLower();
+
+            bool usernameExists = _context.Employees
+                .Any(e => e.Username.ToLower() == username);
+
+            if (usernameExists)
+            {
+                ModelState.AddModelError("Username", "Användarnamnet är redan upptaget.");
+                return View(model);
+            }
+
+            var employee = new Employee
+            {
+                Name = model.Name.Trim(),
+                Adress = model.Adress.Trim(),
+                PhoneNr = model.PhoneNr.Trim(),
+                accesslevel = model.accesslevel,
+                Username = username
+            };
+
+            employee.PasswordHash = _passwordHasher.HashPassword(employee, model.Password);
+
+            _context.Employees.Add(employee);
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("Username", "Användarnamnet är redan upptaget.");
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Edit(int id)
+        {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var employee = _context.Employees.FirstOrDefault(e => e.EId == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EmployeeEditViewModel
+            {
+                EId = employee.EId,
+                Name = employee.Name,
+                Adress = employee.Adress,
+                PhoneNr = employee.PhoneNr,
+                accesslevel = employee.accesslevel,
+                Username = employee.Username
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(EmployeeEditViewModel model)
+        {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var employee = _context.Employees.FirstOrDefault(e => e.EId == model.EId);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            string username = model.Username.Trim().ToLower();
+
+            bool usernameExists = _context.Employees.Any(e =>
+                e.EId != model.EId &&
+                e.Username.ToLower() == username);
+
+            if (usernameExists)
+            {
+                ModelState.AddModelError("Username", "Användarnamnet är redan upptaget.");
+                return View(model);
+            }
+
+            employee.Name = model.Name.Trim();
+            employee.Adress = model.Adress.Trim();
+            employee.PhoneNr = model.PhoneNr.Trim();
+            employee.accesslevel = model.accesslevel;
+            employee.Username = username;
+
+            if (!string.IsNullOrWhiteSpace(model.NewPassword))
+            {
+                employee.PasswordHash = _passwordHasher.HashPassword(employee, model.NewPassword);
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Delete(int id)
+        {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (currentEmployeeId == id)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var employee = _context.Employees.FirstOrDefault(e => e.EId == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (currentEmployeeId == id)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var employee = _context.Employees.FirstOrDefault(e => e.EId == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            employee.IsDeleted = true;
+            employee.DeletedAt = DateTime.Now;
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool IsLoggedIn()
+        {
+            return HttpContext.Session.GetInt32("EmployeeId") != null;
+        }
+
+        private bool IsAdmin()
+        {
+            int? accessLevel = HttpContext.Session.GetInt32("AccessLevel");
+            return accessLevel != null && accessLevel >= 10;
+        }
+
+        public IActionResult SetupFirstUser()
+        {
+            if (_context.Employees.Any())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SetupFirstUser(EmployeeCreateViewModel model)
+        {
+            if (_context.Employees.Any())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            string username = model.Username.Trim().ToLower();
+
+            bool usernameExists = _context.Employees
+                .Any(e => e.Username.ToLower() == username);
+
+            if (usernameExists)
+            {
+                ModelState.AddModelError("Username", "Användarnamnet är redan upptaget.");
+                return View(model);
+            }
+
+            var employee = new Employee
+            {
+                Name = model.Name.Trim(),
+                Adress = model.Adress.Trim(),
+                PhoneNr = model.PhoneNr.Trim(),
+                accesslevel = model.accesslevel,
+                Username = username
+            };
+
+            employee.PasswordHash = _passwordHasher.HashPassword(employee, model.Password);
+
+            _context.Employees.Add(employee);
+            _context.SaveChanges();
+
+            return RedirectToAction("Login", "Auth");
+        }
+
+    }
+}

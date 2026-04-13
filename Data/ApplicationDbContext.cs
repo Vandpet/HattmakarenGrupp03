@@ -28,6 +28,13 @@ namespace HattmakarenWebbAppGrupp03.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Employee>()
+                .HasIndex(e => e.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<Employee>()
+                .HasQueryFilter(e => !e.IsDeleted);
+
             modelBuilder.Entity<Hat>()
                 .HasMany(h => h.Materials)
                 .WithMany(m => m.Hats);
@@ -44,33 +51,26 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasOne(o => o.Customer)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
+            
+            modelBuilder.Entity<Material>()
+                .Property(m => m.Amount)
+                .HasPrecision(18, 2);
 
-            modelBuilder.Entity<CustomerManager>()
-            .HasKey(ec => new { ec.EId, ec.CId });
+            modelBuilder.Entity<Order>()
+                .Property(o => o.Rabatt)
+                .HasPrecision(18, 2);
 
-            modelBuilder.Entity<CustomerManager>()
-                .HasOne(ec => ec.Employee)
-                .WithMany(e => e.ManagedCustomers)
-                .HasForeignKey(ec => ec.EId);
+            modelBuilder.Entity<Hat>()
+                .Property(h => h.Price)
+                .HasPrecision(18, 2);
 
-            modelBuilder.Entity<CustomerManager>()
-                .HasOne(ec => ec.Customer)
-                .WithMany(c => c.Managed)
-                .HasForeignKey(ec => ec.CId);
+            modelBuilder.Entity<Material>()
+                .Property(m => m.Price)
+                .HasPrecision(18, 2);
 
-
-            modelBuilder.Entity<AssignedOrders>()
-                .HasKey(ao => new { ao.EId, ao.OId });
-
-            modelBuilder.Entity<AssignedOrders>()
-                .HasOne(ao => ao.Employee)
-                .WithMany(e => e.TakenOrders)
-                .HasForeignKey(ao => ao.EId);
-
-            modelBuilder.Entity<AssignedOrders>()
-                .HasOne(ao => ao.Order)
-                .WithMany(o => o.AssignedEmployees)
-                .HasForeignKey(ao => ao.OId);
+            modelBuilder.Entity<Order>()
+                .Property(o => o.Price)
+                .HasPrecision(18, 2);
         }
     }
 }
