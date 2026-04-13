@@ -26,7 +26,7 @@ namespace HattmakarenWebbAppGrupp03.Models
         public string Language { get; set; }
 
         // Relationer
-        public  virtual ICollection<Order> Orders { get; set; }
-        public List<CustomerManager> Managed { get; set; } = new();
+        public virtual ICollection<Order> Orders { get; set; }
+        public List<CustomerManager> Managed { get; set; } = new(); //Förhindrar att man hämtar null
     }
 }

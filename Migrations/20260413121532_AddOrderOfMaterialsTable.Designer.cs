@@ -4,6 +4,7 @@ using HattmakarenWebbAppGrupp03.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HattmakarenWebbAppGrupp03.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260413121532_AddOrderOfMaterialsTable")]
+    partial class AddOrderOfMaterialsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("HatMaterial", b =>
+                {
+                    b.Property<int>("HatsHId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaterialsMId")
+                        .HasColumnType("int");
+
+                    b.HasKey("HatsHId", "MaterialsMId");
+
+                    b.HasIndex("MaterialsMId");
+
+                    b.ToTable("HatMaterial");
+                });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.AssignedOrders", b =>
                 {
@@ -30,15 +48,9 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Property<int>("OId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("WholeOrder")
-                        .HasColumnType("bit");
 
                     b.HasKey("EId", "OId");
 
@@ -160,9 +172,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Property<int?>("EmployeeEId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MaterialMId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -193,50 +202,9 @@ namespace HattmakarenWebbAppGrupp03.Migrations
 
                     b.HasIndex("EmployeeEId");
 
-                    b.HasIndex("MaterialMId");
-
                     b.HasIndex("OrderOId");
 
                     b.ToTable("Hats");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.HatMaterial", b =>
-                {
-                    b.Property<int>("HId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MId")
-                        .HasColumnType("int");
-
-                    b.HasKey("HId", "MId");
-
-                    b.HasIndex("MId");
-
-                    b.ToTable("HatMaterials");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.HatOrder", b =>
-                {
-                    b.Property<int>("HId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("HId", "OId");
-
-                    b.HasIndex("EId");
-
-                    b.HasIndex("OId");
-
-                    b.ToTable("HatOrder");
                 });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Material", b =>
@@ -371,6 +339,21 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.ToTable("MaterialMaterialOrder");
                 });
 
+            modelBuilder.Entity("HatMaterial", b =>
+                {
+                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Hat", null)
+                        .WithMany()
+                        .HasForeignKey("HatsHId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Material", null)
+                        .WithMany()
+                        .HasForeignKey("MaterialsMId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.AssignedOrders", b =>
                 {
                     b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "Employee")
@@ -415,57 +398,9 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .WithMany("CreatedHats")
                         .HasForeignKey("EmployeeEId");
 
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Material", null)
-                        .WithMany("Hats")
-                        .HasForeignKey("MaterialMId");
-
                     b.HasOne("HattmakarenWebbAppGrupp03.Models.Order", null)
                         .WithMany("Hats")
                         .HasForeignKey("OrderOId");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.HatMaterial", b =>
-                {
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Hat", "Hat")
-                        .WithMany("Materials")
-                        .HasForeignKey("HId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Material", "Material")
-                        .WithMany("MaterialsForHats")
-                        .HasForeignKey("MId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hat");
-
-                    b.Navigation("Material");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.HatOrder", b =>
-                {
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "Employee")
-                        .WithMany("AssignedHats")
-                        .HasForeignKey("EId");
-
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Hat", "Hat")
-                        .WithMany("HatInOrders")
-                        .HasForeignKey("HId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Order", "Order")
-                        .WithMany("HatOrders")
-                        .HasForeignKey("OId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Hat");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.MaterialOrder", b =>
@@ -533,8 +468,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Employee", b =>
                 {
-                    b.Navigation("AssignedHats");
-
                     b.Navigation("CreatedHats");
 
                     b.Navigation("CreatedMaterialOrders");
@@ -546,20 +479,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Navigation("TakenOrders");
                 });
 
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Hat", b =>
-                {
-                    b.Navigation("HatInOrders");
-
-                    b.Navigation("Materials");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Material", b =>
-                {
-                    b.Navigation("Hats");
-
-                    b.Navigation("MaterialsForHats");
-                });
-
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.MaterialOrder", b =>
                 {
                     b.Navigation("Orders");
@@ -568,8 +487,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Order", b =>
                 {
                     b.Navigation("AssignedEmployees");
-
-                    b.Navigation("HatOrders");
 
                     b.Navigation("Hats");
 
