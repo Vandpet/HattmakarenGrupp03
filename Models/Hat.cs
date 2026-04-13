@@ -18,5 +18,7 @@ namespace HattmakarenWebbAppGrupp03.Models
 
         public List<HatMaterial> Materials { get; set; } = new(); // Förhindrar att man hämtar null
 
+        public List<HatOrder> HatInOrders { get; set; } = new(); // Förhindrar att man hämtar null
+
     }
 }

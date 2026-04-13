@@ -23,6 +23,8 @@ namespace HattmakarenWebbAppGrupp03.Models
         public required virtual ICollection<Hat> Hats { get; set; }
 
         public List<AssignedOrders> AssignedEmployees { get; set; } = new(); // Förhindrar att man hämtar null
-        public List<OrderOfMaterials> MaterialOrders { get; set; } = new();
+        public List<OrderOfMaterials> MaterialOrders { get; set; } = new(); // Förhindrar att man hämtar null
+
+        public List<HatOrder> HatOrders { get; set; } = new(); // Förhindrar att man hämtar null
     }
 }

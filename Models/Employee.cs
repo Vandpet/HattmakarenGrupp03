@@ -38,7 +38,9 @@ namespace HattmakarenWebbAppGrupp03.Models
         public virtual ICollection<Order> HandledOrders { get; set; }
 
         public List<AssignedOrders> TakenOrders { get; set; } = new(); // Förhindrar att man hämtar null
-        public List<CustomerManager> ManagedCustomers { get; set; } = new();
+        public List<CustomerManager> ManagedCustomers { get; set; } = new(); // Förhindrar att man hämtar null
+
+        public List<HatOrder> AssignedHats { get; set; } = new(); // Förhindrar att man hämtar null
 
     }
 }
