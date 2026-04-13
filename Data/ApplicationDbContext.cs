@@ -20,6 +20,9 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<Hat> Hats { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<MaterialOrder> MaterialOrders { get; set; }
+        public DbSet<CustomerManager> CustomerManagers { get; set; }
+
+        public DbSet<AssignedOrders> AssignedOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

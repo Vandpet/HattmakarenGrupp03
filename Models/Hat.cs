@@ -5,7 +5,7 @@ namespace HattmakarenWebbAppGrupp03.Models
     public class Hat
     {
         [Key]
-        public required string HatID { get; set; } // Markeras som HatID*
+        public required int HId { get; set; } // Markeras som HatID*
         public required string Name { get; set; }
         public required decimal Price { get; set; }
         public required string Size { get; set; }

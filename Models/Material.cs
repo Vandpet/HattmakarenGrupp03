@@ -5,7 +5,7 @@ namespace HattmakarenWebbAppGrupp03.Models
     public class Material
     {
         [Key]
-        public required string MID { get; set; } // Markeras som MID*
+        public required int MId { get; set; } // Markeras som MID*
         public required string Name { get; set; }
         public required decimal Amount { get; set; }
         public required string MeasuringUnits { get; set; }
