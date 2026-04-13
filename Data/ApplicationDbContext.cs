@@ -57,7 +57,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Order>()
-                .Property(o => o.Rabatt)
+                .Property(o => o.Discount)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Hat>()
