@@ -25,6 +25,13 @@ namespace HattmakarenWebbAppGrupp03.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Employee>()
+                .HasIndex(e => e.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<Employee>()
+                .HasQueryFilter(e => !e.IsDeleted);
+
             modelBuilder.Entity<Hat>()
                 .HasMany(h => h.Materials)
                 .WithMany(m => m.Hats);
@@ -41,6 +48,26 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasOne(o => o.Customer)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
+            
+            modelBuilder.Entity<Material>()
+                .Property(m => m.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Order>()
+                .Property(o => o.Rabatt)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Hat>()
+                .Property(h => h.Price)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Material>()
+                .Property(m => m.Price)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Order>()
+                .Property(o => o.Price)
+                .HasPrecision(18, 2);
         }
     }
 }
