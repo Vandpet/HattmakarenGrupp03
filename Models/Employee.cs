@@ -37,5 +37,8 @@ namespace HattmakarenWebbAppGrupp03.Models
         public virtual ICollection<MaterialOrder> CreatedMaterialOrders { get; set; }
         public virtual ICollection<Order> HandledOrders { get; set; }
 
+        public List<AssignedOrders> TakenOrders { get; set; }
+        public List<CustomerManager> ManagedCustomers { get; set; }
+
     }
 }

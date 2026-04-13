@@ -57,7 +57,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Order>()
-                .Property(o => o.Rabatt)
+                .Property(o => o.Discount)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Hat>()
@@ -71,6 +71,34 @@ namespace HattmakarenWebbAppGrupp03.Data
             modelBuilder.Entity<Order>()
                 .Property(o => o.Price)
                 .HasPrecision(18, 2);
+
+            //CustomerManager
+            modelBuilder.Entity<CustomerManager>()
+                .HasKey(ec => new { ec.EId, ec.CId });
+
+            modelBuilder.Entity<CustomerManager>()
+                .HasOne(ec => ec.Employee)
+                .WithMany(e => e.ManagedCustomers)
+                .HasForeignKey(ec => ec.EId);
+
+            modelBuilder.Entity<CustomerManager>()
+                .HasOne(ec => ec.Customer)
+                .WithMany(c => c.Managed)
+                .HasForeignKey(ec => ec.CId);
+
+            //AssignedOrders
+            modelBuilder.Entity<AssignedOrders>()
+                .HasKey(ao => new { ao.EId, ao.OId });
+
+            modelBuilder.Entity<AssignedOrders>()
+                .HasOne(ao => ao.Employee)
+                .WithMany(e => e.TakenOrders)
+                .HasForeignKey(ao => ao.EId);
+
+            modelBuilder.Entity<AssignedOrders>()
+                .HasOne(ao => ao.Order)
+                .WithMany(o => o.AssignedEmployees)
+                .HasForeignKey(ao => ao.OId);
         }
     }
 }
