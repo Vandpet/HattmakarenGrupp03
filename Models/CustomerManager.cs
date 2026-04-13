@@ -4,7 +4,7 @@ namespace HattmakarenWebbAppGrupp03.Models
 {
     public class CustomerManager
     {
-        [Key]
+        
         public int EId { get; set; }
         public Employee Employee { get; set; }
 

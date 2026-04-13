@@ -23,6 +23,8 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<CustomerManager> CustomerManagers { get; set; }
 
         public DbSet<AssignedOrders> AssignedOrders { get; set; }
+        public DbSet<OrderOfMaterials> OrderOfMaterials { get; set; }
+        public DbSet<HatMaterial> HatMaterials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,13 +37,6 @@ namespace HattmakarenWebbAppGrupp03.Data
             modelBuilder.Entity<Employee>()
                 .HasQueryFilter(e => !e.IsDeleted);
 
-            modelBuilder.Entity<Hat>()
-                .HasMany(h => h.Materials)
-                .WithMany(m => m.Hats);
-
-            modelBuilder.Entity<MaterialOrder>()
-                .HasMany(mo => mo.Materials)
-                .WithMany(m => m.MaterialOrders);
 
             modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
             modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);
@@ -51,7 +46,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasOne(o => o.Customer)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
-            
+
             modelBuilder.Entity<Material>()
                 .Property(m => m.Amount)
                 .HasPrecision(18, 2);
@@ -99,6 +94,55 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasOne(ao => ao.Order)
                 .WithMany(o => o.AssignedEmployees)
                 .HasForeignKey(ao => ao.OId);
+
+            //OrderOfMaterials
+            modelBuilder.Entity<OrderOfMaterials>()
+                .HasKey(om => new { om.OId, om.MoId });
+
+            modelBuilder.Entity<OrderOfMaterials>()
+                .HasOne(om => om.Order)
+                .WithMany(o => o.MaterialOrders)
+                .HasForeignKey(om => om.OId);
+
+            modelBuilder.Entity<OrderOfMaterials>()
+                .HasOne(om => om.MaterialOrder)
+                .WithMany(mo => mo.Orders)
+                .HasForeignKey(om => om.MoId);
+
+            //HatMaterial
+            modelBuilder.Entity<HatMaterial>()
+                .HasKey(hm => new { hm.HId, hm.MId });
+
+            modelBuilder.Entity<HatMaterial>()
+                .HasOne(hm => hm.Hat)
+                .WithMany(h => h.Materials)
+                .HasForeignKey(hm => hm.HId);
+
+            modelBuilder.Entity<HatMaterial>()
+                .HasOne(hm => hm.Material)
+                .WithMany(m => m.MaterialsForHats)
+                .HasForeignKey(hm => hm.MId);
+
+            //Hatorders
+            modelBuilder.Entity<HatOrder>()
+                .HasKey(ho => new { ho.HId, ho.OId });
+
+            modelBuilder.Entity<HatOrder>()
+                .HasOne(ho => ho.Hat)
+                .WithMany(h => h.HatInOrders)
+                .HasForeignKey(ho => ho.HId);
+
+            modelBuilder.Entity<HatOrder>()
+                .HasOne(ho => ho.Order)
+                .WithMany(o => o.HatOrders)
+                .HasForeignKey(ho => ho.OId);
+
+            // Måste inte finnas en Employee kopplad till en HatOrder, så den är optional
+            modelBuilder.Entity<HatOrder>()
+                .HasOne(ho => ho.Employee)
+                .WithMany(e => e.AssignedHats) 
+                .HasForeignKey(ho => ho.EId)
+                .IsRequired(false);
         }
     }
 }

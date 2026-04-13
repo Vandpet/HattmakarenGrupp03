@@ -15,6 +15,6 @@ namespace HattmakarenWebbAppGrupp03.Models
 
         // Relationer
         public  required virtual ICollection<Order> Orders { get; set; }
-        public List<CustomerManager> Managed { get; set; } = new();
+        public List<CustomerManager> Managed { get; set; } = new(); // Förhindrar att man hämtar null
     }
 }
