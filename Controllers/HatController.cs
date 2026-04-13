@@ -1,4 +1,4 @@
-﻿using HattmakarenWebbAppGrupp03.Data;
+﻿using HattmakarenWebbAppGrupp03.Data.Repositories;
 using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;

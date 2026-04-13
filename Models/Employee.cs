@@ -35,7 +35,7 @@ namespace HattmakarenWebbAppGrupp03.Models
         // Relationer
         public virtual ICollection<Hat> CreatedHats { get; set; }
         public virtual ICollection<MaterialOrder> CreatedMaterialOrders { get; set; }
-        public virtual ICollection<Order> HandledOrders { get; set; }
+        //public virtual ICollection<Order> HandledOrders { get; set; }
 
         public List<AssignedOrders> TakenOrders { get; set; } = new(); // Förhindrar att man hämtar null
         public List<CustomerManager> ManagedCustomers { get; set; } = new(); // Förhindrar att man hämtar null
