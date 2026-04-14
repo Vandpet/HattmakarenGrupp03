@@ -20,3 +20,43 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+
+
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 60px;
+    background: #212529;
+    padding: 10px;
+    transition: width 0.3s;
+}
+
+    .sidebar.expanded {
+        width: 220px;
+    }
+
+    .sidebar .nav-link {
+        white-space: nowrap;
+    }
+
+.menu-text {
+    display: none;
+}
+
+.sidebar.expanded .menu-text {
+    display: inline;
+}
+
+#content {
+    margin-left: 60px;
+    transition: margin-left 0.3s;
+}
+
+.sidebar.expanded ~ #content {
+    margin-left: 220px;
+}
