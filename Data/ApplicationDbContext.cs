@@ -18,6 +18,8 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<MaterialOrder> MaterialOrders { get; set; }
         public DbSet<CustomerManager> CustomerManagers { get; set; }
         public DbSet<AssignedOrders> AssignedOrders { get; set; }
+        public DbSet<OrderOfMaterials> OrderOfMaterials { get; set; }
+        public DbSet<HatOrder> HatOrders { get; set; }
 
         // Lägg till DbSet för kopplingstabellen så EF hittar den ordentligt
         public DbSet<HatMaterial> HatMaterials { get; set; }
