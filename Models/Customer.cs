@@ -5,16 +5,28 @@ namespace HattmakarenWebbAppGrupp03.Models
     public class Customer
     {
         [Key]
-        public required int CId { get; set; } // Markeras som Cid* i diagrammet
-        public required string Name { get; set; }
-        public required string Adress { get; set; }
-        public required string PhoneNr { get; set; }
-        public required string Country { get; set; }
-        public required string City { get; set; }
-        public required string Language { get; set; }
+        public int CId { get; set; } // Markeras som Cid* i diagrammet
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Adress { get; set; }
+
+        [Required]
+        public  string PhoneNr { get; set; }
+
+        [Required]
+        public string Country { get; set; }
+
+        [Required]
+        public string City { get; set; }
+
+        [Required]
+        public string Language { get; set; }
 
         // Relationer
-        public  required virtual ICollection<Order> Orders { get; set; }
-        public List<CustomerManager> Managed { get; set; } = new(); // Förhindrar att man hämtar null
+        public virtual ICollection<Order> Orders { get; set; }
+        public List<CustomerManager> Managed { get; set; } = new(); //Förhindrar att man hämtar null
     }
 }

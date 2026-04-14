@@ -1,7 +1,7 @@
 ﻿using HattmakarenWebbAppGrupp03.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace HattmakarenWebbAppGrupp03.Data
+namespace HattmakarenWebbAppGrupp03.Data.Repositories
 {
     public class HatRepository
     {

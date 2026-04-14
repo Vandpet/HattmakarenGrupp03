@@ -10,26 +10,23 @@ namespace HattmakarenWebbAppGrupp03.Data
         {
         }
 
-        // Tabeller baserade på dina entiteter i diagrammet
         public DbSet<Employee> Employees { get; set; }
-        
         public DbSet<Customer> Customers { get; set; }
-       
         public DbSet<Order> Orders { get; set; }
-       
         public DbSet<Hat> Hats { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<MaterialOrder> MaterialOrders { get; set; }
         public DbSet<CustomerManager> CustomerManagers { get; set; }
-
         public DbSet<AssignedOrders> AssignedOrders { get; set; }
-        public DbSet<OrderOfMaterials> OrderOfMaterials { get; set; }
+
+        // Lägg till DbSet för kopplingstabellen så EF hittar den ordentligt
         public DbSet<HatMaterial> HatMaterials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // 1. Employee inställningar
             modelBuilder.Entity<Employee>()
                 .HasIndex(e => e.Username)
                 .IsUnique();
@@ -37,39 +34,41 @@ namespace HattmakarenWebbAppGrupp03.Data
             modelBuilder.Entity<Employee>()
                 .HasQueryFilter(e => !e.IsDeleted);
 
+            // 2. NY RELATION: Hat <-> Material via HatMaterial
+            modelBuilder.Entity<HatMaterial>()
+                .HasKey(hm => new { hm.HId, hm.MId });
 
-            modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
-            modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);
-            modelBuilder.Entity<Material>().Property(m => m.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<HatMaterial>()
+                .HasOne(hm => hm.Hat)
+                .WithMany(h => h.Materials)
+                .HasForeignKey(hm => hm.HId);
+
+            modelBuilder.Entity<HatMaterial>()
+                .HasOne(hm => hm.Material)
+                .WithMany(m => m.MaterialsForHats)
+                .HasForeignKey(hm => hm.MId);
+
+            // 3. Övriga relationer
+            modelBuilder.Entity<MaterialOrder>()
+                .HasMany(mo => mo.Materials)
+                .WithMany(m => m.MaterialOrders);
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Customer)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
 
-            modelBuilder.Entity<Material>()
-                .Property(m => m.Amount)
-                .HasPrecision(18, 2);
+            // 4. Precision (Decimal-inställningar)
+            modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<Order>().Property(o => o.Discount).HasPrecision(18, 2);
 
-            modelBuilder.Entity<Order>()
-                .Property(o => o.Discount)
-                .HasPrecision(18, 2);
+            modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);
 
-            modelBuilder.Entity<Hat>()
-                .Property(h => h.Price)
-                .HasPrecision(18, 2);
+            modelBuilder.Entity<Material>().Property(m => m.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<Material>().Property(m => m.Amount).HasPrecision(18, 2);
 
-            modelBuilder.Entity<Material>()
-                .Property(m => m.Price)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<Order>()
-                .Property(o => o.Price)
-                .HasPrecision(18, 2);
-
-            //CustomerManager
             modelBuilder.Entity<CustomerManager>()
-                .HasKey(ec => new { ec.EId, ec.CId });
+               .HasKey(ec => new { ec.EId, ec.CId });
 
             modelBuilder.Entity<CustomerManager>()
                 .HasOne(ec => ec.Employee)
@@ -140,7 +139,7 @@ namespace HattmakarenWebbAppGrupp03.Data
             // Måste inte finnas en Employee kopplad till en HatOrder, så den är optional
             modelBuilder.Entity<HatOrder>()
                 .HasOne(ho => ho.Employee)
-                .WithMany(e => e.AssignedHats) 
+                .WithMany(e => e.AssignedHats)
                 .HasForeignKey(ho => ho.EId)
                 .IsRequired(false);
         }
