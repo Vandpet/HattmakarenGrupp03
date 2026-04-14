@@ -15,5 +15,6 @@ namespace HattmakarenWebbAppGrupp03.Models
 
         // Relationer
         public ICollection<HatMaterial> Materials { get; set; } = new List<HatMaterial>();
+        public List<HatOrder> HatInOrders { get; set; } = new List<HatOrder>();
     }
 }

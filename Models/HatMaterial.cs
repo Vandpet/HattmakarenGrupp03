@@ -2,10 +2,10 @@
 {
     public class HatMaterial
     {
-        public int HatId { get; set; }
+        public int HId { get; set; }
         public Hat Hat { get; set; }
 
-        public int MaterialId { get; set; }
+        public int MId { get; set; }
         public Material Material { get; set; }
     }
 }
