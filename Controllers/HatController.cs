@@ -2,6 +2,7 @@
 using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
 {
@@ -16,9 +17,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
         public IActionResult Create()
         {
-            var vm = new HatCreateViewModel();
-            vm.AvailableMaterials = GetMockMaterials(); // Fyller på med test-material
-            return View("Create", vm);
+            //var vm = new HatCreateViewModel();
+            //vm.AvailableMaterials = GetMockMaterials(); // Fyller på med test-material
+            return View("Create");
         }
 
         [HttpPost]
@@ -27,7 +28,13 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         {
             if (!ModelState.IsValid)
             {
-                vm.AvailableMaterials = GetMockMaterials();
+                foreach (var error in ModelState)
+                {
+                    Debug.WriteLine($"{error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
+                    Debug.WriteLine(vm.Name);
+                    Debug.WriteLine(vm.Materials == null);
+                    Debug.WriteLine(vm.Materials?.Count);
+                }
                 return View("Create", vm);
             }
 
@@ -40,29 +47,35 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Status = vm.Status ?? "Accepted",
                 StandardHat = vm.StandardHat,
 
-                // Skapar kopplingen mellan hatt och valda material
-                Materials = vm.SelectedMaterialIds.Select(id => new HatMaterial
+                Materials = vm.Materials?
+                .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Name))
+                .Select(m => new HatMaterial
                 {
-                    MId = id
-                }).ToList()
+                    Material = new Material
+                {
+                    Name = m.Name,
+                    Amount = m.Amount,
+                    MeasuringUnits = m.MeasuringUnits,
+                    Price = m.Price
+                }
+                }).ToList() ?? new List<HatMaterial>()
             };
 
-            // Vi kommenterar bort sparandet för att undvika Foreign Key-fel vid test
-            // await _hatRepository.AddAsync(hat);
+            await _hatRepository.AddAsync(hat);
 
             return RedirectToAction("Index", "Home");
         }
 
         // Hjälpmetod för att simulera databas-material
-        private List<MaterialSelectionViewModel> GetMockMaterials()
-        {
-            return new List<MaterialSelectionViewModel>
-            {
-                new MaterialSelectionViewModel { Id = 1, Name = "Svart Filt" },
-                new MaterialSelectionViewModel { Id = 2, Name = "Sidenband (Rött)" },
-                new MaterialSelectionViewModel { Id = 3, Name = "Strutsfjäder" },
-                new MaterialSelectionViewModel { Id = 4, Name = "Läderrem" }
-            };
-        }
+        //private List<MaterialSelectionViewModel> GetMockMaterials()
+        //{
+        //    return new List<MaterialSelectionViewModel>
+        //    {
+        //        new MaterialSelectionViewModel { Id = 1, Name = "Svart Filt" },
+        //        new MaterialSelectionViewModel { Id = 2, Name = "Sidenband (Rött)" },
+        //        new MaterialSelectionViewModel { Id = 3, Name = "Strutsfjäder" },
+        //        new MaterialSelectionViewModel { Id = 4, Name = "Läderrem" }
+        //    };
+        //}
     }
 }
