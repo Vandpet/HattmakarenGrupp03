@@ -1,6 +1,7 @@
 using HattmakarenWebbAppGrupp03.Data;
 using HattmakarenWebbAppGrupp03.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddScoped<HatRepository>();
+builder.Services.AddScoped<FileService>();
+
 
 var app = builder.Build();
 
