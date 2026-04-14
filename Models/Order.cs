@@ -5,7 +5,7 @@ namespace HattmakarenWebbAppGrupp03.Models
     public class Order
     {
         [Key]
-        public required int OId { get; set; } // Markeras som OrderId*
+        public int OId { get; set; } // Markeras som OrderId*
         public required decimal Price { get; set; }
         public required string Status { get; set; }
         public required bool Express { get; set; }
