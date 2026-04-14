@@ -30,10 +30,12 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             _db.Customers.Update(customer);
             await _db.SaveChangesAsync();
         }
-        public async Task DeleteAsync(Customer customer)
-        {
-            _db.Customers.Remove(customer);
-            await _db.SaveChangesAsync();
-        }
+
+        // Glöm inte att Customer ska raderas annorlunda 
+        //public async Task DeleteAsync(Customer customer)
+        //{
+        //    _db.Customers.Remove(customer);
+        //    await _db.SaveChangesAsync();
+        //}
     }
 }
