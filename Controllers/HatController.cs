@@ -2,23 +2,28 @@
 using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using WebApp.Services;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
 {
     public class HatController : Controller
     {
         private readonly HatRepository _hatRepository;
+        private readonly FileService _fileService;
 
-        public HatController(HatRepository hatRepository)
+
+        public HatController(HatRepository hatRepository, FileService fileService)
         {
             _hatRepository = hatRepository;
+            _fileService = fileService;
         }
 
         public IActionResult Create()
         {
-            var vm = new HatCreateViewModel();
-            vm.AvailableMaterials = GetMockMaterials(); // Fyller på med test-material
-            return View("Create", vm);
+            //var vm = new HatCreateViewModel();
+            //vm.AvailableMaterials = GetMockMaterials(); // Fyller på med test-material
+            return View("Create");
         }
 
         [HttpPost]
@@ -27,8 +32,30 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         {
             if (!ModelState.IsValid)
             {
-                vm.AvailableMaterials = GetMockMaterials();
+                foreach (var error in ModelState)
+                {
+                    Debug.WriteLine($"{error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
+                    Debug.WriteLine(vm.Name);
+                    Debug.WriteLine(vm.Materials == null);
+                    Debug.WriteLine(vm.Materials?.Count);
+                }
                 return View("Create", vm);
+            }
+
+            string picturePath = "";
+
+            // FILE UPLOAD LOGIC
+            if (vm.ImageFile != null)
+            {
+                try
+                {
+                    picturePath = await _fileService.SaveImageAsync(vm.ImageFile);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    return View("Create", vm);
+                }
             }
 
             var hat = new Hat
@@ -36,33 +63,39 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Name = vm.Name,
                 Price = vm.Price,
                 Size = vm.Size,
-                PicturePath = vm.PicturePath ?? "",
+                PicturePath = picturePath ?? "",
                 Status = vm.Status ?? "Accepted",
                 StandardHat = vm.StandardHat,
 
-                // Skapar kopplingen mellan hatt och valda material
-                Materials = vm.SelectedMaterialIds.Select(id => new HatMaterial
+                Materials = vm.Materials?
+                .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Name))
+                .Select(m => new HatMaterial
                 {
-                    MId = id
-                }).ToList()
+                    Material = new Material
+                {
+                    Name = m.Name,
+                    Amount = m.Amount,
+                    MeasuringUnits = m.MeasuringUnits,
+                    Price = m.Price
+                }
+                }).ToList() ?? new List<HatMaterial>()
             };
 
-            // Vi kommenterar bort sparandet för att undvika Foreign Key-fel vid test
-            // await _hatRepository.AddAsync(hat);
+            await _hatRepository.AddAsync(hat);
 
             return RedirectToAction("Index", "Home");
         }
 
         // Hjälpmetod för att simulera databas-material
-        private List<MaterialSelectionViewModel> GetMockMaterials()
-        {
-            return new List<MaterialSelectionViewModel>
-            {
-                new MaterialSelectionViewModel { Id = 1, Name = "Svart Filt" },
-                new MaterialSelectionViewModel { Id = 2, Name = "Sidenband (Rött)" },
-                new MaterialSelectionViewModel { Id = 3, Name = "Strutsfjäder" },
-                new MaterialSelectionViewModel { Id = 4, Name = "Läderrem" }
-            };
-        }
+        //private List<MaterialSelectionViewModel> GetMockMaterials()
+        //{
+        //    return new List<MaterialSelectionViewModel>
+        //    {
+        //        new MaterialSelectionViewModel { Id = 1, Name = "Svart Filt" },
+        //        new MaterialSelectionViewModel { Id = 2, Name = "Sidenband (Rött)" },
+        //        new MaterialSelectionViewModel { Id = 3, Name = "Strutsfjäder" },
+        //        new MaterialSelectionViewModel { Id = 4, Name = "Läderrem" }
+        //    };
+        //}
     }
 }

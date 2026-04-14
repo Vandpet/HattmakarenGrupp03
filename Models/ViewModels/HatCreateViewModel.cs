@@ -5,20 +5,20 @@
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string Size { get; set; }
-        public string? PicturePath { get; set; }
+        public IFormFile? ImageFile { get; set; }
         public string? Status { get; set; }
         public bool StandardHat { get; set; }
 
-        // Listan med alla material som visas (checkboxar)
-        public List<MaterialSelectionViewModel> AvailableMaterials { get; set; } = new();
-
-        // Listan med ID:n för de material användaren har kryssat i
-        public List<int> SelectedMaterialIds { get; set; } = new();
+        // användaren fyller i dessa
+        public List<MaterialInputViewModel> Materials { get; set; } = new();
     }
 
-    public class MaterialSelectionViewModel
+
+    public class MaterialInputViewModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
+        public double Amount { get; set; }
+        public string MeasuringUnits { get; set; }
+        public decimal Price { get; set; }
     }
 }
