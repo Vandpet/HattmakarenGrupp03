@@ -58,8 +58,15 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
 
-            // 4. Precision (Decimal-inställningar)
-            modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
+			modelBuilder.Entity<Order>()
+                .HasOne(o => o.CreatedBy)
+                .WithMany() // Om du inte har en lista i Employee som heter CreatedOrders
+                .HasForeignKey(o => o.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict); // Detta är nyckeln!
+
+
+			// 4. Precision (Decimal-inställningar)
+			modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
             modelBuilder.Entity<Order>().Property(o => o.Discount).HasPrecision(18, 2);
 
             modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);

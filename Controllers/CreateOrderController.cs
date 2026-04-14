@@ -16,14 +16,38 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 			_context = context;
 		}
 
+		// GET: Order
+		public async Task<IActionResult> Index()
+		{
+			// 1. Säkerhetskoll (Session)
+			if (HttpContext.Session.GetInt32("EmployeeId") == null)
+			{
+				return RedirectToAction("Login", "Auth");
+			}
+
+			// 2. Hämta alla ordrar och "länka in" Customer och CreatedBy (Employee)
+			var orders = await _context.Orders
+				.Include(o => o.Customer)
+				.Include(o => o.CreatedBy)
+				.OrderByDescending(o => o.OrderDate) // Nyast först
+				.ToListAsync();
+
+			return View(orders);
+		}
+
 		// GET: Order/Create
 		public async Task<IActionResult> Create()
 		{
+			// KOLL: Är användaren inloggad?
+			if (HttpContext.Session.GetInt32("EmployeeId") == null)
+			{
+				// Om inte, skicka dem till inloggningssidan
+				return RedirectToAction("Login", "Auth");
+			}
+
 			var viewModel = new CreateOrderViewModel
 			{
-				// Hämta bara lagerförda hattar
 				StandardHats = await _context.Hats.Where(h => h.StandardHat).ToListAsync(),
-				// Förbered kundlistan för en dropdown
 				CustomerList = await _context.Customers
 					.Select(c => new SelectListItem { Value = c.CId.ToString(), Text = c.Name })
 					.ToListAsync()
@@ -31,26 +55,34 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 			return View(viewModel);
 		}
 
+
 		// POST: Order/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(CreateOrderViewModel model)
 		{
+			// 1. Hämta EmployeeId från Sessionen
+			int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+			// 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
+			//if (currentEmployeeId == null)
+			//{
+			//	return RedirectToAction("Login", "Auth");
+			//}
+
 			if (ModelState.IsValid)
 			{
-				// 1. Hämta de faktiska hattarna från DB för att få priset
 				var selectedHats = await _context.Hats
 					.Where(h => model.SelectedHatIds.Contains(h.HId))
 					.ToListAsync();
 
-				// 2. Beräkna totalpris
 				decimal totalPrice = selectedHats.Sum(h => h.Price);
-				if (model.IsExpress) totalPrice *= 1.2m; // 20% pålägg för express
+				if (model.IsExpress) totalPrice *= 1.2m;
 
-				// 3. Skapa Order-objektet
 				var newOrder = new Order
 				{
 					CustomerId = model.SelectedCustomerId,
+					CreatedById = currentEmployeeId.Value, // Här mappar vi inloggad användare!
 					Price = totalPrice,
 					Status = "Beställning inkommit",
 					Express = model.IsExpress,
@@ -58,21 +90,25 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 					DiscountDesc = "Ingen",
 					OrderDate = DateTime.Now,
 					PrelDeliveryDate = model.PrelDeliveryDate,
-					Description = model.Description,
-					Hats = selectedHats, // Kopplar hattarna till ordern
-					Customer = await _context.Customers.FindAsync(model.SelectedCustomerId) // Krävs pga 'required'
+					Description = model.Description ?? "",
+					Hats = selectedHats
 				};
 
 				_context.Add(newOrder);
 				await _context.SaveChangesAsync();
-				return RedirectToAction("Index", "Home"); // Eller till en Order-lista
+
+				return RedirectToAction(nameof(Index));
 			}
 
-			// Om något gick fel, ladda om listorna
+			// Om valideringen misslyckas, ladda om listorna som förut
 			model.StandardHats = await _context.Hats.Where(h => h.StandardHat).ToListAsync();
 			model.CustomerList = await _context.Customers
-				.Select(c => new SelectListItem { Value = c.CId.ToString(), Text = c.Name })
-				.ToListAsync();
+				.Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+				{
+					Value = c.CId.ToString(),
+					Text = c.Name
+				}).ToListAsync();
+
 			return View(model);
 		}
 	}

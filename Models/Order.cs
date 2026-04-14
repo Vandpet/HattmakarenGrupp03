@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HattmakarenWebbAppGrupp03.Models
 {
@@ -17,10 +18,16 @@ namespace HattmakarenWebbAppGrupp03.Models
 
         // Relation till Customer (BelongsTo)
         public required int CustomerId { get; set; }
-        public required virtual Customer Customer { get; set; }
+        public virtual Customer? Customer { get; set; }
+
+        // Den som skapade ordern
+        public int CreatedById { get; set; }
+
+        [ForeignKey("CreatedById")]
+        public virtual Employee? CreatedBy { get; set; }
 
         // Relationer
-        public required virtual ICollection<Hat> Hats { get; set; }
+        public virtual ICollection<Hat>? Hats { get; set; }
 
         public List<AssignedOrders> AssignedEmployees { get; set; } = new(); // Förhindrar att man hämtar null
         public List<OrderOfMaterials> MaterialOrders { get; set; } = new(); // Förhindrar att man hämtar null
