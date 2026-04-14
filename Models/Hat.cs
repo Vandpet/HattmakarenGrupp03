@@ -14,6 +14,6 @@ namespace HattmakarenWebbAppGrupp03.Models
         public required string PicturePath { get; set; }
 
         // Relationer
-        public required virtual ICollection<Material> Materials { get; set; }
+        public ICollection<HatMaterial> Materials { get; set; } = new List<HatMaterial>();
     }
 }
