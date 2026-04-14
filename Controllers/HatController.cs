@@ -1,4 +1,4 @@
-﻿using HattmakarenWebbAppGrupp03.Data;
+﻿using HattmakarenWebbAppGrupp03.Data.Repositories;
 using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +43,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 // Skapar kopplingen mellan hatt och valda material
                 Materials = vm.SelectedMaterialIds.Select(id => new HatMaterial
                 {
-                    MaterialId = id
+                    MId = id
                 }).ToList()
             };
 
