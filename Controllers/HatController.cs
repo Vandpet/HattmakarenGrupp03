@@ -3,16 +3,20 @@ using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WebApp.Services;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
 {
     public class HatController : Controller
     {
         private readonly HatRepository _hatRepository;
+        private readonly FileService _fileService;
 
-        public HatController(HatRepository hatRepository)
+
+        public HatController(HatRepository hatRepository, FileService fileService)
         {
             _hatRepository = hatRepository;
+            _fileService = fileService;
         }
 
         public IActionResult Create()
@@ -38,12 +42,28 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 return View("Create", vm);
             }
 
+            string picturePath = "";
+
+            // FILE UPLOAD LOGIC
+            if (vm.ImageFile != null)
+            {
+                try
+                {
+                    picturePath = await _fileService.SaveImageAsync(vm.ImageFile);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    return View("Create", vm);
+                }
+            }
+
             var hat = new Hat
             {
                 Name = vm.Name,
                 Price = vm.Price,
                 Size = vm.Size,
-                PicturePath = vm.PicturePath ?? "",
+                PicturePath = picturePath ?? "",
                 Status = vm.Status ?? "Accepted",
                 StandardHat = vm.StandardHat,
 
