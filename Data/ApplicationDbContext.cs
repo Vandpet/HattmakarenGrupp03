@@ -17,7 +17,6 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<Material> Materials { get; set; }
         public DbSet<MaterialOrder> MaterialOrders { get; set; }
         public DbSet<CustomerManager> CustomerManagers { get; set; }
-        //public DbSet<AssignedOrders> AssignedOrders { get; set; }
         public DbSet<OrderOfMaterials> OrderOfMaterials { get; set; }
         public DbSet<HatOrder> HatOrders { get; set; }
         public DbSet<HatMaterial> HatMaterials { get; set; }
@@ -27,7 +26,7 @@ namespace HattmakarenWebbAppGrupp03.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // 1. Employee inställningar
+            // Employee inställningar
             modelBuilder.Entity<Employee>()
                 .HasIndex(e => e.Username)
                 .IsUnique();
@@ -35,21 +34,16 @@ namespace HattmakarenWebbAppGrupp03.Data
             modelBuilder.Entity<Employee>()
                 .HasQueryFilter(e => !e.IsDeleted);
 
-            // 2. NY RELATION: Hat <-> Material via HatMaterial
-            modelBuilder.Entity<HatMaterial>()
-                .HasKey(hm => new { hm.HId, hm.MId });
+            // Precision (Decimal-inställningar)
+            modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<Order>().Property(o => o.Discount).HasPrecision(18, 2);
 
-            modelBuilder.Entity<HatMaterial>()
-                .HasOne(hm => hm.Hat)
-                .WithMany(h => h.Materials)
-                .HasForeignKey(hm => hm.HId);
+            modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);
 
-            modelBuilder.Entity<HatMaterial>()
-                .HasOne(hm => hm.Material)
-                .WithMany(m => m.MaterialsForHats)
-                .HasForeignKey(hm => hm.MId);
+            modelBuilder.Entity<Material>().Property(m => m.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<Material>().Property(m => m.Amount).HasPrecision(18, 2);
 
-            // 3. Övriga relationer
+            // Övriga relationer
             modelBuilder.Entity<MaterialOrder>()
                 .HasMany(mo => mo.Materials)
                 .WithMany(m => m.MaterialOrders);
@@ -63,18 +57,15 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasOne(o => o.CreatedBy)
                 .WithMany() // Om du inte har en lista i Employee som heter CreatedOrders
                 .HasForeignKey(o => o.CreatedById)
-                .OnDelete(DeleteBehavior.Restrict); // Detta är nyckeln!
+                .OnDelete(DeleteBehavior.Restrict);
 
+            //ActivityTabell med relation till Employee
+            modelBuilder.Entity<CustomActivity>()
+                .HasOne(a => a.Employee)
+                .WithMany(e => e.Activities)
+                .HasForeignKey(a => a.EId);
 
-			// 4. Precision (Decimal-inställningar)
-			modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
-            modelBuilder.Entity<Order>().Property(o => o.Discount).HasPrecision(18, 2);
-
-            modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);
-
-            modelBuilder.Entity<Material>().Property(m => m.Price).HasPrecision(18, 2);
-            modelBuilder.Entity<Material>().Property(m => m.Amount).HasPrecision(18, 2);
-
+            //CustomerManager
             modelBuilder.Entity<CustomerManager>()
                .HasKey(ec => new { ec.EId, ec.CId });
 
@@ -87,20 +78,6 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasOne(ec => ec.Customer)
                 .WithMany(c => c.Managed)
                 .HasForeignKey(ec => ec.CId);
-
-            //AssignedOrders
-            //modelBuilder.Entity<AssignedOrders>()
-            //    .HasKey(ao => new { ao.EId, ao.OId });
-
-            //modelBuilder.Entity<AssignedOrders>()
-            //    .HasOne(ao => ao.Employee)
-            //    .WithMany(e => e.TakenOrders)
-            //    .HasForeignKey(ao => ao.EId);
-
-            //modelBuilder.Entity<AssignedOrders>()
-            //    .HasOne(ao => ao.Order)
-            //    .WithMany(o => o.AssignedEmployees)
-            //    .HasForeignKey(ao => ao.OId);
 
             //OrderOfMaterials
             modelBuilder.Entity<OrderOfMaterials>()
@@ -130,7 +107,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(m => m.MaterialsForHats)
                 .HasForeignKey(hm => hm.MId);
 
-            //Hatorders
+            //HatOrders
             modelBuilder.Entity<HatOrder>()
                 .HasKey(ho => new { ho.HId, ho.OId });
 
@@ -150,12 +127,6 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(e => e.AssignedHats)
                 .HasForeignKey(ho => ho.EId)
                 .IsRequired(false);
-
-            //ActivityTabell med relation till Employee
-            modelBuilder.Entity<CustomActivity>()
-                .HasOne(a => a.Employee)
-                .WithMany(e => e.Activities)
-                .HasForeignKey(a => a.EId);
         }
     }
 }

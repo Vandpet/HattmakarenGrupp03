@@ -6,7 +6,7 @@ namespace HattmakarenWebbAppGrupp03.Models
     public class Order
     {
         [Key]
-        public int OId { get; set; } // Markeras som OrderId*
+        public int OId { get; set; }
         public decimal Price { get; set; }
         public string Status { get; set; }
         public bool Express { get; set; }
@@ -29,9 +29,5 @@ namespace HattmakarenWebbAppGrupp03.Models
         public ICollection<Hat>? Hats { get; set; }
         public ICollection<OrderOfMaterials>? MaterialOrders { get; set; }
         public ICollection<HatOrder>? HatOrders { get; set; }
-
-        //public List<AssignedOrders> AssignedEmployees { get; set; } = new(); // Förhindrar att man hämtar null
-        //public List<OrderOfMaterials> MaterialOrders { get; set; } = new(); // Förhindrar att man hämtar null
-        //public List<HatOrder> HatOrders { get; set; } = new(); // Förhindrar att man hämtar null
     }
 }

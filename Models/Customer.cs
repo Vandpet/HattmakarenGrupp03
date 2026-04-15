@@ -5,7 +5,7 @@ namespace HattmakarenWebbAppGrupp03.Models
     public class Customer
     {
         [Key]
-        public int CId { get; set; } // Markeras som Cid* i diagrammet
+        public int CId { get; set; }
         public string Name { get; set; }
         public string Adress { get; set; }
         public  string PhoneNr { get; set; }
@@ -16,6 +16,5 @@ namespace HattmakarenWebbAppGrupp03.Models
         // Relationer
         public ICollection<Order> Orders { get; set; }
         public ICollection<CustomerManager> Managed { get; set; }
-        //public List<CustomerManager> Managed { get; set; } = new(); //Förhindrar att man hämtar null
     }
 }

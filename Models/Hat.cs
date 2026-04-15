@@ -5,7 +5,7 @@ namespace HattmakarenWebbAppGrupp03.Models
     public class Hat
     {
         [Key]
-        public int HId { get; set; } // Markeras som HatID*
+        public int HId { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string Size { get; set; }
@@ -17,6 +17,5 @@ namespace HattmakarenWebbAppGrupp03.Models
         // Relationer
         public ICollection<HatMaterial> Materials { get; set; } = new List<HatMaterial>();
         public ICollection<HatOrder> HatInOrders { get; set; } = new List<HatOrder>();
-        //public List<HatOrder> HatInOrders { get; set; } = new List<HatOrder>();
     }
 }

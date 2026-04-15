@@ -14,7 +14,5 @@ namespace HattmakarenWebbAppGrupp03.Models
         // Navigation till kopplingstabellen
         public ICollection<HatMaterial> MaterialsForHats { get; set; } = new List<HatMaterial>();
         public ICollection<MaterialOrder> MaterialOrders { get; set; } = new List<MaterialOrder>();
-        //public List<HatMaterial> MaterialsForHats { get; set; } = new();
-        //public List<MaterialOrder> MaterialOrders { get; set; } = new();
     }
 }
