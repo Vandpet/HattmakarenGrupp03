@@ -6,27 +6,16 @@ namespace HattmakarenWebbAppGrupp03.Models
     {
         [Key]
         public int CId { get; set; } // Markeras som Cid* i diagrammet
-
-        [Required]
         public string Name { get; set; }
-
-        [Required]
         public string Adress { get; set; }
-
-        [Required]
         public  string PhoneNr { get; set; }
-
-        [Required]
         public string Country { get; set; }
-
-        [Required]
         public string City { get; set; }
-
-        [Required]
         public string Language { get; set; }
 
         // Relationer
-        public virtual ICollection<Order> Orders { get; set; }
-        public List<CustomerManager> Managed { get; set; } = new(); //Förhindrar att man hämtar null
+        public ICollection<Order> Orders { get; set; }
+        public ICollection<CustomerManager> Managed { get; set; }
+        //public List<CustomerManager> Managed { get; set; } = new(); //Förhindrar att man hämtar null
     }
 }

@@ -17,7 +17,7 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<Material> Materials { get; set; }
         public DbSet<MaterialOrder> MaterialOrders { get; set; }
         public DbSet<CustomerManager> CustomerManagers { get; set; }
-        public DbSet<AssignedOrders> AssignedOrders { get; set; }
+        //public DbSet<AssignedOrders> AssignedOrders { get; set; }
         public DbSet<OrderOfMaterials> OrderOfMaterials { get; set; }
         public DbSet<HatOrder> HatOrders { get; set; }
 
@@ -90,18 +90,18 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasForeignKey(ec => ec.CId);
 
             //AssignedOrders
-            modelBuilder.Entity<AssignedOrders>()
-                .HasKey(ao => new { ao.EId, ao.OId });
+            //modelBuilder.Entity<AssignedOrders>()
+            //    .HasKey(ao => new { ao.EId, ao.OId });
 
-            modelBuilder.Entity<AssignedOrders>()
-                .HasOne(ao => ao.Employee)
-                .WithMany(e => e.TakenOrders)
-                .HasForeignKey(ao => ao.EId);
+            //modelBuilder.Entity<AssignedOrders>()
+            //    .HasOne(ao => ao.Employee)
+            //    .WithMany(e => e.TakenOrders)
+            //    .HasForeignKey(ao => ao.EId);
 
-            modelBuilder.Entity<AssignedOrders>()
-                .HasOne(ao => ao.Order)
-                .WithMany(o => o.AssignedEmployees)
-                .HasForeignKey(ao => ao.OId);
+            //modelBuilder.Entity<AssignedOrders>()
+            //    .HasOne(ao => ao.Order)
+            //    .WithMany(o => o.AssignedEmployees)
+            //    .HasForeignKey(ao => ao.OId);
 
             //OrderOfMaterials
             modelBuilder.Entity<OrderOfMaterials>()

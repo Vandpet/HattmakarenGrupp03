@@ -12,5 +12,8 @@
         public Employee? Employee { get; set; } // Nullable, eftersom en hatt inte behöver vara tilldelad en anställd
 
         public string Status { get; set; } = "Ej påbörjad!";
+        public DateTime? TakenTime { get; set; }
+        public string Note { get; set; } = string.Empty;
+        public int Amount { get; set; }
     }
 }
