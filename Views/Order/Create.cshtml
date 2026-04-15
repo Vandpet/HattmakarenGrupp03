@@ -1,0 +1,48 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.CreateOrderViewModel
+
+<h2>Skapa ny order (Lagerförda modeller)</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label>Välj Kund</label>
+        <select asp-for="SelectedCustomerId" asp-items="Model.CustomerList" class="form-control">
+            <option value="">-- Välj kund --</option>
+        </select>
+    </div>
+
+    <hr />
+    <h4>Välj Hattar</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Välj</th>
+                <th>Namn</th>
+                <th>Pris</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var hat in Model.StandardHats)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="SelectedHatIds" value="@hat.HId" />
+                    </td>
+                    <td>@hat.Name</td>
+                    <td>@hat.Price.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <label asp-for="Description">Beskrivning/Notering</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-check">
+        <input asp-for="IsExpress" class="form-check-input" />
+        <label asp-for="IsExpress" class="form-check-label">Expressbeställning (+20%)</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Skapa Order</button>
+</form>

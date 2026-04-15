@@ -18,6 +18,8 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<MaterialOrder> MaterialOrders { get; set; }
         public DbSet<CustomerManager> CustomerManagers { get; set; }
         public DbSet<AssignedOrders> AssignedOrders { get; set; }
+        public DbSet<OrderOfMaterials> OrderOfMaterials { get; set; }
+        public DbSet<HatOrder> HatOrders { get; set; }
 
         // Lägg till DbSet för kopplingstabellen så EF hittar den ordentligt
         public DbSet<HatMaterial> HatMaterials { get; set; }
@@ -58,8 +60,15 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
 
-            // 4. Precision (Decimal-inställningar)
-            modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
+			modelBuilder.Entity<Order>()
+                .HasOne(o => o.CreatedBy)
+                .WithMany() // Om du inte har en lista i Employee som heter CreatedOrders
+                .HasForeignKey(o => o.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict); // Detta är nyckeln!
+
+
+			// 4. Precision (Decimal-inställningar)
+			modelBuilder.Entity<Order>().Property(o => o.Price).HasPrecision(18, 2);
             modelBuilder.Entity<Order>().Property(o => o.Discount).HasPrecision(18, 2);
 
             modelBuilder.Entity<Hat>().Property(h => h.Price).HasPrecision(18, 2);

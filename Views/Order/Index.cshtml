@@ -1,0 +1,59 @@
+﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Order>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Orderöversikt</h2>
+    <a asp-action="Create" class="btn btn-success">Ny Beställning +</a>
+</div>
+
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Ordernr</th>
+            <th>Datum</th>
+            <th>Kund</th>
+            <th>Skapad av</th>
+            <th>Status</th>
+            <th>Pris</th>
+            <th>Express</th>
+            <th>Hantera</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.OId</td>
+                <td>@item.OrderDate.ToShortDateString()</td>
+                <td>@item.Customer?.Name</td>
+                <td>@item.CreatedBy?.Name</td>
+                <td>
+                    <span class="badge @(item.Status == "Färdig" ? "bg-success" : "bg-primary")">
+                        @item.Status
+                    </span>
+                </td>
+                <td>@item.Price.ToString("C")</td>
+                <td>
+                    @if (item.Express)
+                    {
+                        <span class="text-danger" title="Prioriteras!">⚡ Ja</span>
+                    }
+                    else
+                    {
+                        <span>Nej</span>
+                    }
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Details" asp-route-id="@item.OId" class="btn btn-sm btn-outline-info">Visa</a>
+                        <a asp-action="Edit" asp-route-id="@item.OId" class="btn btn-sm btn-outline-secondary">Ändra</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Inga ordrar hittades i systemet.</div>
+}
