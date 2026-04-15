@@ -116,3 +116,7 @@ button {
 }
 
 
+/* Färg för Badge i orderöversikten */
+.bg-skickad {
+    background-color: #E9D5EA;
+}
