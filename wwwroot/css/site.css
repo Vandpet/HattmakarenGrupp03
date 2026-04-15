@@ -9,7 +9,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #E9D5EA;
 }
 
 html {
@@ -20,3 +20,89 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+
+
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 60px;
+    background: #E9D5EA;
+    padding: 10px;
+    transition: width 0.3s;
+}
+
+    .sidebar.expanded {
+        width: 220px;
+    }
+
+    .sidebar .nav-link {
+        white-space: nowrap;
+    }
+
+.menu-text {
+    display: none;
+}
+
+.sidebar.expanded .menu-text {
+    display: inline;
+}
+
+#content {
+    margin-left: 6rem;
+    transition: margin-left 0.3s;
+}
+
+.sidebar.expanded ~ #content {
+    margin-left: 220px;
+}
+
+.sidebar.expanded h3 {
+    visibility: visible;
+    animation: fadein-headers 0.5s;
+    font-size: 1.5rem;
+}
+
+.sidebar h3 {
+    visibility: hidden;
+}
+
+.sidebar.expanded li {
+    background-color: #984B9C;
+    border-radius: 2rem;
+    margin: 0 0 1rem 0;
+    animation: fadein-item 0.5s;
+}
+
+    .sidebar.expanded li:hover {
+        background-color: #74147A;
+    }
+
+
+@keyframes fadein-item {
+    from {
+        background-color: rgba(255, 99, 71, 0);
+    }
+
+    to {
+        background-color: #984B9C;
+        border-radius: 2rem;
+        margin: 0 0 1rem 0;
+    }
+}
+
+@keyframes fadein-headers{
+    from {
+        visibility: hidden;
+    }
+
+    to {
+        visibility: visible;
+    }
+}
+
+

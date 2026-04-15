@@ -9,38 +9,75 @@
     <link rel="stylesheet" href="~/HattmakarenWebbAppGrupp03.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HattmakarenWebbAppGrupp03</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
+ 
+    @{
+        int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");
+        int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
+        bool isAdmin = currentAccessLevel != null && currentAccessLevel >= 10;
+    }
+
+    <div id="sidebar" class="sidebar">
+        <button class="btn btn-light w-100 mb-3" id="menuToggle">
+            ☰
+        </button>
+
+        <ul class="nav flex-column">
+
+            <h3>Meny</h3>
+
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="Home" asp-action="Index">
+                    <span class="menu-text">Hem</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="Hat" asp-action="Create">
+                    <span class="menu-text">Lägg till hatt modell</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="Customer" asp-action="Create">
+                    <span class="menu-text">Registrera kund</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="Employee" asp-action="Index">
+                    <span class="menu-text">Användare</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="Order" asp-action="Index">
+                    <span class="menu-text">Skapa kundorder</span>
+                </a>
+            </li>
+
+
+            @if (isAdmin)
+            {
+                <h3>Admin</h3>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" asp-controller="Employee" asp-action="Create">
+                        <span class="menu-text">Skapa användare</span>
+                    </a>
+                </li>
+            }
+
+
+        </ul>
+    </div>
+
+
+    <div id="content" class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - HattmakarenWebbAppGrupp03 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
