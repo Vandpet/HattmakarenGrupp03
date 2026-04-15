@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using HattmakarenWebbAppGrupp03.Models;
+﻿using HattmakarenWebbAppGrupp03.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace HattmakarenWebbAppGrupp03.Data
 {
@@ -49,7 +50,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
 
-			modelBuilder.Entity<Order>()
+            modelBuilder.Entity<Order>()
                 .HasOne(o => o.CreatedBy)
                 .WithMany() // Om du inte har en lista i Employee som heter CreatedOrders
                 .HasForeignKey(o => o.CreatedById)
@@ -123,6 +124,80 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(e => e.AssignedHats)
                 .HasForeignKey(ho => ho.EId)
                 .IsRequired(false);
+        }
+
+        public static async Task SeedAsync(ApplicationDbContext context)
+        {
+            // Ensure DB exists
+            await context.Database.EnsureCreatedAsync();
+
+            // Avoid duplicate seeding
+            if (context.Employees.Any())
+                return;
+            var _passwordHasher = new PasswordHasher<Employee>();
+
+            // --- Employee (Otto) ---
+            var otto = new Employee
+            {
+                Name = "Otto",
+                Adress = "Testgatan 1",
+                PhoneNr = "0700000000",
+                accesslevel = 10,
+                Username = "Otto"
+            };
+            otto.PasswordHash = _passwordHasher.HashPassword(otto, "asdasd");
+
+
+            // --- Customer ---
+            var customer = new Customer
+            {
+                Name = "Test Kund",
+                Adress = "Kundgatan 2",
+                PhoneNr = "0711111111",
+                Country = "Sweden",
+                City = "Örebro",
+                Language = "SV"
+            };
+
+            // --- Material ---
+            var material = new Material
+            {
+                Name = "Ull",
+                Amount = 100,
+                MeasuringUnits = "meter",
+                Price = 50m
+            };
+
+            // --- Hat (adjust if your model differs) ---
+            var hat = new Hat
+            {
+                Name = "Standardhatt",
+                Price = 200m,
+                Size = "M",
+                StandardHat = true,
+                PicturePath = "/uploads/740ccec0-24a4-4e2f-915a-e34cd28a3ff9.jpg",
+                Description = "Testhatt"
+            };
+
+            // --- Order ---
+            var order = new Order
+            {
+                Price = 200m,
+                Status = "Ej Påbörjad",
+                Express = false,
+                Discount = 0,
+                DiscountDesc = "",
+                OrderDate = DateTime.Now,
+                PrelDeliveryDate = DateTime.Now.AddDays(7),
+                Description = "Testorder",
+                Customer = customer,
+                CreatedBy = otto
+            };
+
+            // --- Add everything ---
+            context.AddRange(otto, customer, material, hat, order);
+
+            await context.SaveChangesAsync();
         }
     }
 }

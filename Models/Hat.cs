@@ -9,7 +9,6 @@ namespace HattmakarenWebbAppGrupp03.Models
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string Size { get; set; }
-        public string Status { get; set; }
         public bool StandardHat { get; set; }
         public string PicturePath { get; set; }
         public string Description { get; set; }

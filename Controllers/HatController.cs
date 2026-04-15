@@ -64,7 +64,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Price = vm.Price,
                 Size = vm.Size,
                 PicturePath = picturePath ?? "",
-                Status = vm.Status ?? "Accepted",
+                //Status = vm.Status ?? "Accepted", Patrick tog bort status från Hat-modellen, 
                 StandardHat = vm.StandardHat,
                 Description = vm.Description,
 

@@ -39,6 +39,12 @@ app.UseRouting();
 
 app.UseSession();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await ApplicationDbContext.SeedAsync(context); // EXEMPELDATA
+}
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Auth}/{action=Login}/{id?}");
