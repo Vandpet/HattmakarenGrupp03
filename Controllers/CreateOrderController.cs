@@ -84,7 +84,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 					CustomerId = model.SelectedCustomerId,
 					CreatedById = currentEmployeeId.Value, // Här mappar vi inloggad användare!
 					Price = totalPrice,
-					Status = "Beställning inkommit",
+					Status = "Ej Påbörjad",
 					Express = model.IsExpress,
 					Discount = 0,
 					DiscountDesc = "Ingen",

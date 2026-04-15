@@ -10,6 +10,7 @@
         <tr>
             <th>Ordernr</th>
             <th>Datum</th>
+            <th>Beräknad leverans</th>
             <th>Kund</th>
             <th>Skapad av</th>
             <th>Status</th>
@@ -24,10 +25,11 @@
             <tr>
                 <td>@item.OId</td>
                 <td>@item.OrderDate.ToShortDateString()</td>
+                <td>@item.PrelDeliveryDate.ToShortDateString()</td>
                 <td>@item.Customer?.Name</td>
                 <td>@item.CreatedBy?.Name</td>
                 <td>
-                    <span class="badge @(item.Status == "Färdig" ? "bg-success" : "bg-primary")">
+                    <span class="badge @(ColorForBadge(item.Status))">
                         @item.Status
                     </span>
                 </td>
@@ -56,4 +58,27 @@
 @if (!Model.Any())
 {
     <div class="alert alert-info">Inga ordrar hittades i systemet.</div>
+}
+
+@functions {
+    public string ColorForBadge(string itemStatus)
+    {
+        if (itemStatus == "Ej Påbörjad")
+        {
+            return "bg-secondary";
+        }
+        else if (itemStatus == "Påbörjad")
+        {
+            return "bg-primary";
+		}
+        else if (itemStatus == "Färdig")
+        {
+            return "bg-success";
+        }
+        else // if (itemStatus == "Skickad")
+        {
+            return "bg-skickad text-dark";
+
+        }
+    }
 }
