@@ -6,13 +6,12 @@ namespace HattmakarenWebbAppGrupp03.Models
     {
         [Key]
         public int MId { get; set; }
-        public required string Name { get; set; }
-        public required double Amount { get; set; }
-        public required string MeasuringUnits { get; set; }
-        public required decimal Price { get; set; }
+        public string Name { get; set; }
+        public double Amount { get; set; }
+        public string MeasuringUnits { get; set; }
+        public decimal Price { get; set; }
 
         // Navigation till kopplingstabellen
-        public List<HatMaterial> MaterialsForHats { get; set; } = new();
-        public List<MaterialOrder> MaterialOrders { get; set; } = new();
+        public ICollection<HatMaterial> MaterialsForHats { get; set; } = new List<HatMaterial>();
     }
 }

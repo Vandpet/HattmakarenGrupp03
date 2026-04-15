@@ -37,11 +37,11 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
         }
         //Specialmetoder
         //Denna kan användas för Kalendern senare
-        public async Task<Employee?> GetByIdWithAssignedOrders(int id)
-        {
-            return await _db.Employees
-                .Include(e => e.TakenOrders)
-                .FirstOrDefaultAsync(e => e.EId == id);
-        }
+        //public async Task<Employee?> GetByIdWithAssignedOrders(int id)
+        //{
+        //    return await _db.Employees
+        //        .Include(e => e.TakenOrders)
+        //        .FirstOrDefaultAsync(e => e.EId == id);
+        //}
     }
 }
