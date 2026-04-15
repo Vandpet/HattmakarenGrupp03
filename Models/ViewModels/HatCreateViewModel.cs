@@ -9,6 +9,8 @@
         public string? Status { get; set; }
         public bool StandardHat { get; set; }
 
+        public string Description { get; set; }
+
         // användaren fyller i dessa
         public List<MaterialInputViewModel> Materials { get; set; } = new();
     }
