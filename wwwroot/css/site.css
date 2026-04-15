@@ -60,3 +60,9 @@ body {
 .sidebar.expanded ~ #content {
     margin-left: 220px;
 }
+
+.nav-item {
+   background-color: #AF75B2 ;
+   border-radius: 2rem; 
+   margin: 0 0 1rem 0;
+}
