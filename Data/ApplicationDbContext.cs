@@ -20,9 +20,8 @@ namespace HattmakarenWebbAppGrupp03.Data
         //public DbSet<AssignedOrders> AssignedOrders { get; set; }
         public DbSet<OrderOfMaterials> OrderOfMaterials { get; set; }
         public DbSet<HatOrder> HatOrders { get; set; }
-
-        // Lägg till DbSet för kopplingstabellen så EF hittar den ordentligt
         public DbSet<HatMaterial> HatMaterials { get; set; }
+        public DbSet<CustomActivity> CustomActivities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -151,6 +150,12 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(e => e.AssignedHats)
                 .HasForeignKey(ho => ho.EId)
                 .IsRequired(false);
+
+            //ActivityTabell med relation till Employee
+            modelBuilder.Entity<CustomActivity>()
+                .HasOne(a => a.Employee)
+                .WithMany(e => e.Activities)
+                .HasForeignKey(a => a.EId);
         }
     }
 }

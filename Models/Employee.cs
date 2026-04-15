@@ -28,7 +28,8 @@ namespace HattmakarenWebbAppGrupp03.Models
         public ICollection<CustomerManager> ManagedCustomers { get; set; }
         public ICollection<HatOrder> AssignedHats { get; set; }
         public ICollection<Order> HandledOrders { get; set; }
-        
+        public ICollection<CustomActivity> Activities { get; set; }
+
         //public List<CustomerManager> ManagedCustomers { get; set; } = new(); // Förhindrar att man hämtar null
         //public List<HatOrder> AssignedHats { get; set; } = new(); // Förhindrar att man hämtar null
         //public List<AssignedOrders> TakenOrders { get; set; } = new(); // Förhindrar att man hämtar null
