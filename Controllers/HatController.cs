@@ -66,6 +66,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 PicturePath = picturePath ?? "",
                 Status = vm.Status ?? "Accepted",
                 StandardHat = vm.StandardHat,
+                Description = vm.Description,
 
                 Materials = vm.Materials?
                 .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Name))
