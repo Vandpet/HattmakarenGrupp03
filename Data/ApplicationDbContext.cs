@@ -44,10 +44,6 @@ namespace HattmakarenWebbAppGrupp03.Data
             modelBuilder.Entity<Material>().Property(m => m.Amount).HasPrecision(18, 2);
 
             // Övriga relationer
-            modelBuilder.Entity<MaterialOrder>()
-                .HasMany(mo => mo.Materials)
-                .WithMany(m => m.MaterialOrders);
-
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Customer)
                 .WithMany(c => c.Orders)
@@ -93,7 +89,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(mo => mo.Orders)
                 .HasForeignKey(om => om.MoId);
 
-            //HatMaterial
+            //HatMaterials
             modelBuilder.Entity<HatMaterial>()
                 .HasKey(hm => new { hm.HId, hm.MId });
 

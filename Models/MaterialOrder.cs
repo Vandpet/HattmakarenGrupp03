@@ -9,7 +9,6 @@ namespace HattmakarenWebbAppGrupp03.Models
         public bool Printed { get; set; }
 
         // Relationer
-        public ICollection<Material> Materials { get; set; }
         public ICollection<OrderOfMaterials> Orders { get; set; }
     }
 }
