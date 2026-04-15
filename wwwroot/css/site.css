@@ -53,7 +53,7 @@ body {
 }
 
 #content {
-    margin-left: 60px;
+    margin-left: 6rem;
     transition: margin-left 0.3s;
 }
 
@@ -61,8 +61,48 @@ body {
     margin-left: 220px;
 }
 
-.nav-item {
-   background-color: #AF75B2 ;
-   border-radius: 2rem; 
-   margin: 0 0 1rem 0;
+.sidebar.expanded h3 {
+    visibility: visible;
+    animation: fadein-headers 0.5s;
+    font-size: 1.5rem;
 }
+
+.sidebar h3 {
+    visibility: hidden;
+}
+
+.sidebar.expanded li {
+    background-color: #984B9C;
+    border-radius: 2rem;
+    margin: 0 0 1rem 0;
+    animation: fadein-item 0.5s;
+}
+
+    .sidebar.expanded li:hover {
+        background-color: #74147A;
+    }
+
+
+@keyframes fadein-item {
+    from {
+        background-color: rgba(255, 99, 71, 0);
+    }
+
+    to {
+        background-color: #984B9C;
+        border-radius: 2rem;
+        margin: 0 0 1rem 0;
+    }
+}
+
+@keyframes fadein-headers{
+    from {
+        visibility: hidden;
+    }
+
+    to {
+        visibility: visible;
+    }
+}
+
+
