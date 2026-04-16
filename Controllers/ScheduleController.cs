@@ -15,7 +15,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(bool personal = false, int? year = null, int? month = null, int? day = null)
+        public async Task<IActionResult> Index(bool personal = false, int? year = null, int? month = null)
         {
             if (HttpContext.Session.GetInt32("EmployeeId") == null)
             {
@@ -24,21 +24,11 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             int currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId")!.Value;
             DateTime today = DateTime.Today;
-
             int selectedYear = year ?? today.Year;
             int selectedMonth = month ?? today.Month;
-            int selectedDay = day ?? today.Day;
 
-            // Skydd så vald dag alltid är giltig för månaden
-            int daysInMonth = DateTime.DaysInMonth(selectedYear, selectedMonth);
-            if (selectedDay > daysInMonth)
-            {
-                selectedDay = daysInMonth;
-            }
-            if (selectedDay < 1)
-            {
-                selectedDay = 1;
-            }
+            var firstDay = new DateTime(selectedYear, selectedMonth, 1);
+            var startDate = firstDay.AddDays(-(int)firstDay.DayOfWeek);
 
             var hatOrdersQuery = _context.HatOrders
                 .Include(h => h.Hat)
@@ -52,108 +42,109 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 hatOrdersQuery = hatOrdersQuery.Where(h => h.EId == currentEmployeeId);
             }
 
-            var hatOrders = await hatOrdersQuery
-                .Where(h => h.StartDate.HasValue && h.EndDate.HasValue)
-                .ToListAsync();
+            var hatOrders = await hatOrdersQuery.ToListAsync();
 
-            var model = new SchedulePageViewModel
+            var model = new MonthScheduleViewModel
             {
                 IsPersonal = personal,
                 Year = selectedYear,
-                Month = selectedMonth,
-                SelectedDay = selectedDay
+                Month = selectedMonth
             };
 
-            // Kalenderdagar för vald månad
-            for (int d = 1; d <= daysInMonth; d++)
-            {
-                var date = new DateTime(selectedYear, selectedMonth, d);
-
-                var dayOrders = hatOrders
-                    .Where(h => h.StartDate!.Value.Date <= date.Date &&
-                                h.EndDate!.Value.Date >= date.Date)
-                    .ToList();
-
-                model.Days.Add(new CalendarDayViewModel
-                {
-                    Date = date,
-                    IsCurrentMonth = true,
-                    IsSelected = d == selectedDay,
-                    HasItems = dayOrders.Any(),
-                    ColorClass = GetDayColor(dayOrders)
-                });
-            }
-
-            var selectedDate = new DateTime(selectedYear, selectedMonth, selectedDay);
-
-            var selectedDayOrders = hatOrders
-                .Where(h => h.StartDate!.Value.Date <= selectedDate.Date &&
-                            h.EndDate!.Value.Date >= selectedDate.Date)
-                .GroupBy(h => h.OId)
+            // Oschemalagda uppgifter till vänster
+            var unscheduled = hatOrders
+                .Where(h => !h.StartDate.HasValue || !h.EndDate.HasValue)
                 .ToList();
 
-            foreach (var orderGroup in selectedDayOrders)
+            foreach (var ho in unscheduled)
             {
-                var first = orderGroup.First();
-                var order = first.Order;
-
-                model.Orders.Add(new OrderGroupViewModel
+                model.UnscheduledTasks.Add(new UnscheduledTaskViewModel
                 {
-                    OrderId = first.OId,
-                    Title = $"Order {first.OId}",
-                    CustomerName = order?.Customer?.Name ?? "",
-                    Status = order?.Status ?? "",
-                    ColorClass = GetOrderColor(order),
-                    Tasks = orderGroup.Select(h => new TaskItemViewModel
-                    {
-                        Title = h.Hat?.Name ?? "Hattuppgift",
-                        AssignedTo = h.Employee?.Name ?? "Ej tilldelad",
-                        Status = h.Status,
-                        IsDone = h.Status == "Klar"
-                    }).ToList()
+                    OrderId = ho.OId,
+                    HatId = ho.HId,
+                    Title = $"Order {ho.OId}",
+                    HatName = ho.Hat?.Name ?? "Hattuppgift",
+                    Status = ho.Status,
+                    ColorClass = GetColorClass(ho.Order, ho.Status)
                 });
             }
 
-            // Personliga aktiviteter bara i personligt schema
-            if (personal)
-            {
-                var activities = await _context.CustomActivities
-                    .Include(a => a.Employee)
-                    .Where(a =>
-                        a.EId == currentEmployeeId &&
-                        a.StartDate.Date <= selectedDate.Date &&
-                        a.EndDate.Date >= selectedDate.Date)
-                    .ToListAsync();
+            DateTime current = startDate;
 
-                if (activities.Any())
+            for (int week = 0; week < 6; week++)
+            {
+                var weekRow = new WeekRowViewModel();
+
+                for (int day = 0; day < 7; day++)
                 {
-                    model.Orders.Add(new OrderGroupViewModel
+                    var dayOrders = hatOrders
+                        .Where(h =>
+                            h.StartDate.HasValue &&
+                            h.EndDate.HasValue &&
+                            h.StartDate.Value.Date <= current.Date &&
+                            h.EndDate.Value.Date >= current.Date)
+                        .ToList();
+
+                    var cell = new CalendarCellViewModel
                     {
-                        OrderId = 0,
-                        Title = "Mina aktiviteter",
-                        CustomerName = "",
-                        Status = "Planerad",
-                        ColorClass = "order-default",
-                        Tasks = activities.Select(a => new TaskItemViewModel
+                        Date = current,
+                        IsCurrentMonth = current.Month == selectedMonth,
+                        IsToday = current.Date == today
+                    };
+
+                    foreach (var ho in dayOrders)
+                    {
+                        cell.Events.Add(new CalendarEventViewModel
                         {
-                            Title = a.Name,
-                            AssignedTo = a.Employee?.Name ?? "",
-                            Status = "Planerad",
-                            IsDone = false
-                        }).ToList()
-                    });
+                            OrderId = ho.OId,
+                            HatId = ho.HId,
+                            Title = $"Order {ho.OId}",
+                            HatName = ho.Hat?.Name ?? "",
+                            Status = ho.Status,
+                            ColorClass = GetColorClass(ho.Order, ho.Status)
+                        });
+                    }
+
+                    weekRow.Days.Add(cell);
+                    current = current.AddDays(1);
                 }
+
+                model.Weeks.Add(weekRow);
             }
 
             return View(model);
         }
 
-        private string GetOrderColor(Order? order)
+        [HttpPost]
+        public async Task<IActionResult> AssignTaskToDate(int orderId, int hatId, DateTime date, bool personal = false, int? year = null, int? month = null)
+        {
+            var hatOrder = await _context.HatOrders
+                .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
+
+            if (hatOrder == null)
+            {
+                return NotFound();
+            }
+
+            hatOrder.StartDate = date.Date;
+            hatOrder.EndDate = date.Date;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index), new
+            {
+                personal,
+                year = year ?? date.Year,
+                month = month ?? date.Month
+            });
+        }
+
+        private string GetColorClass(Order? order, string hatOrderStatus)
         {
             if (order == null)
                 return "order-default";
 
-            if (order.Status == "Klar")
+            if (order.Status == "Klar" || hatOrderStatus == "Klar")
                 return "order-green";
 
             if (order.PrelDeliveryDate.Date < DateTime.Today)
@@ -163,28 +154,6 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 return "order-yellow";
 
             return "order-default";
-        }
-
-        private string GetDayColor(List<HatOrder> hatOrders)
-        {
-            if (!hatOrders.Any())
-                return "";
-
-            if (hatOrders.Any(h => h.Order != null &&
-                                   h.Order.Status != "Klar" &&
-                                   h.Order.PrelDeliveryDate.Date < DateTime.Today))
-            {
-                return "calendar-red";
-            }
-
-            if (hatOrders.Any(h => h.Order != null &&
-                                   h.Order.Status != "Klar" &&
-                                   h.Order.PrelDeliveryDate.Date <= DateTime.Today.AddDays(3)))
-            {
-                return "calendar-yellow";
-            }
-
-            return "calendar-dark";
         }
     }
 }

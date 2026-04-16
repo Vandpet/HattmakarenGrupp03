@@ -1,180 +1,152 @@
-﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.SchedulePageViewModel
+﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.MonthScheduleViewModel
 
 @{
-    ViewData["Title"] = Model.IsPersonal ? "Personligt schema" : "Gemensamt schema";
-
-    var monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(Model.Month);
+    ViewData["Title"] = "Schema";
 }
 
-<h2 class="mb-4">@ViewData["Title"]</h2>
+<div class="schedule-header">
+    <h2 class="schedule-title">
+        @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.Month)
+        @Model.Year
+    </h2>
 
-<div class="schedule-topbar mb-3">
-    <a asp-action="Index"
-           asp-route-personal="true"
-           asp-route-year="@Model.Year"
-           asp-route-month="@Model.Month"
-           asp-route-day="@Model.SelectedDay"
-           class="btn @(Model.IsPersonal ? "btn-dark" : "btn-outline-dark")">
-        Personligt schema
-    </a>
+    <div class="schedule-controls">
+        <form method="get" asp-action="Index" class="schedule-switch-form">
+            <input type="hidden" name="year" value="@Model.Year" />
+            <input type="hidden" name="month" value="@Model.Month" />
 
-    <a asp-action="Index"
-           asp-route-personal="false"
-           asp-route-year="@Model.Year"
-           asp-route-month="@Model.Month"
-           asp-route-day="@Model.SelectedDay"
-           class="btn @(!Model.IsPersonal ? "btn-dark" : "btn-outline-dark")">
-        Gemensamt schema
-    </a>
+            <label class="switch-label">
+                <input type="checkbox" name="personal" value="true"
+                @(Model.IsPersonal ? "checked" : null)
+                       onchange="this.form.submit()" />
+                <span>Personligt schema</span>
+            </label>
+        </form>
+
+        <div class="calendar-nav">
+            <a class="calendar-btn"
+                   asp-action="Index"
+                   asp-route-month="@(Model.Month == 1 ? 12 : Model.Month - 1)"
+                   asp-route-year="@(Model.Month == 1 ? Model.Year - 1 : Model.Year)"
+                   asp-route-personal="@Model.IsPersonal">
+                ‹
+            </a>
+
+            <a class="calendar-btn"
+                   asp-action="Index"
+                   asp-route-month="@(Model.Month == 12 ? 1 : Model.Month + 1)"
+                   asp-route-year="@(Model.Month == 12 ? Model.Year + 1 : Model.Year)"
+                   asp-route-personal="@Model.IsPersonal">
+                ›
+            </a>
+        </div>
+    </div>
 </div>
 
-<div class="schedule-wrapper">
-    <div class="schedule-orders">
-        @if (!Model.Orders.Any())
+<div class="schedule-layout">
+    <aside class="task-panel">
+        <h4>Ej schemalagda</h4>
+
+        @if (!Model.UnscheduledTasks.Any())
         {
-            <div class="order-card order-default">
-                <div class="order-header">
-                    <strong>Inga uppgifter</strong>
-                </div>
-                <div class="order-body">
-                    <div class="task-row">
-                        <span>Det finns inga uppgifter för vald dag.</span>
-                    </div>
-                </div>
-            </div>
+            <div class="empty-box">Inga oschemalagda uppgifter.</div>
         }
         else
         {
-            @foreach (var order in Model.Orders)
+            @foreach (var task in Model.UnscheduledTasks)
             {
-                <div class="order-card @order.ColorClass">
-                    <div class="order-header">
-                        <div>
-                            <strong>@order.Title</strong>
-                            @if (!string.IsNullOrWhiteSpace(order.CustomerName))
-                            {
-                                <div class="small text-muted">@order.CustomerName</div>
-                            }
-                        </div>
-
-                        @if (!string.IsNullOrWhiteSpace(order.Status))
-                        {
-                            <span class="badge text-bg-light">@order.Status</span>
-                        }
-                    </div>
-
-                    <div class="order-body">
-                        @foreach (var task in order.Tasks)
-                        {
-                            <div class="task-row">
-                                <div class="task-left">
-                                    <span class="task-title">@task.Title</span>
-                                </div>
-
-                                <div class="task-right">
-                                    @if (!string.IsNullOrWhiteSpace(task.AssignedTo))
-                                    {
-                                        <span class="task-assigned">@task.AssignedTo</span>
-                                    }
-                                    <span class="task-status">@task.Status</span>
-                                </div>
-                            </div>
-                        }
-                    </div>
+                <div class="task-card @task.ColorClass"
+                     draggable="true"
+                     data-order-id="@task.OrderId"
+                     data-hat-id="@task.HatId">
+                    <div class="task-card-title">@task.Title</div>
+                    <div class="task-card-sub">@task.HatName</div>
+                    <div class="task-card-status">@task.Status</div>
                 </div>
             }
         }
-    </div>
+    </aside>
 
-    <div class="schedule-calendar">
-        <div class="calendar-toolbar">
-            <a asp-action="Index"
-                   asp-route-personal="@Model.IsPersonal"
-                   asp-route-year="@(Model.Month == 1 ? Model.Year - 1 : Model.Year)"
-                   asp-route-month="@(Model.Month == 1 ? 12 : Model.Month - 1)"
-                   asp-route-day="1"
-                   class="calendar-arrow">
-                &#10094;
-            </a>
-
-            <form method="get" asp-action="Index" class="calendar-form">
-                <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
-
-                <select name="month" onchange="this.form.submit()" class="calendar-select">
-                    @for (int m = 1; m <= 12; m++)
-                    {
-                        if (m == Model.Month)
-                        {
-                            <option value="@m" selected>
-                                @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(m)
-                            </option>
-                        }
-                        else
-                        {
-                            <option value="@m">
-                                @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(m)
-                            </option>
-                        }
-                    }
-                </select>
-
-                <select name="year" onchange="this.form.submit()" class="calendar-select">
-                    @for (int y = DateTime.Today.Year - 2; y <= DateTime.Today.Year + 2; y++)
-                    {
-                        if (y == Model.Year)
-                        {
-                            <option value="@y" selected>@y</option>
-                        }
-                        else
-                        {
-                            <option value="@y">@y</option>
-                        }
-                    }
-                </select>
-            </form>
-
-            <a asp-action="Index"
-                   asp-route-personal="@Model.IsPersonal"
-                   asp-route-year="@(Model.Month == 12 ? Model.Year + 1 : Model.Year)"
-                   asp-route-month="@(Model.Month == 12 ? 1 : Model.Month + 1)"
-                   asp-route-day="1"
-                   class="calendar-arrow">
-                &#10095;
-            </a>
-        </div>
-
-        <div class="calendar-weekdays">
-            <div>Sö</div>
-            <div>Må</div>
-            <div>Ti</div>
-            <div>On</div>
-            <div>To</div>
-            <div>Fr</div>
-            <div>Lö</div>
-        </div>
-
+    <section class="calendar-panel">
         <div class="calendar-grid">
-            @{
-                var firstDay = new DateTime(Model.Year, Model.Month, 1);
-                var startOffset = (int)firstDay.DayOfWeek;
-            }
+            <div class="weekday">Sön</div>
+            <div class="weekday">Mån</div>
+            <div class="weekday">Tis</div>
+            <div class="weekday">Ons</div>
+            <div class="weekday">Tors</div>
+            <div class="weekday">Fre</div>
+            <div class="weekday">Lör</div>
 
-            @for (int i = 0; i < startOffset; i++)
+            @foreach (var week in Model.Weeks)
             {
-                <div class="calendar-day empty"></div>
-            }
+                @foreach (var day in week.Days)
+                {
+                    <div class="calendar-cell @(day.IsCurrentMonth ? "" : "faded") @(day.IsToday ? "today" : "") drop-zone"
+                         data-date="@day.Date.ToString("yyyy-MM-dd")">
+                        <div class="date">@day.Date.Day</div>
 
-            @foreach (var day in Model.Days)
-            {
-                <a asp-action="Index"
-                       asp-route-personal="@Model.IsPersonal"
-                       asp-route-year="@Model.Year"
-                       asp-route-month="@Model.Month"
-                       asp-route-day="@day.Date.Day"
-                       class="calendar-day @day.ColorClass @(day.IsSelected ? "selected" : "")">
-                    @day.Date.Day
-                </a>
+                        @foreach (var ev in day.Events.Take(3))
+                        {
+                            <div class="event @ev.ColorClass">
+                                <div>@ev.Title</div>
+                                <div class="event-sub">@ev.HatName</div>
+                            </div>
+                        }
+
+                        @if (day.Events.Count > 3)
+                        {
+                            <div class="more">+@(day.Events.Count - 3) fler</div>
+                        }
+                    </div>
+                }
             }
         </div>
-    </div>
+    </section>
 </div>
+
+<form id="dropForm" method="post" asp-action="AssignTaskToDate">
+    <input type="hidden" name="orderId" id="dropOrderId" />
+    <input type="hidden" name="hatId" id="dropHatId" />
+    <input type="hidden" name="date" id="dropDate" />
+    <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
+    <input type="hidden" name="year" value="@Model.Year" />
+    <input type="hidden" name="month" value="@Model.Month" />
+</form>
+
+@section Scripts {
+    <script>
+        let draggedOrderId = null;
+        let draggedHatId = null;
+
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('dragstart', function () {
+                draggedOrderId = this.dataset.orderId;
+                draggedHatId = this.dataset.hatId;
+            });
+        });
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                this.classList.add('drag-hover');
+            });
+
+            zone.addEventListener('dragleave', function () {
+                this.classList.remove('drag-hover');
+            });
+
+            zone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                this.classList.remove('drag-hover');
+
+                if (!draggedOrderId || !draggedHatId) return;
+
+                document.getElementById('dropOrderId').value = draggedOrderId;
+                document.getElementById('dropHatId').value = draggedHatId;
+                document.getElementById('dropDate').value = this.dataset.date;
+
+                document.getElementById('dropForm').submit();
+            });
+        });
+    </script>
+}
