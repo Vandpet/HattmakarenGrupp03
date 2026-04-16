@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 {
@@ -8,8 +9,8 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 		[Required(ErrorMessage = "Välj en kund")]
 		public int SelectedCustomerId { get; set; }
 
-		[Required(ErrorMessage = "Välj minst en hatt")]
-		public List<int> SelectedHatIds { get; set; } = new();
+		//[Required(ErrorMessage = "Välj minst en hatt")]
+		//public List<int> SelectedHatIds { get; set; } = new();
 
 		public string Description { get; set; } = "";
 
@@ -23,13 +24,15 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 		public List<Hat>? StandardHats { get; set; }
 
 		//lista för att HatOrder 
-		public List<HatOrder> HatOrder { get; set; }
+		//public List<HatOrder> HatOrder { get; set; }
 
-		public List<HatListItem> HatListItems { get; set; } = new();
-        public class HatListItem
+		//public List<HatRow> HatRows { get; set; } = new();
+		public HatRow HatRows { get; set; } = new();
+        public class HatRow
 		{
 			public List<int> Amount { get; set; } = new();
-			public List<Hat>? StandardHat { get; set; } = new();
+			public List<int> HId { get; set; } = new();
+            //public List<Hat>? StandardHat { get; set; } = new();
         }
 
     }

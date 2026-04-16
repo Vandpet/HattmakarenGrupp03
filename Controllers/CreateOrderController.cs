@@ -1,4 +1,5 @@
 ﻿using HattmakarenWebbAppGrupp03.Data;
+using HattmakarenWebbAppGrupp03.Data.Repositories;
 using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 	public class OrderController : Controller
 	{
 		private readonly ApplicationDbContext _context;
+		private readonly HatOrderRepository _hatOrderRepo;
 
-		public OrderController(ApplicationDbContext context)
+		public OrderController(ApplicationDbContext context, HatOrderRepository hatOrderRepo)
 		{
 			_context = context;
+			_hatOrderRepo = hatOrderRepo;
 		}
 
 		// GET: Order
@@ -62,7 +65,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 					.Select(c => new SelectListItem { Value = c.CId.ToString(), Text = c.Name })
 					.ToListAsync()
 			};
-			return View(viewModel);
+			//viewModel.StandardHats = viewModel.StandardHats;
+            return View(viewModel);
 		}
 
 
@@ -74,39 +78,55 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 			// 1. Hämta EmployeeId från Sessionen
 			int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
 
-			// 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
-			//if (currentEmployeeId == null)
-			//{
-			//	return RedirectToAction("Login", "Auth");
-			//}
+            // 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
+            //if (currentEmployeeId == null)
+            //{
+            //	return RedirectToAction("Login", "Auth");
+            //}
 
-			if (ModelState.IsValid)
+
+            if (ModelState.IsValid)
 			{
-				var selectedHats = await _context.Hats
-					.Where(h => model.SelectedHatIds.Contains(h.HId))
-					.ToListAsync();
-
-				decimal totalPrice = selectedHats.Sum(h => h.Price);
-				if (model.IsExpress) totalPrice *= 1.2m;
-
+				//Skapar Ordern
 				var newOrder = new Order
 				{
 					CustomerId = model.SelectedCustomerId,
 					CreatedById = currentEmployeeId.Value, // Här mappar vi inloggad användare!
-					Price = totalPrice,
+					//Price = totalPrice, Denna sätts senare här under!
 					Status = "Ej Påbörjad",
 					Express = model.IsExpress,
 					Discount = 0,
 					DiscountDesc = "Ingen",
 					OrderDate = DateTime.Now,
 					PrelDeliveryDate = model.PrelDeliveryDate,
-					Description = model.Description ?? "",
-					Hats = selectedHats
+					Description = model.Description ?? ""
 				};
 
-				_context.Add(newOrder);
+				//Ordern måste skapas, då får vi ett OId att leka med.
+                _context.Add(newOrder);
 				await _context.SaveChangesAsync();
 
+				//Skapar HatOrder-posterna
+				var hatOrders = new List<HatOrder>();
+				//if (model.HatRows.StandardHat?.Any() == true)
+				{
+                    for (int i = 0; i < model.HatRows.HId.Count; i++)
+                    {
+                        //Om amount är större än 0, vill man ha hatten
+                        if (model.HatRows.Amount[i] > 0)
+                        {
+                            var hatOrder = new HatOrder
+                            {
+                                HId = model.HatRows.HId[i],
+                                OId = newOrder.OId,
+                                Amount = model.HatRows.Amount[i]
+                            };
+                            hatOrders.Add(hatOrder);
+                        }
+                    }
+				}
+				await _hatOrderRepo.AddManyAsync(hatOrders);
+                await _hatOrderRepo.SetPriceOnOrder(newOrder.OId);
 				return RedirectToAction(nameof(Index));
 			}
 

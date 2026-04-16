@@ -49,5 +49,26 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             //Sätt status till "Assigned" när en anställd tilldelas eller något liknande
             await _db.SaveChangesAsync();
         }
+
+        public async Task SetPriceOnOrder(int OId)
+        {
+            var hatOrders = await _db.HatOrders
+                .Where(ho => ho.OId == OId)
+                .Include(ho => ho.Hat)
+                .ToListAsync();
+
+            decimal totalPrice = hatOrders.Sum(ho => ho.Hat.Price * ho.Amount);
+
+            var order = await _db.Orders.FindAsync(OId);
+            if (order.Express) totalPrice *= 1.2m; // Lägg på 20% för expressorder
+
+            order.Price = totalPrice;
+            await _db.SaveChangesAsync();
+        }
+        public async Task AddManyAsync(List<HatOrder> hatOrders)
+        {
+            _db.HatOrders.AddRange(hatOrders);
+            await _db.SaveChangesAsync();
+        }
     }
 }
