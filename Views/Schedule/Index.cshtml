@@ -1,0 +1,152 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.MonthScheduleViewModel
+
+@{
+    ViewData["Title"] = "Schema";
+}
+
+<div class="schedule-header">
+    <h2 class="schedule-title">
+        @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.Month)
+        @Model.Year
+    </h2>
+
+    <div class="schedule-controls">
+        <form method="get" asp-action="Index" class="schedule-switch-form">
+            <input type="hidden" name="year" value="@Model.Year" />
+            <input type="hidden" name="month" value="@Model.Month" />
+
+            <label class="switch-label">
+                <input type="checkbox" name="personal" value="true"
+                @(Model.IsPersonal ? "checked" : null)
+                       onchange="this.form.submit()" />
+                <span>Personligt schema</span>
+            </label>
+        </form>
+
+        <div class="calendar-nav">
+            <a class="calendar-btn"
+                   asp-action="Index"
+                   asp-route-month="@(Model.Month == 1 ? 12 : Model.Month - 1)"
+                   asp-route-year="@(Model.Month == 1 ? Model.Year - 1 : Model.Year)"
+                   asp-route-personal="@Model.IsPersonal">
+                ‹
+            </a>
+
+            <a class="calendar-btn"
+                   asp-action="Index"
+                   asp-route-month="@(Model.Month == 12 ? 1 : Model.Month + 1)"
+                   asp-route-year="@(Model.Month == 12 ? Model.Year + 1 : Model.Year)"
+                   asp-route-personal="@Model.IsPersonal">
+                ›
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="schedule-layout">
+    <aside class="task-panel">
+        <h4>Ej schemalagda</h4>
+
+        @if (!Model.UnscheduledTasks.Any())
+        {
+            <div class="empty-box">Inga oschemalagda uppgifter.</div>
+        }
+        else
+        {
+            @foreach (var task in Model.UnscheduledTasks)
+            {
+                <div class="task-card @task.ColorClass"
+                     draggable="true"
+                     data-order-id="@task.OrderId"
+                     data-hat-id="@task.HatId">
+                    <div class="task-card-title">@task.Title</div>
+                    <div class="task-card-sub">@task.HatName</div>
+                    <div class="task-card-status">@task.Status</div>
+                </div>
+            }
+        }
+    </aside>
+
+    <section class="calendar-panel">
+        <div class="calendar-grid">
+            <div class="weekday">Sön</div>
+            <div class="weekday">Mån</div>
+            <div class="weekday">Tis</div>
+            <div class="weekday">Ons</div>
+            <div class="weekday">Tors</div>
+            <div class="weekday">Fre</div>
+            <div class="weekday">Lör</div>
+
+            @foreach (var week in Model.Weeks)
+            {
+                @foreach (var day in week.Days)
+                {
+                    <div class="calendar-cell @(day.IsCurrentMonth ? "" : "faded") @(day.IsToday ? "today" : "") drop-zone"
+                         data-date="@day.Date.ToString("yyyy-MM-dd")">
+                        <div class="date">@day.Date.Day</div>
+
+                        @foreach (var ev in day.Events.Take(3))
+                        {
+                            <div class="event @ev.ColorClass">
+                                <div>@ev.Title</div>
+                                <div class="event-sub">@ev.HatName</div>
+                            </div>
+                        }
+
+                        @if (day.Events.Count > 3)
+                        {
+                            <div class="more">+@(day.Events.Count - 3) fler</div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </section>
+</div>
+
+<form id="dropForm" method="post" asp-action="AssignTaskToDate">
+    <input type="hidden" name="orderId" id="dropOrderId" />
+    <input type="hidden" name="hatId" id="dropHatId" />
+    <input type="hidden" name="date" id="dropDate" />
+    <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
+    <input type="hidden" name="year" value="@Model.Year" />
+    <input type="hidden" name="month" value="@Model.Month" />
+</form>
+
+@section Scripts {
+    <script>
+        let draggedOrderId = null;
+        let draggedHatId = null;
+
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('dragstart', function () {
+                draggedOrderId = this.dataset.orderId;
+                draggedHatId = this.dataset.hatId;
+            });
+        });
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                this.classList.add('drag-hover');
+            });
+
+            zone.addEventListener('dragleave', function () {
+                this.classList.remove('drag-hover');
+            });
+
+            zone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                this.classList.remove('drag-hover');
+
+                if (!draggedOrderId || !draggedHatId) return;
+
+                document.getElementById('dropOrderId').value = draggedOrderId;
+                document.getElementById('dropHatId').value = draggedHatId;
+                document.getElementById('dropDate').value = this.dataset.date;
+
+                document.getElementById('dropForm').submit();
+            });
+        });
+    </script>
+}
