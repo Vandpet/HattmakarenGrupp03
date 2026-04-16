@@ -17,7 +17,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 		}
 
 		// GET: Order
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string filter)
 		{
 			// 1. Säkerhetskoll (Session)
 			if (HttpContext.Session.GetInt32("EmployeeId") == null)
@@ -32,8 +32,18 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 				.OrderByDescending(o => o.OrderDate) // Nyast först
 				.ToListAsync();
 
-			return View(orders);
-		}
+            // 3. Filtrera baserat på vald knapp
+            orders = filter switch
+            {
+                "nyligen" => orders.OrderBy(o => o.OrderDate).ToList(),
+                "påbörjade" => orders.Where(o => o.Status == "Påbörjad").ToList(),
+                "avslutade" => orders.Where(o => o.Status == "Färdig").ToList(),
+                "ej-påbörjade" => orders.Where(o => o.Status == "Ej Påbörjad").ToList(),
+                _ => orders
+            };
+
+            return View(orders);
+        }
 
 		// GET: Order/Create
 		public async Task<IActionResult> Create()

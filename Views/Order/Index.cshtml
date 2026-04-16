@@ -1,8 +1,37 @@
 ﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Order>
 
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Orderöversikt</h2>
     <a asp-action="Create" class="btn btn-success">Ny Beställning +</a>
+</div>
+
+
+
+<div>
+    <form method="get" asp-controller="Order" asp-action="Index">
+        <label class="btn btn-outline-primary text-start">
+            <input type="radio" name="filter" onchange="this.form.submit()" class="d-none" />
+            Alla Ordrar
+        </label>
+        <label class="btn btn-outline-primary text-start">
+            <input type="radio" name="filter" value="nyligen" onchange="this.form.submit()" class="d-none" />
+            Nyligen Tillagda
+        </label>
+        <label class="btn btn-outline-primary text-start">
+            <input type="radio" name="filter" value="påbörjade" onchange="this.form.submit()" class="d-none" />
+            Påbörjade Ordrar
+        </label>
+        <label class="btn btn-outline-primary text-start">
+            <input type="radio" name="filter" value="avslutade" onchange="this.form.submit()" class="d-none" />
+            Avslutade Ordrar
+        </label>
+        <label class="btn btn-outline-primary text-start">
+            <input type="radio" name="filter" value="ej-påbörjade" onchange="this.form.submit()" class="d-none" />
+            Ej Påbörjade Ordrar
+        </label>
+    </form>
+
 </div>
 
 <table class="table table-hover">
@@ -13,6 +42,7 @@
             <th>Beräknad leverans</th>
             <th>Kund</th>
             <th>Skapad av</th>
+            <th>Antal</th>
             <th>Status</th>
             <th>Pris</th>
             <th>Express</th>
@@ -28,6 +58,7 @@
                 <td>@item.PrelDeliveryDate.ToShortDateString()</td>
                 <td>@item.Customer?.Name</td>
                 <td>@item.CreatedBy?.Name</td>
+                <td>@(item.HatOrders?.Sum(h => h.Amount) ?? 0)</td>
                 <td>
                     <span class="badge @(ColorForBadge(item.Status))">
                         @item.Status
@@ -47,7 +78,6 @@
                 <td>
                     <div class="btn-group" role="group">
                         <a asp-action="Details" asp-route-id="@item.OId" class="btn btn-sm btn-outline-info">Visa</a>
-                        <a asp-action="Edit" asp-route-id="@item.OId" class="btn btn-sm btn-outline-secondary">Ändra</a>
                     </div>
                 </td>
             </tr>
@@ -70,7 +100,7 @@
         else if (itemStatus == "Påbörjad")
         {
             return "bg-primary";
-		}
+        }
         else if (itemStatus == "Färdig")
         {
             return "bg-success";
