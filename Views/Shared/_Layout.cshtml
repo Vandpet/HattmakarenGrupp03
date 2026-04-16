@@ -14,7 +14,10 @@
         int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");
         int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
         bool isAdmin = currentAccessLevel != null && currentAccessLevel >= 10;
+		bool isLoggedIn = currentEmployeeId != null;
     }
+
+    @if (isLoggedIn){
 
     <div id="sidebar" class="sidebar">
         <button class="button meny-btn" id="menuToggle">
@@ -85,9 +88,20 @@
                 </li>
             }
 
+                <li class="nav-item">
+                <a asp-controller="Auth" asp-action="Logout" class="nav-link text-white">
+                    <span class="menu-text">Logga ut</span>
+                </a>
+                </li>
+
 
         </ul>
     </div>
+
+    }
+
+
+
 
 
     <div id="content" class="container">
