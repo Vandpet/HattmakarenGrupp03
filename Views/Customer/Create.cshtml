@@ -8,7 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card shadow">
-                <div class="card-header bg-dark text-white">
+                <div class="card-header bg-primary text-white">
                     <h3 class="mb-0">Skapa kund</h3>
                 </div>
 
@@ -32,6 +32,12 @@
                             <label asp-for="PhoneNr" class="form-label">Telefonnummer</label>
                             <input asp-for="PhoneNr" class="form-control" />
                             <span asp-validation-for="PhoneNr" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">E-post</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">

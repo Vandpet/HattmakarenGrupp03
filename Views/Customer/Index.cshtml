@@ -7,7 +7,7 @@
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Kund</h2>
+        <h2 class="mb-0">Kunder</h2>
         <div class="d-flex gap-2">
                 <a asp-controller="Customer" asp-action="Create" class="btn btn-success">Ny kund</a>
         </div>
@@ -16,12 +16,13 @@
     <div class="card shadow">
         <div class="card-body">
             <table class="table table-striped table-hover align-middle mb-0">
-                <thead class="table-dark">
+                <thead class="bg-primary text-white">
                     <tr>
                         <th>ID</th>
                         <th>Namn</th>
                         <th>Adress</th>
                         <th>Telefon</th>
+                        <th>E-post</th>
                         <th>Land</th>
                         <th>Stad</th>
                         <th>Språk</th>
@@ -36,6 +37,7 @@
                             <td>@customer.Name</td>
                             <td>@customer.Adress</td>
                             <td>@customer.PhoneNr</td>
+                            <td><a href="mailto:@customer.Email">@customer.Email</a></td>
                             <td>@customer.Country</td>
                             <td>@customer.City</td>
                             <td>@customer.Language</td>
