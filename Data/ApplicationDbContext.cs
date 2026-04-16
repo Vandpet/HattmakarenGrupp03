@@ -142,6 +142,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Name = "Otto",
                 Adress = "Testgatan 1",
                 PhoneNr = "0700000000",
+                Email = "Otto@hatmakarna.se",
                 accesslevel = 10,
                 Username = "Otto"
             };
@@ -155,6 +156,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Adress = "Kundgatan 2",
                 PhoneNr = "0711111111",
                 Country = "Sweden",
+                Email = "testkund@example.com",
                 City = "Örebro",
                 Language = "SV"
             };
