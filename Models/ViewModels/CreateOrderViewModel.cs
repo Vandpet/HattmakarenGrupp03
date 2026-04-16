@@ -21,5 +21,16 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 		// Listor för att fylla dropdowns i vyn
 		public List<SelectListItem>? CustomerList { get; set; }
 		public List<Hat>? StandardHats { get; set; }
-	}
+
+		//lista för att HatOrder 
+		public List<HatOrder> HatOrder { get; set; }
+
+		public List<HatListItem> HatListItems { get; set; } = new();
+        public class HatListItem
+		{
+			public List<int> Amount { get; set; } = new();
+			public List<Hat>? StandardHat { get; set; } = new();
+        }
+
+    }
 }
