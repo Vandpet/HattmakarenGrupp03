@@ -29,6 +29,30 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             return View(employees);
         }
 
+        public IActionResult View(int id)
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+            if (!IsAdmin() && currentEmployeeId != id)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var employee = _context.Employees.FirstOrDefault(e => e.EId == id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
+        }
+
         public IActionResult Create()
         {
             bool hasAnyUsers = _context.Employees.Any();
@@ -78,6 +102,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Name = model.Name.Trim(),
                 Adress = model.Adress.Trim(),
                 PhoneNr = model.PhoneNr.Trim(),
+                Email = model.Email.Trim(), 
                 accesslevel = model.accesslevel,
                 Username = username
             };
@@ -101,9 +126,16 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
         public IActionResult Edit(int id)
         {
-            if (!IsAdmin())
+            if (!IsLoggedIn())
             {
                 return RedirectToAction("Login", "Auth");
+            }
+
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+            if (!IsAdmin() && currentEmployeeId != id)
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             var employee = _context.Employees.FirstOrDefault(e => e.EId == id);
@@ -118,6 +150,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Name = employee.Name,
                 Adress = employee.Adress,
                 PhoneNr = employee.PhoneNr,
+                Email = employee.Email, 
                 accesslevel = employee.accesslevel,
                 Username = employee.Username
             };
@@ -129,9 +162,16 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EmployeeEditViewModel model)
         {
-            if (!IsAdmin())
+            if (!IsLoggedIn())
             {
                 return RedirectToAction("Login", "Auth");
+            }
+
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+            if (!IsAdmin() && currentEmployeeId != model.EId)
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             if (!ModelState.IsValid)
@@ -160,8 +200,13 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             employee.Name = model.Name.Trim();
             employee.Adress = model.Adress.Trim();
             employee.PhoneNr = model.PhoneNr.Trim();
-            employee.accesslevel = model.accesslevel;
+            employee.Email = model.Email.Trim();
             employee.Username = username;
+
+            if (IsAdmin())
+            {
+                employee.accesslevel = model.accesslevel;
+            }
 
             if (!string.IsNullOrWhiteSpace(model.NewPassword))
             {
@@ -275,6 +320,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Name = model.Name.Trim(),
                 Adress = model.Adress.Trim(),
                 PhoneNr = model.PhoneNr.Trim(),
+                Email = model.Email.Trim(),
                 accesslevel = model.accesslevel,
                 Username = username
             };

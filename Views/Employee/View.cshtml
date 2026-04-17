@@ -1,0 +1,72 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.Employee
+
+@{
+    ViewData["Title"] = "Profil";
+
+    int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");
+    int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
+
+    bool isAdmin = currentAccessLevel != null && currentAccessLevel >= 10;
+    bool isCurrentUser = currentEmployeeId == Model.EId;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Profil</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <dl class="row">
+
+                        <dt class="col-sm-4">Namn</dt>
+                        <dd class="col-sm-8">@Model.Name</dd>
+
+                        <dt class="col-sm-4">Adress</dt>
+                        <dd class="col-sm-8">@Model.Adress</dd>
+
+                        <dt class="col-sm-4">Telefon</dt>
+                        <dd class="col-sm-8">@Model.PhoneNr</dd>
+
+                        <dt class="col-sm-4">E-post</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrWhiteSpace(Model.Email))
+                            {
+                                <a href="mailto:@Model.Email">@Model.Email</a>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">Användarnamn</dt>
+                        <dd class="col-sm-8">@Model.Username</dd>
+
+                        @if (isAdmin)
+                        {
+                            <dt class="col-sm-4">Accessnivå</dt>
+                            <dd class="col-sm-8">@Model.accesslevel</dd>
+                        }
+
+                    </dl>
+
+                    <div class="d-flex gap-2 mt-4">
+
+                        @if (isAdmin || isCurrentUser)
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.EId" class="btn btn-primary">
+                                Redigera profil
+                            </a>
+                        }
+
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            Tillbaka
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

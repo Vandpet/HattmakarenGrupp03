@@ -1,0 +1,69 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.CustomActivityCreateViewModel
+
+@{
+    ViewData["Title"] = "Skapa arbetsuppgift";
+    int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");
+    bool isAdmin = currentAccessLevel != null && currentAccessLevel >= 10;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Skapa arbetsuppgift</h3>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Namn</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Beskrivning / instruktioner</label>
+                            <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Date" class="form-label">Datum</label>
+                            <input asp-for="Date" class="form-control" type="date" />
+                            <span asp-validation-for="Date" class="text-danger"></span>
+                        </div>
+
+                        @if (isAdmin)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="EId" class="form-label">Tilldela till</label>
+                                <select asp-for="EId" asp-items="Model.Employees" class="form-select">
+                                    <option value="0">Välj anställd</option>
+                                </select>
+                                <span asp-validation-for="EId" class="text-danger"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <input type="hidden" asp-for="EId" />
+                        }
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Spara</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Tillbaka</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
