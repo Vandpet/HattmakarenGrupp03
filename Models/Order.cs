@@ -26,7 +26,7 @@ namespace HattmakarenWebbAppGrupp03.Models
         [ForeignKey("CreatedById")]
         public Employee? CreatedBy { get; set; }
         // Relationer
-        public ICollection<Hat>? Hats { get; set; }
+        //public ICollection<Hat>? Hats { get; set; }
         public ICollection<OrderOfMaterials>? MaterialOrders { get; set; }
         public ICollection<HatOrder>? HatOrders { get; set; }
     }

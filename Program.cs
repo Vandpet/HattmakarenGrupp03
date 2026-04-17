@@ -22,6 +22,8 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddScoped<HatRepository>();
 builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<HatOrderRepository>();
+
 
 
 var app = builder.Build();
