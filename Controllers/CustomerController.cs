@@ -218,5 +218,22 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult View(int id)
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var customer = _context.Customers.FirstOrDefault(c => c.CId == id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
+        }
     }
 }
