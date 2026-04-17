@@ -91,7 +91,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 					OrderDate = DateTime.Now,
 					PrelDeliveryDate = model.PrelDeliveryDate,
 					Description = model.Description ?? "",
-					Hats = selectedHats
+					//Hats = selectedHats
 				};
 
 				_context.Add(newOrder);
