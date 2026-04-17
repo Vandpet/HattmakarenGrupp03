@@ -32,6 +32,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 			var orders = await _context.Orders
 				.Include(o => o.Customer)
 				.Include(o => o.CreatedBy)
+				.Include(o => o.HatOrders)
 				.OrderByDescending(o => o.OrderDate) // Nyast först
 				.ToListAsync();
 
