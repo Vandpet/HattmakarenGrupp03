@@ -1,7 +1,11 @@
-﻿namespace HattmakarenWebbAppGrupp03.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HattmakarenWebbAppGrupp03.Models
 {
     public class HatOrder
     {
+        [Key]
+        public int HOId { get; set; }
         public int HId { get; set; }
         public Hat Hat { get; set; }
 

@@ -196,8 +196,20 @@ namespace HattmakarenWebbAppGrupp03.Data
                 CreatedBy = otto
             };
 
+            var hatOrder = new HatOrder
+            {
+                HId = 1,
+                Hat = hat,
+                OId = 1,
+                Order = order,
+                EId = 1,
+                Employee = otto,
+                Status = "Ej påbörjad"
+
+            };
+
             // --- Add everything ---
-            context.AddRange(otto, customer, material, hat, order);
+            context.AddRange(otto, customer, material, hat, order, hatOrder);
 
             await context.SaveChangesAsync();
         }
