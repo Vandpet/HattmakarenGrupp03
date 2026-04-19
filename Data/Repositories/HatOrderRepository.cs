@@ -65,6 +65,13 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             order.Price = totalPrice;
             await _db.SaveChangesAsync();
         }
+        public async Task<List<HatOrder>> GetByOrderIdAsync(int OId)
+        {
+            return await _db.HatOrders
+                .Where(ho => ho.OId == OId)
+                .Include(ho => ho.Hat)
+                .ToListAsync();
+        }
         public async Task AddManyAsync(List<HatOrder> hatOrders)
         {
             _db.HatOrders.AddRange(hatOrders);

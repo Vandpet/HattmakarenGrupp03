@@ -2,63 +2,63 @@
 
 <h2>Skapa ny order (Lagerförda modeller)</h2>
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label>Välj Kund</label>
-        <select asp-for="SelectedCustomerId" asp-items="Model.CustomerList" class="form-control">
-            <option value="">-- Välj kund --</option>
-        </select>
-    </div>
+<form asp-action="Create" method="post">
+	<div class="form-group">
+		<label>Välj Kund</label>
+		<select asp-for="SelectedCustomerId" asp-items="Model.CustomerList" class="form-control">
+			<option value="">-- Välj kund --</option>
+		</select>
+		<span asp-validation-for="SelectedCustomerId" class="text-danger"></span>
+	</div>
 
-    <hr />
-    <h4>Välj Hattar</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Välj</th>
-                <th>Namn</th>
-                <th>Pris</th>
-            </tr>
-        </thead>
-        <tbody>
-            @* @foreach (var hat in Model.HatRows.StandardHat)
-            {
-                <tr>
-                    <td>
-                        @* <input type="checkbox" name="SelectedHatIds" value="@hat.HId" /> *@
-                        @* <input type="number" name="HatRows.Amount[@Model.HatRows.StandardHat.IndexOf(hat)]" value="0" min="0"/> *@
-                        @* <input type="number" name="HatRows.Amount" value="0" min="0" /> *@
-                    @*</td>
-                    <td>@hat.Name</td>
-                    <td>@hat.Price.ToString("C")</td>
-                </tr>
-            } *@
-            @for (int i = 0; i < Model.StandardHats.Count; i++)
-            {
-                var hat = Model.StandardHats[i];
+	<hr />
+	<h4>Välj Hattar</h4>
 
-                <tr>
-                    <td>
-                        <input type="hidden" name="HatRows.HId[@i]" value="@hat.HId" />
-                        <input type="number" name="HatRows.Amount[@i]" value="0" min="0" />
-                    </td>
+	<div class="text-danger mb-2">
+		<div asp-validation-summary="ModelOnly"></div>
+	</div>
 
-                    <td>@hat.Name</td>
-                    <td>@hat.Price.ToString("C")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Välj</th>
+				<th>Namn</th>
+				<th>Pris</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for (int i = 0; i < Model.StandardHats.Count; i++)
+			{
+				var hat = Model.StandardHats[i];
 
-    <div class="form-group">
-        <label asp-for="Description">Beskrivning/Notering</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-    </div>
+				<tr>
+					<td>
+						<input type="hidden" name="HatRows.HId[@i]" value="@hat.HId" />
+						<input type="number" name="HatRows.Amount[@i]" value="0" min="0" style="max-width: 60px;" />
+					</td>
 
-    <div class="form-check">
-        <input asp-for="IsExpress" class="form-check-input" />
-        <label asp-for="IsExpress" class="form-check-label">Expressbeställning (+20%)</label>
-    </div>
+					<td>@hat.Name</td>
+					<td>@hat.Price.ToString("C")</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 
-    <button type="submit" class="btn btn-primary mt-3">Skapa Order</button>
+	<div class="form-group">
+		<label asp-for="PrelDeliveryDate">Preliminärt leveransdatum</label>
+		<input asp-for="PrelDeliveryDate" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+		<span asp-validation-for="PrelDeliveryDate" class="text-danger"></span>
+	</div>
+
+	<div class="form-group">
+		<label asp-for="Description">Beskrivning/Notering</label>
+		<textarea asp-for="Description" class="form-control"></textarea>
+	</div>
+
+	<div class="form-check">
+		<input asp-for="IsExpress" class="form-check-input" />
+		<label asp-for="IsExpress" class="form-check-label">Expressbeställning (+20%)</label>
+	</div>
+
+	<button type="submit" class="btn btn-primary mt-3">Skapa Order</button>
 </form>

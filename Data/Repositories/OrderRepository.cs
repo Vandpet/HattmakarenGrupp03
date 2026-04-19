@@ -51,5 +51,13 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
         //        .Include(o => o.AssignedEmployees)
         //        .FirstOrDefaultAsync(o => o.OId == id);
         //}
+
+        public async Task<Order?> GetOrderByIdWithCustomerAndCreatorAsync(int id)
+        {
+            return await _db.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.CreatedBy)
+                .FirstOrDefaultAsync(o => o.OId == id);
+        }
     }
 }

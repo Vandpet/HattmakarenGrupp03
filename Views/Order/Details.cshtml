@@ -1,0 +1,82 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.OrderDetailsViewModel
+
+<div class="d-flex justify-content-between align-items-center my-4">
+	<h2>Orderdetalj</h2>
+	@* <a asp-action="Create" class="btn btn-success">Ny Beställning +</a> *@
+	<a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+</div>
+
+@* Orderinfo *@
+<div class="d-flex justify-content-center">
+	<div class="d-flex flex-column ljuslila justify-content-between box-shadow col-md-8 col-lg-6"
+		 style="border-radius: 5rem; overflow: hidden;">
+
+		@* ÖVER *@
+		<div class="d-flex flex-row p-3">
+			@* VÄNSTER *@
+			<div class="d-flex flex-column w-50 align-content-around justify-content-evenly flex-wrap gap-2">
+				<span>Ordernummer: @Model.order.OId</span>
+				<span>Beställningsdatum: @Model.order.OrderDate.ToShortDateString()</span>
+				<span>Skapad av: @Model.order.CreatedBy?.Name</span>
+				<span>Rabatt: @Model.order.Discount.ToString("P")</span>
+				<span>Beräknat pris: @Model.order.Price.ToString("C")</span>
+			</div>
+
+			@* HÖGER *@
+			<div class="d-flex flex-column w-50 align-content-around justify-content-evenly flex-wrap gap-2">
+                <span>
+                    Kund:
+                    <a asp-controller="Customer" asp-action="View" asp-route-id="@Model.order.CustomerId" class="text-decoration-none fw-bold text-dark"> @Model.order.Customer?.Name</a>
+                </span>
+				<span>Beräknad leverans: @Model.order.PrelDeliveryDate.ToShortDateString()</span>
+				<span>Expressleverans: @(Model.order.Express ? "Ja" : "Nej")</span>
+				<span>Rabattbeskrivning: @Model.order.DiscountDesc</span>
+				<span>Status: @Model.order.Status</span>
+			</div>
+		</div>
+
+		@* NEDRE *@
+		<div class="border p-4 text-wrap text-break">
+            @(Model.order.Description ?? "Ingen beskrivning tillgänglig.")
+            @* What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galleyof type and scrambled it to make a type specimen book. It has survived not only			five centuries, but also the leap into electronic typesetting, remaining unchanged. It was popularised in the 1960s with the release of Letraset sheets	containing Lorem Ipsum passages, and more recently with desktop publishing software	like Aldus PageMaker including versions of Lorem Ipsum. *@
+		</div>
+	</div>
+</div>
+
+@* OrderInnehåll *@
+<h2>Orderinnehåll</h2>
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Id</th>
+            <th>Namn</th>
+            <th>Antal</th>
+            <th>Pris/Styck</th>
+            <th>Storlek</th>
+            <th>Bild</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.hatOrders)
+        {
+            <tr>
+                <td>@item.HId</td>
+                <td>@item.Hat?.Name</td>
+                <td>@item.Amount</td>
+                <td>@item.Hat?.Price.ToString("C")</td>
+                <td>@item.Hat?.Size</td>
+                <td>
+                    @if (string.IsNullOrEmpty(item.Hat?.PicturePath))
+                    {
+                        <span class="text-muted">Otillgänglig</span>
+                    }
+                    else
+                    {
+                        <a asp-controller="Hat" asp-action="Details" asp-route-hId="@item.HId" class="btn btn-sm btn-outline-info">Visa Bild</a> @*Ingen funktion för tillfället *@
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

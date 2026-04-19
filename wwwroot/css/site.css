@@ -312,3 +312,34 @@ button {
         max-height: none;
     }
 }
+
+/*Standardfärgerna*/
+.rosa {
+    background-color: #E9D5EA;
+}
+
+.ljuslila {
+    background-color: #AF75B2;
+}
+
+.lila {
+    background-color: #73147A;
+}
+
+.btn-rosa {
+    background-color: #E9D5EA;
+    color: #333;
+    font-weight: bold;
+}
+
+.btn-ljuslila {
+    background-color: #AF75B2;
+    color: #333;
+    font-weight: bold;
+}
+
+.btn-lila {
+    background-color: #73147A;
+    color: #333;
+    font-weight: bold;
+}
