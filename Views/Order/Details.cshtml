@@ -7,40 +7,76 @@
 </div>
 
 @* Orderinfo *@
-<div class="d-flex justify-content-center">
-	<div class="d-flex flex-column ljuslila justify-content-between box-shadow col-md-8 col-lg-6"
-		 style="border-radius: 5rem; overflow: hidden;">
+<div class="d-flex justify-content-center my-4">
 
-		@* ÖVER *@
-		<div class="d-flex flex-row p-3">
-			@* VÄNSTER *@
-			<div class="d-flex flex-column w-50 align-content-around justify-content-evenly flex-wrap gap-2">
-				<span>Ordernummer: @Model.order.OId</span>
-				<span>Beställningsdatum: @Model.order.OrderDate.ToShortDateString()</span>
-				<span>Skapad av: @Model.order.CreatedBy?.Name</span>
-				<span>Rabatt: @Model.order.Discount.ToString("P")</span>
-				<span>Beräknat pris: @Model.order.Price.ToString("C")</span>
-			</div>
+    <div class="card shadow col-md-8 col-lg-6 p-3 ljuslila" style="border-radius: 3rem">
 
-			@* HÖGER *@
-			<div class="d-flex flex-column w-50 align-content-around justify-content-evenly flex-wrap gap-2">
-                <span>
-                    Kund:
-                    <a asp-controller="Customer" asp-action="View" asp-route-id="@Model.order.CustomerId" class="text-decoration-none fw-bold text-dark"> @Model.order.Customer?.Name</a>
-                </span>
-				<span>Beräknad leverans: @Model.order.PrelDeliveryDate.ToShortDateString()</span>
-				<span>Expressleverans: @(Model.order.Express ? "Ja" : "Nej")</span>
-				<span>Rabattbeskrivning: @Model.order.DiscountDesc</span>
-				<span>Status: @Model.order.Status</span>
-			</div>
-		</div>
+        @* Rad 1: Allmän info*@
+        <div class="card-header rosa" style="border-radius: 1rem">
+            <div class="row">
 
-		@* NEDRE *@
-		<div class="border p-4 text-wrap text-break">
-            @(Model.order.Description ?? "Ingen beskrivning tillgänglig.")
-            @* What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galleyof type and scrambled it to make a type specimen book. It has survived not only			five centuries, but also the leap into electronic typesetting, remaining unchanged. It was popularised in the 1960s with the release of Letraset sheets	containing Lorem Ipsum passages, and more recently with desktop publishing software	like Aldus PageMaker including versions of Lorem Ipsum. *@
-		</div>
-	</div>
+                <div class="col-md-6">
+                    <div><strong>Order:</strong> @(Model.order.OId)</div>
+                    <div><strong>Datum:</strong> @(Model.order.OrderDate.ToShortDateString())</div>
+                    <div><strong>Skapad av:</strong> @(Model.order.CreatedBy?.Name)</div>
+                </div>
+
+                <div class="col-md-6">
+                    <div>
+                        <strong>Kund:</strong>
+                        <a asp-controller="Customer"
+                           asp-action="View"
+                           asp-route-id="@(Model.order.CustomerId)"
+                           class="fw-bold text-decoration-none">
+                            @(Model.order.Customer?.Name)
+                        </a>
+                    </div>
+
+                    <div><strong>Leverans:</strong> @(Model.order.PrelDeliveryDate.ToShortDateString())</div>
+                    <div><strong>Status:</strong> @(Model.order.Status)</div>
+
+                </div>
+
+            </div>
+        </div>
+
+        @* Rad 2: Beskrivning*@
+        <div class="card-body rosa my-1" style="border-radius: 1rem">
+
+            <h6 class="card-title">Beskrivning</h6>
+
+            <p class="card-text text-break">
+                @(Model.order.Description ?? "Ingen beskrivning tillgänglig.")
+            </p>
+
+        </div>
+
+        @* Rad 3: Prisdetaljer*@
+        <div class="card-footer rosa d-flex justify-content-between align-items-start" style="border-radius: 1rem">
+
+            <div class="d-flex flex-column">
+                <div>
+                    Rabatt: @(Model.order.Discount.ToString("P"))
+                </div>
+
+                <div>
+                    <small class="text-muted"> @(Model.order.DiscountDesc ?? "Ingen beskrivning tillgänglig.")</small>
+                </div>
+
+                <div>
+                    Express: @(Model.order.Express ? "Ja (+kostnad)" : "Nej")
+                </div>
+            </div>
+
+            <div class="text-end">
+                <strong>Beräknat Pris:</strong><br />
+                @(Model.order.Price.ToString("C"))
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 @* OrderInnehåll *@
@@ -72,7 +108,8 @@
                     }
                     else
                     {
-                        <a asp-controller="Hat" asp-action="Details" asp-route-hId="@item.HId" class="btn btn-sm btn-outline-info">Visa Bild</a> @*Ingen funktion för tillfället *@
+                        <a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#imageModal" 
+                        data-img="@item.Hat?.PicturePath"> Visa Bild</a>
                     }
                 </td>
             </tr>
@@ -80,3 +117,68 @@
     </tbody>
 </table>
 
+@* Modal för att visa bild *@
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Bild</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <img id="modalImage" class="img-fluid" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var imageModal = document.getElementById('imageModal');
+
+    imageModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var imgSrc = button.getAttribute('data-img');
+        document.getElementById('modalImage').src = imgSrc;
+    });
+</script>
+
+
+
+@* Gamla OrderDetalj 
+ <div class="d-flex justify-content-center">
+    <div class="d-flex flex-column ljuslila justify-content-between box-shadow col-md-8 col-lg-6"
+         style="border-radius: 5rem; overflow: hidden;">
+
+        ÖVER
+        <div class="d-flex flex-row p-3">
+            VÄNSTER 
+            <div class="d-flex flex-column w-50 align-content-around justify-content-evenly flex-wrap gap-2">
+                <span>Ordernummer: @Model.order.OId</span>
+                <span>Beställningsdatum: @Model.order.OrderDate.ToShortDateString()</span>
+                <span>Skapad av: @Model.order.CreatedBy?.Name</span>
+                <span>Rabatt: @Model.order.Discount.ToString("P")</span>
+                <span>Beräknat pris: @Model.order.Price.ToString("C")</span>
+            </div>
+
+            HÖGER
+            <div class="d-flex flex-column w-50 align-content-around justify-content-evenly flex-wrap gap-2">
+                <span>
+                    Kund:
+                    <a asp-controller="Customer" asp-action="View" asp-route-id="@Model.order.CustomerId" class="text-decoration-none fw-bold text-dark"> @Model.order.Customer?.Name</a>
+                </span>
+                <span>Beräknad leverans: @Model.order.PrelDeliveryDate.ToShortDateString()</span>
+                <span>Expressleverans: @(Model.order.Express ? "Ja" : "Nej")</span>
+                <span>Rabattbeskrivning: @Model.order.DiscountDesc</span>
+                <span>Status: @Model.order.Status</span>
+            </div>
+        </div>
+
+        NEDRE
+        <div class="border p-4 text-wrap text-break">
+            @(Model.order.Description ?? "Ingen beskrivning tillgänglig.")
+        </div>
+    </div>
+</div> *@

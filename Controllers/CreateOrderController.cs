@@ -107,10 +107,10 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     Status = "Ej Påbörjad",
                     Express = model.IsExpress,
                     Discount = 0,
-                    DiscountDesc = "Ingen",
+                    DiscountDesc = "Ingen beskrivning tillgänglig",
                     OrderDate = DateTime.Now,
                     PrelDeliveryDate = model.PrelDeliveryDate,
-                    Description = model.Description ?? "Ingen Beskrivning"
+                    Description = model.Description ?? "Ingen beskrivning tillgänglig"
                 };
 
                 //Ordern måste skapas, då får vi ett OId att leka med.
