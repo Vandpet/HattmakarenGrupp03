@@ -89,10 +89,6 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             // 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
             if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
 
-            //Konstig bugg vi inte fattar när man inte lägger in beskrivning.
-            ModelState.Remove(nameof(model.Description));
-
-            //Måste lägga till i ModelState if:en att man måste välja minst en hatt.
             //Denna kollar för tillfället bara på standardhattar, inte specialhattar.
             if (model.HatRows.Amount.Any(a => a > 0) == false) ModelState.AddModelError(string.Empty, "Du måste välja minst en hatt.");
 
@@ -106,8 +102,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     //Price = totalPrice, Denna sätts senare här under!
                     Status = "Ej Påbörjad",
                     Express = model.IsExpress,
-                    Discount = 0,
-                    DiscountDesc = "Ingen beskrivning tillgänglig",
+                    Discount = model.Discount,
+                    DiscountDesc = model.DiscountDesc ?? "Ingen beskrivning tillgänglig",
                     OrderDate = DateTime.Now,
                     PrelDeliveryDate = model.PrelDeliveryDate,
                     Description = model.Description ?? "Ingen beskrivning tillgänglig"

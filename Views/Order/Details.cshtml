@@ -2,7 +2,6 @@
 
 <div class="d-flex justify-content-between align-items-center my-4">
 	<h2>Orderdetalj</h2>
-	@* <a asp-action="Create" class="btn btn-success">Ny Beställning +</a> *@
 	<a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
 </div>
 
@@ -55,17 +54,19 @@
         <div class="card-footer rosa d-flex justify-content-between align-items-start" style="border-radius: 1rem">
 
             <div class="d-flex flex-column">
+
                 <div>
-                    Rabatt: @(Model.order.Discount.ToString("P"))
+                    Express: @(Model.order.Express ? "Ja (+20%)" : "Nej")
+                </div>
+
+                <div>
+                    Rabatt: @(Model.order.Discount.ToString() + "%")
                 </div>
 
                 <div>
                     <small class="text-muted"> @(Model.order.DiscountDesc ?? "Ingen beskrivning tillgänglig.")</small>
                 </div>
 
-                <div>
-                    Express: @(Model.order.Express ? "Ja (+kostnad)" : "Nej")
-                </div>
             </div>
 
             <div class="text-end">

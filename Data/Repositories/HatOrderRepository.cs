@@ -60,7 +60,9 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             decimal totalPrice = hatOrders.Sum(ho => ho.Hat.Price * ho.Amount);
 
             var order = await _db.Orders.FindAsync(OId);
+
             if (order.Express) totalPrice *= 1.2m; // Lägg på 20% för expressorder
+            totalPrice -= (totalPrice * order.Discount / 100); // Dra av eventuell rabatt
 
             order.Price = totalPrice;
             await _db.SaveChangesAsync();
