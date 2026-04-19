@@ -21,7 +21,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         {
             if (HttpContext.Session.GetInt32("EmployeeId") != null)
             {
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index", "Order");
             }
 
             ViewBag.NoUsersExist = !_context.Employees.Any();
@@ -66,7 +66,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             HttpContext.Session.SetInt32("AccessLevel", employee.accesslevel);
             HttpContext.Session.SetString("Name", employee.Name);
 
-            return RedirectToAction("Index", "Employee");
+            return RedirectToAction("Index", "Order");
         }
 
         public IActionResult Logout()

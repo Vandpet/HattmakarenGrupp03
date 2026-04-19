@@ -22,6 +22,8 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<HatOrder> HatOrders { get; set; }
         public DbSet<HatMaterial> HatMaterials { get; set; }
         public DbSet<CustomActivity> CustomActivities { get; set; }
+        public DbSet<HatSchedule> HatSchedule { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -124,6 +126,12 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(e => e.AssignedHats)
                 .HasForeignKey(ho => ho.EId)
                 .IsRequired(false);
+
+            // Schema
+            //modelBuilder.Entity<HatSchedule>()
+            //   .HasOne(s => s.HatOrder)
+            //   .WithMany()
+            //   .HasForeignKey(s => s.HatOrderId);
         }
 
         public static async Task SeedAsync(ApplicationDbContext context)
@@ -142,6 +150,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Name = "Otto",
                 Adress = "Testgatan 1",
                 PhoneNr = "0700000000",
+                Email = "Otto@hatmakarna.se",
                 accesslevel = 10,
                 Username = "Otto"
             };
@@ -155,6 +164,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Adress = "Kundgatan 2",
                 PhoneNr = "0711111111",
                 Country = "Sweden",
+                Email = "testkund@example.com",
                 City = "Örebro",
                 Language = "SV"
             };
@@ -193,6 +203,8 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Customer = customer,
                 CreatedBy = otto
             };
+
+            
 
             // --- Add everything ---
             context.AddRange(otto, customer, material, hat, order);

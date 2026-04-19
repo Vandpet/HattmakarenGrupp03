@@ -72,6 +72,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Name = model.Name.Trim(),
                 Adress = model.Adress.Trim(),
                 PhoneNr = model.PhoneNr.Trim(),
+                Email = model.Email.Trim(),
                 Country = model.Country.Trim(),
                 City = model.City.Trim(),
                 Language = model.Language.Trim()
@@ -125,6 +126,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             customer.Name = "";
             customer.Adress = "";
             customer.PhoneNr = "";
+            customer.Email = "";
             customer.Country = "";
             customer.City = "";
             customer.Language = "";
@@ -154,6 +156,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Name = customer.Name,
                 Adress = customer.Adress,
                 PhoneNr = customer.PhoneNr,
+                Email = customer.Email,
                 Country = customer.Country,
                 City = customer.City,
                 Language = customer.Language
@@ -198,6 +201,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             customer.Name = model.Name?.Trim();
             customer.Adress = model.Adress?.Trim();
             customer.PhoneNr = model.PhoneNr?.Trim();
+            customer.Email = model.Email?.Trim();
             customer.Country = model.Country?.Trim();
             customer.City = model.City?.Trim();
             customer.Language = model.Language?.Trim();
@@ -213,6 +217,23 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult View(int id)
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var customer = _context.Customers.FirstOrDefault(c => c.CId == id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
         }
     }
 }

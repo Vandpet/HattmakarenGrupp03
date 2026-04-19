@@ -4,6 +4,7 @@ using HattmakarenWebbAppGrupp03.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HattmakarenWebbAppGrupp03.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417152330_AddDateToHatOrder")]
+    partial class AddDateToHatOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,6 +366,9 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("EmployeeEId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Express")
                         .HasColumnType("bit");
 
@@ -385,6 +391,8 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("EmployeeEId");
 
                     b.ToTable("Orders");
                 });
@@ -514,7 +522,7 @@ namespace HattmakarenWebbAppGrupp03.Migrations
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Order", b =>
                 {
                     b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "CreatedBy")
-                        .WithMany("HandledOrders")
+                        .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -524,6 +532,10 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", null)
+                        .WithMany("HandledOrders")
+                        .HasForeignKey("EmployeeEId");
 
                     b.Navigation("CreatedBy");
 
