@@ -92,7 +92,14 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
 
             //Denna kollar för tillfället bara på standardhattar, inte specialhattar.
-            if (model.HatRows.Amount.Any(a => a > 0) == false) ModelState.AddModelError(string.Empty, "Du måste välja minst en hatt.");
+            var hasAnyHat =
+                model.HatRows?.Amount != null &&
+                model.HatRows.Amount.Any(a => a > 0);
+
+            if (!hasAnyHat)
+            {
+                ModelState.AddModelError(string.Empty, "Du måste välja minst en hatt.");
+            }
 
             if (ModelState.IsValid)
             {

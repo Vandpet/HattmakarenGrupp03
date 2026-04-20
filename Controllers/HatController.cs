@@ -4,6 +4,7 @@ using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 using WebApp.Services;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
@@ -74,12 +75,12 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 .Select(m => new HatMaterial
                 {
                     Material = new Material
-                {
-                    Name = m.Name,
-                    Amount = m.Amount,
-                    MeasuringUnits = m.MeasuringUnits,
-                    Price = m.Price
-                }
+                    {
+                        Name = m.Name,
+                        Amount = m.Amount,
+                        MeasuringUnits = m.MeasuringUnits,
+                        Price = m.Price
+                    }
                 }).ToList() ?? new List<HatMaterial>()
             };
 
@@ -114,5 +115,74 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         //        new MaterialSelectionViewModel { Id = 4, Name = "Läderrem" }
         //    };
         //}
+
+        [HttpGet]
+        public IActionResult CreateModal()
+        {
+            var vm = new HatCreateViewModel
+            {
+                StandardHat = false
+            };
+
+            return PartialView("_CreateHatModalPartial", vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateModal(HatCreateViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView("_CreateHatModalPartial", vm);
+            }
+
+            string picturePath = "";
+
+            if (vm.ImageFile != null)
+            {
+                try
+                {
+                    picturePath = await _fileService.SaveImageAsync(vm.ImageFile);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    return PartialView("_CreateHatModalPartial", vm);
+                }
+            }
+
+            var hat = new Hat
+            {
+                Name = vm.Name,
+                Price = vm.Price,
+                Size = vm.Size,
+                PicturePath = picturePath ?? "",
+                StandardHat = false,
+                Description = vm.Description,
+                Materials = vm.Materials?
+                    .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Name))
+                    .Select(m => new HatMaterial
+                    {
+                        Material = new Material
+                        {
+                            Name = m.Name,
+                            Amount = m.Amount,
+                            MeasuringUnits = m.MeasuringUnits,
+                            Price = m.Price
+                        }
+                    }).ToList() ?? new List<HatMaterial>()
+            };
+
+            await _hatRepository.AddAsync(hat);
+
+            return Json(new
+            {
+                success = true,
+                hId = hat.HId,
+                name = hat.Name,
+                price = hat.Price.ToString("0.00")
+            });
+        }
+
     }
 }
