@@ -3,10 +3,11 @@
 <div class="d-flex justify-content-between align-items-center my-4">
 	<h2>Orderdetalj</h2>
     <div class=" d-flex gap-2">
-    <form asp-action="" asp-route-id="@(Model.order.OId)" method="post">
-        <input type="hidden" name="oId" value="@(Model.order.OId)" />
-        <button type="submit" class="btn rosa fw-bold m-0")>Skriv ut Order</button>
-        </form>
+	@* 	<form asp-action="" asp-route-id="@(Model.order.OId)" method="post">
+			<input type="hidden" name="oId" value="@(Model.order.OId)" />
+			<button type="submit" class="btn rosa fw-bold m-0" )>Skriv ut Order</button>
+		</form> *@
+        <form asp-action="PrintOrder" asp-route-id="@(Model.order.OId)" method="post">
         <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
     </div>
 </div>
