@@ -68,7 +68,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             //    .Where(h => !scheduledHatOrderIds.Contains(h.Id))
             //    .ToList();
 
-            var unscheduled = allHatOrders.Where(ho => ho.Status == "Ej påbörjad").ToList();
+            var unscheduled = allHatOrders.Where(ho => ho.Status == "Ej Påbörjad").ToList();
             
 
             foreach (var ho in unscheduled)
@@ -165,6 +165,34 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 personal,
                 year = year ?? date.Year,
                 month = month ?? date.Month
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UnassignTask(
+    int orderId,
+    int hatId,
+    bool personal = false,
+    int? year = null,
+    int? month = null)
+        {
+            var hatOrder = await _context.HatOrders
+                .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
+
+            if (hatOrder == null)
+                return NotFound();
+
+            hatOrder.Date = null;
+            hatOrder.EId = null;
+            hatOrder.Status = "Ej Påbörjad";
+
+            await _hatOrderRepository.UpdateAsync(hatOrder);
+
+            return RedirectToAction(nameof(Index), new
+            {
+                personal,
+                year,
+                month
             });
         }
 
