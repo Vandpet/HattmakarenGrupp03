@@ -117,4 +117,237 @@ button {
 /* Färg för Badge i orderöversikten */
 .bg-skickad {
     background-color: #E9D5EA;
+
+}
+
+/* ===== SCHEMA / KALENDER ===== */
+
+.schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.schedule-title {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.schedule-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.switch-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.calendar-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.calendar-btn {
+    text-decoration: none;
+    font-size: 1.4rem;
+    color: #333;
+    padding: 4px 10px;
+    border-radius: 10px;
+}
+
+    .calendar-btn:hover {
+        background: #f1f1f1;
+    }
+
+.schedule-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+.task-panel {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+    max-height: 78vh;
+    overflow-y: auto;
+}
+
+    .task-panel h4 {
+        margin-top: 0;
+        margin-bottom: 12px;
+        font-size: 1rem;
+    }
+
+.empty-box {
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    color: #666;
+}
+
+.task-card {
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: grab;
+    border: 1px solid rgba(0,0,0,0.08);
+}
+
+.task-card-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.task-card-sub {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 2px;
+}
+
+.task-card-status {
+    font-size: 0.8rem;
+    margin-top: 6px;
+    opacity: 0.85;
+}
+
+.calendar-panel {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.weekday {
+    text-align: center;
+    font-weight: 600;
+    color: #666;
+    padding: 4px 0 8px 0;
+    font-size: 0.9rem;
+}
+
+.calendar-cell {
+    min-height: 92px;
+    background: #f8f9fa;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: background 0.15s ease;
+}
+
+    .calendar-cell.faded {
+        opacity: 0.35;
+    }
+
+    .calendar-cell.today {
+        outline: 2px solid #984B9C;
+    }
+
+    .calendar-cell.drag-hover {
+        background: #efe3f0;
+    }
+
+.date {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+
+.event {
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    overflow: hidden;
+}
+
+.event-sub {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.85;
+}
+
+.more {
+    font-size: 10px;
+    color: gray;
+    margin-top: 2px;
+}
+
+.order-red {
+    background: #f8d7da;
+}
+
+.order-yellow {
+    background: #fff3cd;
+}
+
+.order-green {
+    background: #d1e7dd;
+}
+
+.order-default {
+    background: #e2e3e5;
+}
+
+@media (max-width: 1100px) {
+    .schedule-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .task-panel {
+        max-height: none;
+    }
+}
+
+/*Standardfärgerna*/
+.rosa {
+    background-color: #E9D5EA;
+}
+
+.ljuslila {
+    background-color: #AF75B2;
+}
+
+.lila {
+    background-color: #73147A;
+}
+
+.btn-rosa {
+    background-color: #E9D5EA;
+    color: #333;
+    font-weight: bold;
+}
+
+.btn-ljuslila {
+    background-color: #AF75B2;
+    color: #333;
+    font-weight: bold;
+}
+
+.btn-lila {
+    background-color: #73147A;
+    color: #333;
+    font-weight: bold;
+
 }

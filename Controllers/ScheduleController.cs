@@ -1,4 +1,5 @@
 ﻿using HattmakarenWebbAppGrupp03.Data;
+using HattmakarenWebbAppGrupp03.Data.Repositories;
 using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -9,20 +10,21 @@ namespace HattmakarenWebbAppGrupp03.Controllers
     public class ScheduleController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly HatOrderRepository _hatOrderRepository;
 
-        public ScheduleController(ApplicationDbContext context)
+        public ScheduleController(ApplicationDbContext context, HatOrderRepository hatOrderRepository)
         {
             _context = context;
+            _hatOrderRepository = hatOrderRepository;
         }
 
         public async Task<IActionResult> Index(bool personal = false, int? year = null, int? month = null)
         {
             if (HttpContext.Session.GetInt32("EmployeeId") == null)
-            {
                 return RedirectToAction("Login", "Auth");
-            }
 
             int currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId")!.Value;
+
             DateTime today = DateTime.Today;
             int selectedYear = year ?? today.Year;
             int selectedMonth = month ?? today.Month;
@@ -30,19 +32,29 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var firstDay = new DateTime(selectedYear, selectedMonth, 1);
             var startDate = firstDay.AddDays(-(int)firstDay.DayOfWeek);
 
-            var hatOrdersQuery = _context.HatOrders
-                .Include(h => h.Hat)
-                .Include(h => h.Employee)
-                .Include(h => h.Order)
-                    .ThenInclude(o => o.Customer)
+
+            // ✅ HÄMTA SCHEMA
+            var schedulesQuery = _context.HatSchedule
+                .Include(s => s.Employee)
+                .Include(s => s.HatOrder)
+                    .ThenInclude(h => h.Hat)
+                .Include(s => s.HatOrder.Order)
                 .AsQueryable();
 
             if (personal)
             {
-                hatOrdersQuery = hatOrdersQuery.Where(h => h.EId == currentEmployeeId);
+                schedulesQuery = schedulesQuery.Where(s => s.EmployeeId == currentEmployeeId);
             }
 
-            var hatOrders = await hatOrdersQuery.ToListAsync();
+            var schedules = await schedulesQuery.ToListAsync();
+
+            // HÄMTA ALLA HATORDERS (för oschemalagda)
+            var allHatOrders = await _context.HatOrders
+                .Include(h => h.Hat)
+                .Include(h => h.Order)
+                .ToListAsync();
+
+            //var scheduledHatOrderIds = schedules.Select(s => s.HatOrderId).ToHashSet();
 
             var model = new MonthScheduleViewModel
             {
@@ -51,10 +63,13 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Month = selectedMonth
             };
 
-            // Oschemalagda uppgifter till vänster
-            var unscheduled = hatOrders
-                .Where(h => !h.StartDate.HasValue || !h.EndDate.HasValue)
-                .ToList();
+            // ✅ OSCHEMALAGDA
+            //var unscheduled = allHatOrders
+            //    .Where(h => !scheduledHatOrderIds.Contains(h.Id))
+            //    .ToList();
+
+            var unscheduled = allHatOrders.Where(ho => ho.Status == "Ej påbörjad").ToList();
+            
 
             foreach (var ho in unscheduled)
             {
@@ -63,7 +78,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     OrderId = ho.OId,
                     HatId = ho.HId,
                     Title = $"Order {ho.OId}",
-                    HatName = ho.Hat?.Name ?? "Hattuppgift",
+                    HatName = ho.Hat?.Name ?? "",
                     Status = ho.Status,
                     ColorClass = GetColorClass(ho.Order, ho.Status)
                 });
@@ -77,12 +92,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
                 for (int day = 0; day < 7; day++)
                 {
-                    var dayOrders = hatOrders
-                        .Where(h =>
-                            h.StartDate.HasValue &&
-                            h.EndDate.HasValue &&
-                            h.StartDate.Value.Date <= current.Date &&
-                            h.EndDate.Value.Date >= current.Date)
+                    var daySchedules = schedules
+                        .Where(s => s.Date.Date == current.Date)
                         .ToList();
 
                     var cell = new CalendarCellViewModel
@@ -92,16 +103,20 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                         IsToday = current.Date == today
                     };
 
-                    foreach (var ho in dayOrders)
+                    foreach (var s in daySchedules)
                     {
                         cell.Events.Add(new CalendarEventViewModel
                         {
-                            OrderId = ho.OId,
-                            HatId = ho.HId,
-                            Title = $"Order {ho.OId}",
-                            HatName = ho.Hat?.Name ?? "",
-                            Status = ho.Status,
-                            ColorClass = GetColorClass(ho.Order, ho.Status)
+                            OrderId = s.HatOrder.OId,
+                            HatId = s.HatOrder.HId,
+                            Title = $"Order {s.HatOrder.OId}",
+                            HatName = s.HatOrder.Hat?.Name ?? "",
+                            Status = s.Status,
+                            ColorClass = GetColorClass(s.HatOrder.Order, s.Status),
+
+                            // ✅ NYTT
+                            EmployeeId = s.EmployeeId,
+                            EmployeeName = s.Employee.Name
                         });
                     }
 
@@ -112,24 +127,39 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 model.Weeks.Add(weekRow);
             }
 
+            model.Employees = await _context.Employees
+                .Select(e => new EmployeeViewModel
+                {
+                    Id = e.EId,
+                    Name = e.Name
+                })
+                .ToListAsync();
+
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AssignTaskToDate(int orderId, int hatId, DateTime date, bool personal = false, int? year = null, int? month = null)
-        {
+        public async Task<IActionResult> AssignTaskToDate(
+            int orderId,
+            int hatId,
+            int employeeId,
+            DateTime date,
+            bool personal = false,
+            int? year = null,
+            int? month = null)
+            {
             var hatOrder = await _context.HatOrders
                 .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
 
             if (hatOrder == null)
-            {
                 return NotFound();
-            }
 
-            hatOrder.StartDate = date.Date;
-            hatOrder.EndDate = date.Date;
+            hatOrder.Date = date;
+            hatOrder.Status = "Påbörjad";
+            hatOrder.EId = employeeId;
 
-            await _context.SaveChangesAsync();
+
+            _hatOrderRepository.UpdateAsync(hatOrder);
 
             return RedirectToAction(nameof(Index), new
             {
@@ -138,6 +168,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 month = month ?? date.Month
             });
         }
+
 
         private string GetColorClass(Order? order, string hatOrderStatus)
         {

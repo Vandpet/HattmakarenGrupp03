@@ -1,4 +1,6 @@
-﻿namespace HattmakarenWebbAppGrupp03.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HattmakarenWebbAppGrupp03.Models
 {
     public class HatOrder
     {
@@ -12,11 +14,7 @@
         public Employee? Employee { get; set; }
 
         public string Status { get; set; } = "Ej påbörjad";
-        public DateTime? TakenTime { get; set; }
-
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-
+        public DateTime Date {  get; set; }
         public string Note { get; set; } = string.Empty;
         public int Amount { get; set; }
     }

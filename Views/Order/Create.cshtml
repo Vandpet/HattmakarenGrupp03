@@ -2,47 +2,77 @@
 
 <h2>Skapa ny order (Lagerförda modeller)</h2>
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label>Välj Kund</label>
-        <select asp-for="SelectedCustomerId" asp-items="Model.CustomerList" class="form-control">
-            <option value="">-- Välj kund --</option>
-        </select>
-    </div>
+<form asp-action="Create" method="post">
+	<div class="form-group">
+		<label>Välj Kund</label>
+		<select asp-for="SelectedCustomerId" asp-items="Model.CustomerList" class="form-control">
+			<option value="">-- Välj kund --</option>
+		</select>
+		<span asp-validation-for="SelectedCustomerId" class="text-danger"></span>
+	</div>
 
-    <hr />
-    <h4>Välj Hattar</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Välj</th>
-                <th>Namn</th>
-                <th>Pris</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var hat in Model.StandardHats)
-            {
-                <tr>
-                    <td>
-                        <input type="checkbox" name="SelectedHatIds" value="@hat.HId" />
-                    </td>
-                    <td>@hat.Name</td>
-                    <td>@hat.Price.ToString("C")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<hr />
+	<h4>Välj Hattar</h4>
 
-    <div class="form-group">
-        <label asp-for="Description">Beskrivning/Notering</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-    </div>
+	<div class="text-danger mb-2">
+		<div asp-validation-summary="ModelOnly"></div>
+	</div>
 
-    <div class="form-check">
-        <input asp-for="IsExpress" class="form-check-input" />
-        <label asp-for="IsExpress" class="form-check-label">Expressbeställning (+20%)</label>
-    </div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Välj</th>
+				<th>Namn</th>
+				<th>Pris</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for (int i = 0; i < Model.StandardHats.Count; i++)
+			{
+				var hat = Model.StandardHats[i];
 
-    <button type="submit" class="btn btn-primary mt-3">Skapa Order</button>
+				<tr>
+					<td>
+						<input type="hidden" name="HatRows.HId[@i]" value="@hat.HId" />
+						<input type="number" name="HatRows.Amount[@i]" value="0" min="0" style="max-width: 60px;" />
+					</td>
+
+					<td>@hat.Name</td>
+					<td>@hat.Price.ToString("C")</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	<div class="form-group">
+		<label asp-for="PrelDeliveryDate">Preliminärt leveransdatum</label>
+		<input asp-for="PrelDeliveryDate" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+		<span asp-validation-for="PrelDeliveryDate" class="text-danger"></span>
+	</div>
+
+	<div class="form-group mt-3">
+		<label asp-for="Description">Beskrivning/Notering</label>
+		<textarea asp-for="Description" class="form-control"></textarea>
+	</div>
+
+	<div class="d-flex gap-3 align-items-end">
+		<div class="form-group mt-3">
+			<label asp-for="Discount">Rabatt (%)</label>
+			<input asp-for="Discount" type="number" min="0" max="100" class="form-control" style="max-width: 60px"/>
+			<span asp-validation-for="Discount" class="text-danger"></span>
+		</div>
+
+		<div class="form-group flex-grow-1">
+			<label asp-for="DiscountDesc">Rabattbeskrivning (max 50 tecken)</label>
+			<input asp-for="DiscountDesc" maxlength="50" class="form-control" />
+			<span asp-validation-for="DiscountDesc" class="text-danger"></span>
+		</div>
+	</div>
+
+	<div class="form-check mt-3">
+		<input asp-for="IsExpress" class="form-check-input" />
+		<label asp-for="IsExpress" class="form-check-label">Expressbeställning (+20%)</label>
+	</div>
+
+	<button type="submit" class="btn btn-primary mt-3">Skapa Order</button>
 </form>

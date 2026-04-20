@@ -1,0 +1,55 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.Customer
+
+@{
+    ViewData["Title"] = "Kundprofil";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Kundprofil</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <dl class="row">
+
+                        <dt class="col-sm-4">Namn</dt>
+                        <dd class="col-sm-8">@Model.Name</dd>
+
+                        <dt class="col-sm-4">Adress</dt>
+                        <dd class="col-sm-8">@Model.Adress</dd>
+
+                        <dt class="col-sm-4">Telefon</dt>
+                        <dd class="col-sm-8">@Model.PhoneNr</dd>
+
+                        <dt class="col-sm-4">E-post</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrWhiteSpace(Model.Email))
+                            {
+                                <a href="mailto:@Model.Email">@Model.Email</a>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">Land</dt>
+                        <dd class="col-sm-8">@Model.Country</dd>
+
+                        <dt class="col-sm-4">Stad</dt>
+                        <dd class="col-sm-8">@Model.City</dd>
+
+                        <dt class="col-sm-4">Språk</dt>
+                        <dd class="col-sm-8">@Model.Language</dd>
+
+                    </dl>
+                    <div class="mt-3">
+                        <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
+                        <a asp-action="Edit" asp-route-id="@Model.CId" class="btn btn-primary">Redigera</a>
+                        <a asp-action="Delete" asp-route-id="@Model.CId" class="btn btn-danger">Ta bort</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

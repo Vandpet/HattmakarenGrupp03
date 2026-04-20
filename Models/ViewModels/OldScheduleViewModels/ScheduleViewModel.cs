@@ -1,4 +1,4 @@
-﻿namespace HattmakarenWebbAppGrupp03.Models.ViewModels
+﻿namespace HattmakarenWebbAppGrupp03.Models.ViewModels.OldScheduleViewModels
 {
     public class ScheduleViewModel
     {
