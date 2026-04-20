@@ -44,8 +44,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 "nyligen" => orders.OrderBy(o => o.OrderDate).ToList(),
                 "påbörjade" => orders.Where(o => o.Status == "Påbörjad").ToList(),
-                "avslutade" => orders.Where(o => o.Status == "Färdig").ToList(),
+                "avslutade" => orders.Where(o => o.Status == "Skickad").ToList(),
                 "ej-påbörjade" => orders.Where(o => o.Status == "Ej Påbörjad").ToList(),
+                "färdig" => orders.Where(o => o.Status == "Färdig").ToList(),
                 _ => orders
             };
 
@@ -136,7 +137,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 //Loop för att spara specialhattar här.
 
                 await _hatOrderRepo.AddManyAsync(hatOrders);
-                await _hatOrderRepo.SetPriceOnOrder(newOrder.OId);
+                await _hatOrderRepo.SetPriceOnOrderAsync(newOrder.OId);
                 return RedirectToAction(nameof(Index));
             }
 

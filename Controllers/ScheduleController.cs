@@ -158,7 +158,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             hatOrder.EId = employeeId;
 
 
-            _hatOrderRepository.UpdateAsync(hatOrder);
+            await _hatOrderRepository.ChangeToStartedAsync(hatOrder);
 
             return RedirectToAction(nameof(Index), new
             {
