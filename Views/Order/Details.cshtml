@@ -91,6 +91,7 @@
             <th>Pris/Styck</th>
             <th>Storlek</th>
             <th>Bild</th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -112,6 +113,11 @@
                         <a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#imageModal" 
                         data-img="@item.Hat?.PicturePath"> Visa Bild</a>
                     }
+                </td>
+                <td>
+                    <span class="badge @(ColorForBadge(item.Status))">
+                        @item.Status
+                    </span>
                 </td>
             </tr>
         }
@@ -145,6 +151,29 @@
         document.getElementById('modalImage').src = imgSrc;
     });
 </script>
+
+@functions {
+    public string ColorForBadge(string itemStatus)
+    {
+        if (itemStatus == "Ej Påbörjad")
+        {
+            return "bg-secondary";
+        }
+        else if (itemStatus == "Påbörjad")
+        {
+            return "bg-primary";
+        }
+        else if (itemStatus == "Färdig")
+        {
+            return "bg-success";
+        }
+        else // if (itemStatus == "Skickad")
+        {
+            return "bg-skickad text-dark";
+
+        }
+    }
+}
 
 
 
