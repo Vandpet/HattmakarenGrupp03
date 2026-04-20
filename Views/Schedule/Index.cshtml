@@ -1,0 +1,214 @@
+﻿@using HattmakarenWebbAppGrupp03.Models.ViewModels
+@model MonthScheduleViewModel
+
+@{
+    ViewData["Title"] = "Schema";
+}
+
+<div class="schedule-personal-toggle">
+    <form method="get" asp-action="Index">
+
+        <input type="hidden" name="year" value="@Model.Year" />
+        <input type="hidden" name="month" value="@Model.Month" />
+
+        <label class="switch-label">
+            <input type="checkbox"
+                   name="personal"
+                   value="true"
+                   @(Model.IsPersonal ? "checked" : null)
+                   onchange="this.form.submit()" />
+
+            <span>Visa bara min planering</span>
+        </label>
+
+    </form>
+</div>
+
+<div class="schedule-header">
+
+    <a class="calendar-nav-btn"
+       asp-action="Index"
+       asp-route-month="@(Model.Month == 1 ? 12 : Model.Month - 1)"
+       asp-route-year="@(Model.Month == 1 ? Model.Year - 1 : Model.Year)"
+       asp-route-personal="@Model.IsPersonal">
+        ‹
+    </a>
+
+    <h2 class="schedule-title">
+        @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.Month)
+        @Model.Year
+    </h2>
+
+    <a class="calendar-nav-btn"
+       asp-action="Index"
+       asp-route-month="@(Model.Month == 12 ? 1 : Model.Month + 1)"
+       asp-route-year="@(Model.Month == 12 ? Model.Year + 1 : Model.Year)"
+       asp-route-personal="@Model.IsPersonal">
+        ›
+    </a>
+
+</div>
+
+<div id="employeeModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>Välj anställd</h3>
+
+        <select id="modalEmployeeSelect" class="form-control">
+            <option value="">-- Välj anställd --</option>
+            @foreach (var emp in Model.Employees)
+            {
+                <option value="@emp.Id">@emp.Name</option>
+            }
+        </select>
+
+        <div class="modal-actions">
+            <button onclick="confirmAssignment()" class="btn btn-primary">
+                Bekräfta
+            </button>
+
+            <button onclick="closeModal()" class="btn btn-secondary">
+                Avbryt
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="schedule-layout">
+    <aside class="task-panel">
+        <h4>Ej schemalagda</h4>
+
+        ```
+        @if (!Model.UnscheduledTasks.Any())
+        {
+            <div class="empty-box">Inga oschemalagda uppgifter.</div>
+        }
+        else
+        {
+            @foreach (var task in Model.UnscheduledTasks)
+            {
+                <div class="task-card @task.ColorClass"
+                     draggable="true"
+                     data-order-id="@task.OrderId"
+                     data-hat-id="@task.HatId">
+                    <div class="task-card-title">@task.Title</div>
+                    <div class="task-card-sub">@task.HatName</div>
+                    <div class="task-card-status">@task.Status</div>
+                </div>
+            }
+        }
+    </aside>
+
+    <section class="calendar-panel">
+        <div class="calendar-grid">
+            <div class="weekday">Sön</div>
+            <div class="weekday">Mån</div>
+            <div class="weekday">Tis</div>
+            <div class="weekday">Ons</div>
+            <div class="weekday">Tors</div>
+            <div class="weekday">Fre</div>
+            <div class="weekday">Lör</div>
+
+            @foreach (var week in Model.Weeks)
+            {
+                @foreach (var day in week.Days)
+                {
+                    <div class="calendar-cell @(day.IsCurrentMonth ? "" : "faded") @(day.IsToday ? "today" : "") drop-zone"
+                         data-date="@day.Date.ToString("yyyy-MM-dd")">
+
+                        <div class="date">@day.Date.Day</div>
+
+                        @foreach (var ev in day.Events.Take(3))
+                        {
+                            <div class="event @ev.ColorClass">
+                                <div>@ev.Title</div>
+                                <div class="event-sub">@ev.HatName</div>
+                                <div class="event-sub"><small>@ev.EmployeeName</small></div>
+                            </div>
+                        }
+
+                        @if (day.Events.Count > 3)
+                        {
+                            <div class="more">+@(day.Events.Count - 3) fler</div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </section>
+    ```
+
+</div>
+
+<form id="dropForm" method="post" asp-action="AssignTaskToDate">
+    <input type="hidden" name="orderId" id="dropOrderId" />
+    <input type="hidden" name="hatId" id="dropHatId" />
+    <input type="hidden" name="employeeId" id="dropEmployeeId" /> <!-- 🔥 NY -->
+    <input type="hidden" name="date" id="dropDate" />
+    <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
+    <input type="hidden" name="year" value="@Model.Year" />
+    <input type="hidden" name="month" value="@Model.Month" />
+</form>
+
+@section Scripts {
+    <script>
+        let draggedOrderId = null;
+        let draggedHatId = null;
+        let selectedDate = null;
+
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('dragstart', function () {
+                draggedOrderId = this.dataset.orderId;
+                draggedHatId = this.dataset.hatId;
+            });
+        });
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                zone.classList.add('drag-hover');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('drag-hover');
+            });
+
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('drag-hover');
+
+                if (!draggedOrderId || !draggedHatId) return;
+
+                selectedDate = zone.dataset.date;
+
+                openModal();
+            });
+        });
+
+        function openModal() {
+            document.getElementById("employeeModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("employeeModal").style.display = "none";
+            document.getElementById("modalEmployeeSelect").value = "";
+        }
+
+        function confirmAssignment() {
+            const employeeId = document.getElementById("modalEmployeeSelect").value;
+
+            if (!employeeId) {
+                alert("Välj en anställd");
+                return;
+            }
+
+            document.getElementById("dropOrderId").value = draggedOrderId;
+            document.getElementById("dropHatId").value = draggedHatId;
+            document.getElementById("dropDate").value = selectedDate;
+            document.getElementById("dropEmployeeId").value = employeeId;
+
+            document.getElementById("dropForm").submit();
+        }
+    </script>
+    ```
+
+}

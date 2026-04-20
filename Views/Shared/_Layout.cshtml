@@ -59,8 +59,14 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="ELEFANT" asp-action="ELEFANT">
+                <a class="nav-link text-white" asp-controller="Schedule" asp-action="Index">
                     <span class="menu-text">Schema</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="CustomActivity" asp-action="Index">
+                    <span class="menu-text">Arbetsupgifter</span>
                 </a>
             </li>
 
@@ -69,11 +75,14 @@
                     <span class="menu-text">Alla användare</span>
                 </a>
             </li>
-            
+
             <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="ELEFANT" asp-action="ELEFANT">
-                    <span class="menu-text">Min profil</span>
-                </a>
+            <a class="nav-link text-white"
+               asp-controller="Employee"
+               asp-action="View"
+               asp-route-id="@currentEmployeeId">
+                <span class="menu-text">Min profil</span>
+            </a>
             </li>
 
             <li class="nav-item">
@@ -94,6 +103,15 @@
                 </li>
             }
 
+<<<<<<< HEAD
+=======
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="Auth" asp-action="Logout">
+                    <span class="menu-text">Logga ut</span>
+                </a>
+            </li>
+
+>>>>>>> master
         </ul>
     </div>
 

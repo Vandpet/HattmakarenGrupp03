@@ -30,6 +30,9 @@ namespace HattmakarenWebbAppGrupp03.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AId"));
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -65,6 +68,10 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -119,6 +126,10 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -169,9 +180,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderOId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PicturePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -190,8 +198,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.HasKey("HId");
 
                     b.HasIndex("EmployeeEId");
-
-                    b.HasIndex("OrderOId");
 
                     b.ToTable("Hats");
                 });
@@ -222,6 +228,9 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("EId")
                         .HasColumnType("int");
 
@@ -233,9 +242,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("TakenTime")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("HId", "OId");
 
                     b.HasIndex("EId");
@@ -243,6 +249,42 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.HasIndex("OId");
 
                     b.ToTable("HatOrders");
+                });
+
+            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.HatSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HatOrderHId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HatOrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HatOrderOId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("HatOrderHId", "HatOrderOId");
+
+                    b.ToTable("HatSchedule");
                 });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Material", b =>
@@ -321,9 +363,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EmployeeEId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Express")
                         .HasColumnType("bit");
 
@@ -346,8 +385,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("EmployeeEId");
 
                     b.ToTable("Orders");
                 });
@@ -402,10 +439,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", null)
                         .WithMany("CreatedHats")
                         .HasForeignKey("EmployeeEId");
-
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Order", null)
-                        .WithMany("Hats")
-                        .HasForeignKey("OrderOId");
                 });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.HatMaterial", b =>
@@ -452,6 +485,25 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.HatSchedule", b =>
+                {
+                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HattmakarenWebbAppGrupp03.Models.HatOrder", "HatOrder")
+                        .WithMany()
+                        .HasForeignKey("HatOrderHId", "HatOrderOId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("HatOrder");
+                });
+
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.MaterialOrder", b =>
                 {
                     b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", null)
@@ -462,7 +514,7 @@ namespace HattmakarenWebbAppGrupp03.Migrations
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Order", b =>
                 {
                     b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "CreatedBy")
-                        .WithMany()
+                        .WithMany("HandledOrders")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -472,10 +524,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", null)
-                        .WithMany("HandledOrders")
-                        .HasForeignKey("EmployeeEId");
 
                     b.Navigation("CreatedBy");
 
@@ -543,8 +591,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Order", b =>
                 {
                     b.Navigation("HatOrders");
-
-                    b.Navigation("Hats");
 
                     b.Navigation("MaterialOrders");
                 });
