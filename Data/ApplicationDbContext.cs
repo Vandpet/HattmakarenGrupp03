@@ -54,7 +54,7 @@ namespace HattmakarenWebbAppGrupp03.Data
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.CreatedBy)
-                .WithMany() // Om du inte har en lista i Employee som heter CreatedOrders
+                .WithMany(e => e.HandledOrders) // Om du inte har en lista i Employee som heter CreatedOrders
                 .HasForeignKey(o => o.CreatedById)
                 .OnDelete(DeleteBehavior.Restrict);
 
