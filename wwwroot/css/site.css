@@ -1,27 +1,26 @@
 html {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 @media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
+  html {
+    font-size: 16px;
+  }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #E9D5EA;
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #E9D5EA;
 }
 
 html {
-    position: relative;
-    min-height: 100%;
+  position: relative;
+  min-height: 100%;
 }
 
 body {
-    margin-bottom: 60px;
+  margin-bottom: 60px;
 }
 
-/* SIDEBAR */
 
 .sidebar {
     z-index: 5;
@@ -50,7 +49,7 @@ body {
 button {
     border: none;
     background-color: transparent;
-    margin: 0 0.5rem 1rem 0;
+    margin: 0 0.5rem 1rem 0 ;
 }
 
 .menu-text {
@@ -64,6 +63,10 @@ button {
 #content {
     margin-left: 6rem;
     transition: margin-left 0.3s;
+}
+
+.sidebar.expanded ~ #content {
+/*    margin-left: 20rem;*/
 }
 
 .sidebar.expanded h3 {
@@ -87,6 +90,7 @@ button {
         background-color: #74147A;
     }
 
+
 @keyframes fadein-item {
     from {
         background-color: rgba(255, 99, 71, 0);
@@ -94,10 +98,12 @@ button {
 
     to {
         background-color: #984B9C;
+        border-radius: 2rem;
+        margin: 0 0 1rem 0;
     }
 }
 
-@keyframes fadein-headers {
+@keyframes fadein-headers{
     from {
         visibility: hidden;
     }
@@ -107,10 +113,11 @@ button {
     }
 }
 
-/* BADGE */
 
+/* Färg för Badge i orderöversikten */
 .bg-skickad {
     background-color: #E9D5EA;
+
 }
 
 /* ===== SCHEMA / KALENDER ===== */
@@ -398,4 +405,5 @@ button {
     background-color: #73147A;
     color: #333;
     font-weight: bold;
+
 }
