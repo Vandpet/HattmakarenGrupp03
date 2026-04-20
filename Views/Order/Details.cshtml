@@ -2,7 +2,13 @@
 
 <div class="d-flex justify-content-between align-items-center my-4">
 	<h2>Orderdetalj</h2>
-	<a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+    <div class=" d-flex gap-2">
+    <form asp-action="" asp-route-id="@(Model.order.OId)" method="post">
+        <input type="hidden" name="oId" value="@(Model.order.OId)" />
+        <button type="submit" class="btn rosa fw-bold m-0")>Skriv ut Order</button>
+        </form>
+        <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+    </div>
 </div>
 
 @* Orderinfo *@
