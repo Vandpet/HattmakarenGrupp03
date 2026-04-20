@@ -35,7 +35,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Order" asp-action="Index">
+                <a class="nav-link text-white" asp-controller="Order" asp-action="Create">
                     <span class="menu-text">Lägg ny kundorder</span>
                 </a>
             </li>
@@ -64,11 +64,11 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="CustomActivity" asp-action="Index">
-                    <span class="menu-text">Arbetsupgifter</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" asp-controller="CustomActivity" asp-action="Index">
+                        <span class="menu-text">Arbetsuppgifter</span>
+                    </a>
+                </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Employee" asp-action="Index">
@@ -76,14 +76,14 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-            <a class="nav-link text-white"
-               asp-controller="Employee"
-               asp-action="View"
-               asp-route-id="@currentEmployeeId">
-                <span class="menu-text">Min profil</span>
-            </a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                       asp-controller="Employee"
+                       asp-action="View"
+                       asp-route-id="@currentEmployeeId">
+                        <span class="menu-text">Min profil</span>
+                    </a>
+                </li>
 
             <li class="nav-item">
                 <a asp-controller="Auth" asp-action="Logout" class="nav-link text-white">
@@ -103,15 +103,6 @@
                 </li>
             }
 
-@* <<<<<<< HEAD
-=======
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Auth" asp-action="Logout">
-                    <span class="menu-text">Logga ut</span>
-                </a>
-            </li>
-
->>>>>>> master *@
         </ul>
     </div>
 

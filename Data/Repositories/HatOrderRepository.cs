@@ -6,10 +6,12 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
     public class HatOrderRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly OrderRepository _orderRepository;
 
-        public HatOrderRepository(ApplicationDbContext db)
+        public HatOrderRepository(ApplicationDbContext db, OrderRepository orderRepository)
         {
             _db = db;
+            _orderRepository = orderRepository;
         }
 
         public async Task AddAsync(HatOrder hatOrder)
@@ -50,7 +52,7 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task SetPriceOnOrder(int OId)
+        public async Task SetPriceOnOrderAsync(int OId)
         {
             var hatOrders = await _db.HatOrders
                 .Where(ho => ho.OId == OId)
@@ -77,6 +79,16 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
         public async Task AddManyAsync(List<HatOrder> hatOrders)
         {
             _db.HatOrders.AddRange(hatOrders);
+            await _db.SaveChangesAsync();
+        }
+
+        // Denna metod kan användas i kalender
+        public async Task ChangeToStartedAsync(HatOrder hatOrder)
+        {
+            hatOrder.Status = "Påbörjad";
+            await _db.SaveChangesAsync();
+            var order = await _orderRepository.GetByIdAsync(hatOrder.OId);
+            order.Status = "Påbörjad";
             await _db.SaveChangesAsync();
         }
     }

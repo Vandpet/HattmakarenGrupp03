@@ -112,23 +112,26 @@
             {
                 @foreach (var day in week.Days)
                 {
-                    <div class="calendar-cell @(day.IsCurrentMonth ? "" : "faded") @(day.IsToday ? "today" : "") drop-zone"
-                         data-date="@day.Date.ToString("yyyy-MM-dd")">
+                    <div class="calendar-cell ..."
+                         data-date="@day.Date.ToString("yyyy-MM-dd")"
+                         data-events='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(day.Events))'
+                         onclick="openDayModal(this)">
+
 
                         <div class="date">@day.Date.Day</div>
 
-                        @foreach (var ev in day.Events.Take(3))
+                        @foreach (var ev in day.Events.Take(1))
                         {
                             <div class="event @ev.ColorClass">
-                                <div>@ev.Title</div>
-                                <div class="event-sub">@ev.HatName</div>
+                                <div class="event-title">@ev.HatName</div>
+                                <div class="event-sub">Order @ev.OrderId</div>
                                 <div class="event-sub"><small>@ev.EmployeeName</small></div>
                             </div>
                         }
 
-                        @if (day.Events.Count > 3)
+                        @if (day.Events.Count > 1)
                         {
-                            <div class="more">+@(day.Events.Count - 3) fler</div>
+                            <div class="more">+@(day.Events.Count - 1) fler</div>
                         }
                     </div>
                 }
@@ -137,6 +140,18 @@
     </section>
     ```
 
+</div>
+
+<div id="dayModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3 id="modalDateTitle"></h3>
+
+        <div id="modalContent"></div>
+
+        <button onclick="closeDayModal()" class="btn btn-secondary">
+            Stäng
+        </button>
+    </div>
 </div>
 
 <form id="dropForm" method="post" asp-action="AssignTaskToDate">
@@ -207,6 +222,42 @@
             document.getElementById("dropEmployeeId").value = employeeId;
 
             document.getElementById("dropForm").submit();
+        }
+
+        function openDayModal(element) {
+
+            const date = element.dataset.date;
+            const events = JSON.parse(element.dataset.events || "[]");
+
+            document.getElementById("modalDateTitle").innerText = date;
+
+            const container = document.getElementById("modalContent");
+            container.innerHTML = "";
+
+            if (events.length === 0) {
+                container.innerHTML = "<p>Inga hattar denna dag</p>";
+            } else {
+
+                events.forEach(ev => {
+
+                    const div = document.createElement("div");
+                    div.className = "event";
+
+                            div.innerHTML = `
+                    <div><strong>${ev.HatName}</strong></div>
+                    <div>Order ${ev.OrderId}</div>
+                    <div><small>${ev.EmployeeName}</small></div>
+                    `;
+
+                    container.appendChild(div);
+                });
+            }
+
+            document.getElementById("dayModal").style.display = "flex";
+        }
+
+        function closeDayModal() {
+            document.getElementById("dayModal").style.display = "none";
         }
     </script>
     ```

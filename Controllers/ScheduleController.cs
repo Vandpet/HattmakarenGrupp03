@@ -33,20 +33,20 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var startDate = firstDay.AddDays(-(int)firstDay.DayOfWeek);
 
 
-            // ✅ HÄMTA SCHEMA
-            var schedulesQuery = _context.HatSchedule
-                .Include(s => s.Employee)
-                .Include(s => s.HatOrder)
-                    .ThenInclude(h => h.Hat)
-                .Include(s => s.HatOrder.Order)
+            var hatOrdersQuery = _context.HatOrders
+                .Include(h => h.Hat)
+                .Include(h => h.Order)
+                .Include(h => h.Employee)
                 .AsQueryable();
 
             if (personal)
             {
-                schedulesQuery = schedulesQuery.Where(s => s.EmployeeId == currentEmployeeId);
+                hatOrdersQuery = hatOrdersQuery
+                    .Where(h => h.EId == currentEmployeeId);
             }
 
-            var schedules = await schedulesQuery.ToListAsync();
+            var hatOrders = await hatOrdersQuery.ToListAsync();
+
 
             // HÄMTA ALLA HATORDERS (för oschemalagda)
             var allHatOrders = await _context.HatOrders
@@ -92,9 +92,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
                 for (int day = 0; day < 7; day++)
                 {
-                    var daySchedules = schedules
-                        .Where(s => s.Date.Date == current.Date)
-                        .ToList();
+                    var dayHatOrders = hatOrders
+                    .Where(h => h.Date == current.Date)
+                    .ToList();
 
                     var cell = new CalendarCellViewModel
                     {
@@ -103,20 +103,19 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                         IsToday = current.Date == today
                     };
 
-                    foreach (var s in daySchedules)
-                    {
+                    foreach(var ho in dayHatOrders)
+{
                         cell.Events.Add(new CalendarEventViewModel
                         {
-                            OrderId = s.HatOrder.OId,
-                            HatId = s.HatOrder.HId,
-                            Title = $"Order {s.HatOrder.OId}",
-                            HatName = s.HatOrder.Hat?.Name ?? "",
-                            Status = s.Status,
-                            ColorClass = GetColorClass(s.HatOrder.Order, s.Status),
+                            OrderId = ho.OId,
+                            HatId = ho.HId,
+                            Title = $"Order {ho.OId}",
+                            HatName = ho.Hat?.Name ?? "",
+                            Status = ho.Status,
+                            ColorClass = GetColorClass(ho.Order, ho.Status),
 
-                            // ✅ NYTT
-                            EmployeeId = s.EmployeeId,
-                            EmployeeName = s.Employee.Name
+                            EmployeeId = ho.EId ?? 0,
+                            EmployeeName = ho.Employee?.Name ?? ""
                         });
                     }
 
@@ -159,7 +158,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             hatOrder.EId = employeeId;
 
 
-            _hatOrderRepository.UpdateAsync(hatOrder);
+            await _hatOrderRepository.ChangeToStartedAsync(hatOrder);
 
             return RedirectToAction(nameof(Index), new
             {
