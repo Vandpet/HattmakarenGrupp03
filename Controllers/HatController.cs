@@ -2,6 +2,7 @@
 using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using WebApp.Services;
 
@@ -85,6 +86,21 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             await _hatRepository.AddAsync(hat);
 
             return RedirectToAction("Index", "Home");
+        }
+        private bool IsLoggedIn()
+        {
+            return HttpContext.Session.GetInt32("EmployeeId") != null;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var hats = await _hatRepository.GetAllAsync();
+            return View(hats);
         }
 
         // Hjälpmetod för att simulera databas-material
