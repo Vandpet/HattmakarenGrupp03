@@ -31,15 +31,15 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task UpdateAsync(Hat hat)
+        public async Task UpdateAsync(Order order)
         {
-            _db.Hats.Update(hat);
+            _db.Orders.Update(order);
             await _db.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Hat hat)
+        public async Task DeleteAsync(Order order)
         {
-            _db.Hats.Remove(hat);
+            _db.Orders.Remove(order);
             await _db.SaveChangesAsync();
         }
 

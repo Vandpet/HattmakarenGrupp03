@@ -2,7 +2,13 @@
 
 <div class="d-flex justify-content-between align-items-center my-4">
 	<h2>Orderdetalj</h2>
-	<a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+    <div class=" d-flex gap-2">
+    <form asp-action="" asp-route-id="@(Model.order.OId)" method="post">
+        <input type="hidden" name="oId" value="@(Model.order.OId)" />
+        <button type="submit" class="btn rosa fw-bold m-0")>Skriv ut Order</button>
+        </form>
+        <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+    </div>
 </div>
 
 @* Orderinfo *@
@@ -81,7 +87,13 @@
 </div>
 
 @* OrderInnehåll *@
+<div class=" d-flex justify-content-between align-items-center">
 <h2>Orderinnehåll</h2>
+    <form asp-action="SendOrder" asp-route-id="@(Model.order.OId)" method="post">
+        <input type="hidden" name="oId" value="@(Model.order.OId)" />
+        <button type="submit" class="btn rosa fw-bold" @(Model.order.Status != "Färdig" ? "disabled" : "")>Skicka Order</button>
+    </form>
+</div>
 <table class="table table-hover">
     <thead class="thead-dark">
         <tr>
@@ -91,6 +103,7 @@
             <th>Pris/Styck</th>
             <th>Storlek</th>
             <th>Bild</th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -112,6 +125,11 @@
                         <a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#imageModal" 
                         data-img="@item.Hat?.PicturePath"> Visa Bild</a>
                     }
+                </td>
+                <td>
+                    <span class="badge @(ColorForBadge(item.Status))">
+                        @item.Status
+                    </span>
                 </td>
             </tr>
         }
@@ -145,6 +163,29 @@
         document.getElementById('modalImage').src = imgSrc;
     });
 </script>
+
+@functions {
+    public string ColorForBadge(string itemStatus)
+    {
+        if (itemStatus == "Ej Påbörjad")
+        {
+            return "bg-secondary";
+        }
+        else if (itemStatus == "Påbörjad")
+        {
+            return "bg-primary";
+        }
+        else if (itemStatus == "Färdig")
+        {
+            return "bg-success";
+        }
+        else // if (itemStatus == "Skickad")
+        {
+            return "bg-skickad text-dark";
+
+        }
+    }
+}
 
 
 

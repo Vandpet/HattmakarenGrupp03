@@ -20,17 +20,21 @@
             <input type="radio" name="filter" value="nyligen" onchange="this.form.submit()" class="d-none" />
             Nyligen Tillagda
         </label>
+        <label class="btn text-start @(selected == "ej-påbörjade" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="ej-påbörjade" onchange="this.form.submit()" class="d-none" />
+            Ej Påbörjade Ordrar
+        </label>
         <label class="btn text-start @(selected == "påbörjade" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="påbörjade" onchange="this.form.submit()" class="d-none" />
             Påbörjade Ordrar
         </label>
+        <label class="btn text-start @(selected == "färdig" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="färdig" onchange="this.form.submit()" class="d-none" />
+            Färdiga Ordrar
+        </label>
         <label class="btn text-start @(selected == "avslutade" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="avslutade" onchange="this.form.submit()" class="d-none" />
             Avslutade Ordrar
-        </label>
-        <label class="btn text-start @(selected == "ej-påbörjade" ? "btn-ljuslila" : "btn-rosa")">
-            <input type="radio" name="filter" value="ej-påbörjade" onchange="this.form.submit()" class="d-none" />
-            Ej Påbörjade Ordrar
         </label>
     </form>
 

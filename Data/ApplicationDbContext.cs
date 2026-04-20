@@ -204,10 +204,106 @@ namespace HattmakarenWebbAppGrupp03.Data
                 CreatedBy = otto
             };
 
-            
+
+
+            var order1 = new Order
+            {
+                Price = 200m,
+                Status = "Påbörjad",
+                Express = false,
+                Discount = 0,
+                DiscountDesc = "",
+                OrderDate = DateTime.Now.AddDays(-2),
+                PrelDeliveryDate = DateTime.Now.AddDays(5),
+                Description = "Order påbörjad",
+                Customer = customer,
+                CreatedBy = otto
+            };
+
+            var order2 = new Order
+            {
+                Price = 300m,
+                Status = "Färdig",
+                Express = false,
+                Discount = 0,
+                DiscountDesc = "",
+                OrderDate = DateTime.Now.AddDays(-5),
+                PrelDeliveryDate = DateTime.Now.AddDays(2),
+                Description = "Order färdig",
+                Customer = customer,
+                CreatedBy = otto
+            };
+
+            var order3 = new Order
+            {
+                Price = 400m,
+                Status = "Skickad",
+                Express = true,
+                Discount = 10,
+                DiscountDesc = "Test rabatt",
+                OrderDate = DateTime.Now.AddDays(-10),
+                PrelDeliveryDate = DateTime.Now.AddDays(-1),
+                Description = "Order skickad",
+                Customer = customer,
+                CreatedBy = otto
+            };
+
+            var hatorder = new HatOrder
+            {
+                Hat = hat,
+                Order = order,
+                Employee = otto,
+                Status = "Ej Påbörjad",
+                Date = DateTime.Now.AddDays(0),
+                Amount = 1
+            };
+
+            var hatOrder1 = new HatOrder
+            {
+                Hat = hat,
+                Order = order1,
+                Employee = otto,
+                Status = "Påbörjad",
+                Date = DateTime.Now.AddDays(0),
+                Amount = 1
+            };
+
+            var hatOrder2 = new HatOrder
+            {
+                Hat = hat,
+                Order = order2,
+                Employee = otto,
+                Status = "Färdig",
+                Date = DateTime.Now.AddDays(1),
+                Amount = 2
+            };
+
+            var hatOrder3 = new HatOrder
+            {
+                Hat = hat,
+                Order = order3,
+                Employee = otto,
+                Status = "Skickad",
+                Date = DateTime.Now.AddDays(2),
+                Amount = 1
+            };
+
 
             // --- Add everything ---
-            context.AddRange(otto, customer, material, hat, order);
+            context.AddRange(
+                otto,
+                customer,
+                material,
+                hat,
+                order,
+                order1,
+                order2,
+                order3,
+                hatorder,
+                hatOrder1,
+                hatOrder2,
+                hatOrder3
+            );
 
             await context.SaveChangesAsync();
         }
