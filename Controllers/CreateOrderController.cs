@@ -5,6 +5,7 @@ using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
 {
@@ -73,7 +74,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     .ToListAsync(),
                 PrelDeliveryDate = DateTime.Now.AddDays(14)
             };
-            
+
             return View(viewModel);
         }
 
@@ -174,6 +175,32 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return View(viewModel);
         }
+        [HttpPost]
+        public async Task<IActionResult> SendOrder(int oId)
+        {
+            // 1. Hämta EmployeeId från Sessionen
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
 
+            // 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
+            if (currentEmployeeId == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var orderToSend = await _orderRepo.GetByIdAsync(oId);
+            if (orderToSend == null) return NotFound();
+            
+            orderToSend.Status = "Skickad";
+
+            var hatOrderList = await _hatOrderRepo.GetByOrderIdAsync(oId);
+            foreach (var hatOrder in hatOrderList)
+            {
+                hatOrder.Status = "Skickad";
+                await _hatOrderRepo.UpdateAsync(hatOrder);
+            }
+            
+            await _orderRepo.UpdateAsync(orderToSend);
+            return RedirectToAction(nameof(Details), new { oId });
+        }
     }
 }

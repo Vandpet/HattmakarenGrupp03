@@ -81,7 +81,13 @@
 </div>
 
 @* OrderInnehåll *@
+<div class=" d-flex justify-content-between align-items-center">
 <h2>Orderinnehåll</h2>
+    <form asp-action="SendOrder" asp-route-id="@(Model.order.OId)" method="post">
+        <input type="hidden" name="oId" value="@(Model.order.OId)" />
+        <button type="submit" class="btn rosa fw-bold" @(Model.order.Status != "Färdig" ? "disabled" : "")>Skicka Order</button>
+    </form>
+</div>
 <table class="table table-hover">
     <thead class="thead-dark">
         <tr>
