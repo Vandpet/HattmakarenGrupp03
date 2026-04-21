@@ -64,13 +64,10 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Month = selectedMonth
             };
 
-            // OSCHEMALAGDA
-            //var unscheduled = allHatOrders
-            //    .Where(h => !scheduledHatOrderIds.Contains(h.Id))
-            //    .ToList();
 
             var unscheduled = allHatOrders.Where(ho => ho.Status == "Ej Påbörjad").ToList();
             
+
 
             foreach (var ho in unscheduled)
             {
@@ -81,7 +78,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     Title = $"Order {ho.OId}",
                     HatName = ho.Hat?.Name ?? "",
                     Status = ho.Status,
-                    ColorClass = GetColorClass(ho.Order, ho.Status)
+                    ColorClass = GetColorClass(ho.Order, ho.Status),
+                    Amount = ho.Amount,
                 });
             }
 
@@ -114,6 +112,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                             HatName = ho.Hat?.Name ?? "",
                             Status = ho.Status,
                             ColorClass = GetColorClass(ho.Order, ho.Status),
+                            Amount = ho.Amount,
 
                             EmployeeId = ho.EId ?? 0,
                             EmployeeName = ho.Employee?.Name ?? ""

@@ -90,7 +90,7 @@
                      data-order-id="@task.OrderId"
                      data-hat-id="@task.HatId">
                     <div class="task-card-title">@task.Title</div>
-                    <div class="task-card-sub">@task.HatName</div>
+                    <div class="task-card-sub">@task.Amount x @task.HatName</div>
                     <div class="task-card-status">@task.Status</div>
                 </div>
             }
@@ -119,21 +119,32 @@
 
                         <div class="date">@day.Date.Day</div>
 
-                        @foreach (var ev in day.Events.Take(1))
+                        @{
+                            var ev = day.Events.FirstOrDefault(e => e.Status != "Färdig")
+                            ?? day.Events.FirstOrDefault();
+                        }
+
+                        @if (ev != null)
                         {
-                            <div class="event @ev.ColorClass task-card"
+                            var statusClass = ev.Status == "Färdig" ? "event-done" : "";
+
+                            <div class="event @statusClass @ev.ColorClass task-card"
                                  draggable="true"
                                  data-order-id="@ev.OrderId"
                                  data-hat-id="@ev.HatId">
-                                <div class="event-title">@ev.HatName</div>
+
+                                <div class="event-title">@ev.Amount x @ev.HatName</div>
                                 <div class="event-sub">Order @ev.OrderId</div>
                                 <div class="event-sub"><small>@ev.EmployeeName</small></div>
+
                             </div>
                         }
+                        
 
                         @if (day.Events.Count > 1)
                         {
                             <div class="more">+@(day.Events.Count - 1) fler</div>
+                         
                         }
                     </div>
                 }
@@ -282,15 +293,22 @@
                 events.forEach(ev => {
 
                     const div = document.createElement("div");
-                    div.className = "event";
+                    div.classList.add("event");
+
+                    if (ev.Status === "Färdig") {
+                        div.classList.add("event-done");
+                    }
+                    else {
+                        div.classList.remove("event-done")
+                    }
 
                             div.innerHTML = `
-                    <div><strong><h5>${ev.HatName}</h5></strong></div>
+                    <div><strong><h5>${ev.Amount} x ${ev.HatName}</h5></strong></div>
                     <div><h6>Order ${ev.OrderId}</h6></div>
                     <div>${ev.EmployeeName}</div>
                     <button class="btn btn-danger btn-sm"  onclick="unassignTask(${ev.OrderId}, ${ev.HatId})">Oschemalägg</button>
                     <button class="btn btn-success" onclick="markDone(${ev.OrderId}, ${ev.HatId})">Klar</button>
-                    <hr>
+                    <hr style="margin:0;">
                     `;
 
                     container.appendChild(div);
