@@ -282,6 +282,10 @@ button {
     .calendar-cell.drag-hover {
         background: #efe3f0;
     }
+.drop-unscheduled.drag-hover {
+    background: #efe3f0;
+    outline: 2px dashed #984B9C;
+}
 
 .date {
     font-weight: 700;

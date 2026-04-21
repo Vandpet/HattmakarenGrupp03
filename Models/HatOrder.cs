@@ -14,7 +14,7 @@ namespace HattmakarenWebbAppGrupp03.Models
         public Employee? Employee { get; set; }
 
         public string Status { get; set; } = "Ej påbörjad";
-        public DateTime Date {  get; set; }
+        public DateTime? Date {  get; set; }
         public string Note { get; set; } = string.Empty;
         public int Amount { get; set; }
     }

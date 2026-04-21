@@ -1,0 +1,82 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.HatCreateViewModel
+
+<form id="createCustomHatForm" asp-action="CreateModal" method="post" enctype="multipart/form-data">
+
+    <!-- HATT-SEKTION -->
+    <div class="card p-3 mb-4">
+
+        <div class="form-group mb-3">
+            <label asp-for="Name">Namn</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Price">Pris</label>
+            <input asp-for="Price" class="form-control" type="number" step="0.01" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Size">Storlek</label>
+            <input asp-for="Size" class="form-control" />
+            <span asp-validation-for="Size" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ImageFile">Bild</label>
+            <input asp-for="ImageFile" type="file" class="form-control" />
+            <span asp-validation-for="ImageFile" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Description">Beskrivning</label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+
+    </div>
+       <!-- MATERIAL-SEKTION -->
+    <div class="card p-3 mb-4">
+        <h4>Material</h4>
+
+        <div id="materials-container">
+
+            <!-- första raden -->
+            <div class="material-item border p-2 mb-3">
+                <input name="Materials[0].Name" class="form-control mb-1" placeholder="Namn" />
+                <input name="Materials[0].Amount" class="form-control mb-1" placeholder="Mängd" type="number" step="0.01" />
+                <input name="Materials[0].MeasuringUnits" class="form-control mb-1" placeholder="Enhet" />
+                <input name="Materials[0].Price" class="form-control mb-1" placeholder="Pris" type="number" step="0.01" />
+            </div>
+
+        </div>
+
+        <button type="button" class="btn btn-success" id="addMaterialBtn">
+            + Lägg till nytt material
+        </button>
+    </div>
+
+    <!-- KNAPPAR -->
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" id="saveCustomHatBtn">Spara hatt</button>
+        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Avbryt</a>
+    </div>
+
+</form>
+
+<!-- TEMPLATE (viktig fix för stabil binding) -->
+<div id="material-template" style="display:none;">
+    <div class="material-item border p-2 mb-3">
+        <input class="form-control mb-1 name" placeholder="Namn" />
+        <input class="form-control mb-1 amount" placeholder="Mängd" type="number" step="0.01" />
+        <input class="form-control mb-1 unit" placeholder="Enhet" />
+        <input class="form-control mb-1 price" placeholder="Pris" type="number" step="0.01" />
+        
+        <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn">
+            Ta bort
+        </button>
+    </div>
+</div>
+

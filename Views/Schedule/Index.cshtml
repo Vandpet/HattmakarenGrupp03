@@ -74,10 +74,9 @@
 </div>
 
 <div class="schedule-layout">
-    <aside class="task-panel">
+    <aside class="task-panel drop-unscheduled">
         <h4>Ej schemalagda</h4>
 
-        ```
         @if (!Model.UnscheduledTasks.Any())
         {
             <div class="empty-box">Inga oschemalagda uppgifter.</div>
@@ -112,9 +111,8 @@
             {
                 @foreach (var day in week.Days)
                 {
-                    <div class="calendar-cell ..."
+                    <div class="calendar-cell @(day.IsCurrentMonth ? "" : "faded") @(day.IsToday ? "today" : "") drop-zone"
                          data-date="@day.Date.ToString("yyyy-MM-dd")"
-                         data-events='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(day.Events))'
                          onclick="openDayModal(this)">
 
 
@@ -122,7 +120,10 @@
 
                         @foreach (var ev in day.Events.Take(1))
                         {
-                            <div class="event @ev.ColorClass">
+                            <div class="event @ev.ColorClass task-card"
+                                 draggable="true"
+                                 data-order-id="@ev.OrderId"
+                                 data-hat-id="@ev.HatId">
                                 <div class="event-title">@ev.HatName</div>
                                 <div class="event-sub">Order @ev.OrderId</div>
                                 <div class="event-sub"><small>@ev.EmployeeName</small></div>
@@ -138,7 +139,7 @@
             }
         </div>
     </section>
-    ```
+   
 
 </div>
 
@@ -163,6 +164,13 @@
     <input type="hidden" name="year" value="@Model.Year" />
     <input type="hidden" name="month" value="@Model.Month" />
 </form>
+<form id="unscheduleForm" method="post" asp-action="UnassignTask">
+    <input type="hidden" name="orderId" id="unscheduleOrderId" />
+    <input type="hidden" name="hatId" id="unscheduleHatId" />
+    <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
+    <input type="hidden" name="year" value="@Model.Year" />
+    <input type="hidden" name="month" value="@Model.Month" />
+</form>
 
 @section Scripts {
     <script>
@@ -177,7 +185,7 @@
             });
         });
 
-        document.querySelectorAll('.drop-zone').forEach(zone => {
+               document.querySelectorAll('.drop-zone').forEach(zone => {
             zone.addEventListener('dragover', e => {
                 e.preventDefault();
                 zone.classList.add('drag-hover');
@@ -199,6 +207,31 @@
             });
         });
 
+        const unscheduledZone = document.querySelector('.drop-unscheduled');
+
+        if (unscheduledZone) {
+            unscheduledZone.addEventListener('dragover', e => {
+                e.preventDefault();
+                unscheduledZone.classList.add('drag-hover');
+            });
+
+            unscheduledZone.addEventListener('dragleave', () => {
+                unscheduledZone.classList.remove('drag-hover');
+            });
+
+            unscheduledZone.addEventListener('drop', e => {
+                e.preventDefault();
+                unscheduledZone.classList.remove('drag-hover');
+
+                if (!draggedOrderId || !draggedHatId) return;
+
+                document.getElementById("unscheduleOrderId").value = draggedOrderId;
+                document.getElementById("unscheduleHatId").value = draggedHatId;
+
+                document.getElementById("unscheduleForm").submit();
+            });
+        }
+       
         function openModal() {
             document.getElementById("employeeModal").style.display = "flex";
         }
@@ -260,6 +293,6 @@
             document.getElementById("dayModal").style.display = "none";
         }
     </script>
-    ```
+    
 
 }
