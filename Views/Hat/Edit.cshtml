@@ -8,7 +8,7 @@
 <div class="container mt-4">
     <h2>Redigera hatt</h2>
 
-    <form asp-action="Edit" asp-controller="Hat" method="post" enctype="multipart/form-data">
+    <form asp-action="Edit" asp-controller="Hat" asp-route-id="@Model.HId" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input asp-for="HId" type="hidden" />
 
