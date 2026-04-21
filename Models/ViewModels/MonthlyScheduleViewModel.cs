@@ -37,6 +37,7 @@
         public string ColorClass { get; set; } = "";
         public int EmployeeId { get; set; }
         public string EmployeeName { get; set; } = "";
+        public int Amount { get; set; }
     }
 
     public class UnscheduledTaskViewModel
@@ -47,6 +48,7 @@
         public string HatName { get; set; } = "";
         public string Status { get; set; } = "";
         public string ColorClass { get; set; } = "";
+        public int Amount { get; set; }
     }
 
     public class EmployeeViewModel

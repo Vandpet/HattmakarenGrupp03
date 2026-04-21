@@ -21,7 +21,6 @@ body {
   margin-bottom: 60px;
 }
 
-
 .sidebar {
     z-index: 5;
     position: fixed;
@@ -361,6 +360,11 @@ button {
     display: flex;
     justify-content: center;
     margin-top: 0.5rem;
+}
+
+.event-done {
+    background-color: #d4edda; /* ljusgrön */
+    border-left: 4px solid #28a745;
 }
 
 .switch-label {
