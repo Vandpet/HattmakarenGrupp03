@@ -3,6 +3,7 @@
     public class MonthScheduleViewModel
     {
         public bool IsPersonal { get; set; }
+        public bool IsAdmin { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
 
@@ -21,6 +22,7 @@
         public DateTime Date { get; set; }
         public bool IsCurrentMonth { get; set; }
         public bool IsToday { get; set; }
+
 
         public List<CalendarEventViewModel> Events { get; set; } = new();
     }

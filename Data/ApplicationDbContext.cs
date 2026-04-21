@@ -151,10 +151,23 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Adress = "Testgatan 1",
                 PhoneNr = "0700000000",
                 Email = "Otto@hatmakarna.se",
-                accesslevel = 10,
+                accesslevel = 9,
                 Username = "Otto"
             };
+
+            var felicia = new Employee
+            {
+                Name = "Felicia",
+                Adress = "Testgatan 1",
+                PhoneNr = "0700000000",
+                Email = "Otto@hatmakarna.se",
+                accesslevel = 10,
+                Username = "Felicia"
+            };
             otto.PasswordHash = _passwordHasher.HashPassword(otto, "asdasd");
+
+            felicia.PasswordHash = _passwordHasher.HashPassword(felicia, "123123");
+
 
 
             // --- Customer ---
@@ -292,6 +305,7 @@ namespace HattmakarenWebbAppGrupp03.Data
             // --- Add everything ---
             context.AddRange(
                 otto,
+                felicia,
                 customer,
                 material,
                 hat,

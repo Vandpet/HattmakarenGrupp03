@@ -49,29 +49,32 @@
 
 </div>
 
-<div id="employeeModal" class="modal-overlay" style="display:none;">
-    <div class="modal-box">
-        <h3>Välj anställd</h3>
+@if (Model.IsAdmin)
+{
+    <div id="employeeModal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <h3>Välj anställd</h3>
 
-        <select id="modalEmployeeSelect" class="form-control">
-            <option value="">-- Välj anställd --</option>
-            @foreach (var emp in Model.Employees)
-            {
-                <option value="@emp.Id">@emp.Name</option>
-            }
-        </select>
+            <select id="modalEmployeeSelect" class="form-control">
+                <option value="">-- Välj anställd --</option>
+                @foreach (var emp in Model.Employees)
+                {
+                    <option value="@emp.Id">@emp.Name</option>
+                }
+            </select>
 
-        <div class="modal-actions">
-            <button onclick="confirmAssignment()" class="btn btn-primary">
-                Bekräfta
-            </button>
+            <div class="modal-actions">
+                <button type="button" onclick="confirmAssignment()" class="btn btn-primary">
+                    Bekräfta
+                </button>
 
-            <button onclick="closeModal()" class="btn btn-secondary">
-                Avbryt
-            </button>
+                <button type="button" onclick="closeModal()" class="btn btn-secondary">
+                    Avbryt
+                </button>
+            </div>
         </div>
     </div>
-</div>
+}
 
 <div class="schedule-layout">
     <aside class="task-panel drop-unscheduled">
@@ -220,9 +223,18 @@
 
                 if (!draggedOrderId || !draggedHatId) return;
 
-                selectedDate = zone.dataset.date;
+                        selectedDate = zone.dataset.date;
 
-                openModal();
+                    if (@Model.IsAdmin.ToString().ToLower()) {
+                       openModal();
+                     }              
+                        else {
+                                document.getElementById("dropOrderId").value = draggedOrderId;
+                                document.getElementById("dropHatId").value = draggedHatId;
+                                document.getElementById("dropDate").value = selectedDate;
+                                document.getElementById("dropEmployeeId").value = 0;
+                                document.getElementById("dropForm").submit();
+        }
             });
         });
 
