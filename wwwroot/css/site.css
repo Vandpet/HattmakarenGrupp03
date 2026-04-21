@@ -362,6 +362,11 @@ button {
     margin-top: 0.5rem;
 }
 
+.event-done {
+    background-color: #d4edda; /* ljusgrön */
+    border-left: 4px solid #28a745;
+}
+
 .switch-label {
     display: flex;
     align-items: center;
