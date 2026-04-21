@@ -103,13 +103,15 @@
             <th>Pris/Styck</th>
             <th>Storlek</th>
             <th>Bild</th>
+            <th>Beskrivning</th>
             <th>Status</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.HatOrders)
         {
-            <tr>
+            <tr onclick="window.location='@Url.Action("View", "Hat", new { hId = item.HId, oId = Model.Order.OId, amount = item.Amount })'"
+                style="cursor:pointer;">
                 <td>@item.HId</td>
                 <td>@item.Hat?.Name</td>
                 <td>@item.Amount</td>
@@ -122,10 +124,11 @@
                     }
                     else
                     {
-                        <a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#imageModal" 
-                        data-img="@item.Hat?.PicturePath"> Visa Bild</a>
+                        <a href="#" class="btn btn-sm btn-outline-info" onclick="event.stopPropagation();" data-bs-toggle="modal" data-bs-target="#imageModal"
+                            data-img="@item.Hat?.PicturePath"> Visa Bild</a>
                     }
                 </td>
+				<td style="max-width: 30px;" class="text-truncate">@item.Hat?.Description</td>
                 <td>
                     <span class="badge @(ColorForBadge(item.Status))">
                         @item.Status

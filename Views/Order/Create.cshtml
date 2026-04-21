@@ -23,6 +23,7 @@
 			<tr>
 				<th>Välj</th>
 				<th>Namn</th>
+				<th>Storlek</th>
 				<th>Pris</th>
 			</tr>
 		</thead>
@@ -38,6 +39,7 @@
 					</td>
 
 					<td>@hat.Name</td>
+					<td>@hat.Size</td>
 					<td>@hat.Price.ToString("C")</td>
 				</tr>
 			}
@@ -50,23 +52,23 @@
 			<tr>
 				<th>Välj</th>
 				<th>Namn</th>
+				<th>Beskrivning</th>
 				<th>Pris</th>
 			</tr>
 		</thead>
 		<tbody>
-
 		</tbody>
 	</table>
 
 
 	<div>
-		<button type="button" class="btn btn-primary mt-3" id="openCustomHatModalBtn">
-			Skapa special beställd Hatt
-			</button>
+		<button type="button" class="btn rosa fw-bold m-0" id="openCustomHatModalBtn">
+			Skapa Specialbeställd Hatt
+		</button>
 	</div>
 
 
-	<div class="form-group">
+	<div class="form-group mt-3">
 		<label asp-for="PrelDeliveryDate">Preliminärt leveransdatum</label>
 		<input asp-for="PrelDeliveryDate" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
 		<span asp-validation-for="PrelDeliveryDate" class="text-danger"></span>
@@ -80,7 +82,7 @@
 	<div class="d-flex gap-3 align-items-end">
 		<div class="form-group mt-3">
 			<label asp-for="Discount">Rabatt (%)</label>
-			<input asp-for="Discount" type="number" min="0" max="100" class="form-control" style="max-width: 60px"/>
+			<input asp-for="Discount" type="number" min="0" max="100" class="form-control" style="max-width: 60px" />
 			<span asp-validation-for="Discount" class="text-danger"></span>
 		</div>
 
@@ -96,7 +98,7 @@
 		<label asp-for="IsExpress" class="form-check-label">Expressbeställning (+20%)</label>
 	</div>
 
-	<button type="submit" class="btn btn-primary mt-3">Skapa Order</button>
+	<button type="submit" class="btn rosa fw-bold m-0 mt-3">Skapa Order</button>
 </form>
 
 <div class="modal fade" id="customHatModal" tabindex="-1" aria-hidden="true">
@@ -113,111 +115,112 @@
 	</div>
 </div>
 
-	@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
 
-    <script>
-        let customHatIndex = @Model.StandardHats.Count;
+	<script>
+		let customHatIndex = @Model.StandardHats.Count;
 
-        const modalElement = document.getElementById('customHatModal');
-        const modalBody = document.getElementById('customHatModalBody');
-        const openModalBtn = document.getElementById('openCustomHatModalBtn');
-        const customHatModal = new bootstrap.Modal(modalElement);
+		const modalElement = document.getElementById('customHatModal');
+		const modalBody = document.getElementById('customHatModalBody');
+		const openModalBtn = document.getElementById('openCustomHatModalBtn');
+		const customHatModal = new bootstrap.Modal(modalElement);
 
-        openModalBtn.addEventListener('click', async function () {
-            const response = await fetch('/Hat/CreateModal');
-            const html = await response.text();
+		openModalBtn.addEventListener('click', async function () {
+			const response = await fetch('/Hat/CreateModal');
+			const html = await response.text();
 
-            modalBody.innerHTML = html;
-            customHatModal.show();
-        });
+			modalBody.innerHTML = html;
+			customHatModal.show();
+		});
 
-        modalBody.addEventListener('click', async function (e) {
-            if (e.target && e.target.id === 'addMaterialBtn') {
-                addMaterial();
-            }
+		modalBody.addEventListener('click', async function (e) {
+			if (e.target && e.target.id === 'addMaterialBtn') {
+				addMaterial();
+			}
 
-            if (e.target && e.target.classList.contains('remove-btn')) {
-                e.target.closest('.material-item').remove();
-                reindexMaterials();
-            }
+			if (e.target && e.target.classList.contains('remove-btn')) {
+				e.target.closest('.material-item').remove();
+				reindexMaterials();
+			}
 
-            if (e.target && e.target.id === 'saveCustomHatBtn') {
-                e.preventDefault();
+			if (e.target && e.target.id === 'saveCustomHatBtn') {
+				e.preventDefault();
 
-                const form = document.getElementById('createCustomHatForm');
-                if (!form) return;
+				const form = document.getElementById('createCustomHatForm');
+				if (!form) return;
 
-                const formData = new FormData(form);
+				const formData = new FormData(form);
 
-                const response = await fetch('/Hat/CreateModal', {
-                    method: 'POST',
-                    body: formData
-                });
+				const response = await fetch('/Hat/CreateModal', {
+					method: 'POST',
+					body: formData
+				});
 
-                const contentType = response.headers.get("content-type") || "";
+				const contentType = response.headers.get("content-type") || "";
 
-                if (contentType.includes("application/json")) {
-                    const result = await response.json();
+				if (contentType.includes("application/json")) {
+					const result = await response.json();
 
-                    if (result.success) {
-                        addCustomHatToOrder(result);
-                        customHatModal.hide();
-                    }
-                } else {
-                    const html = await response.text();
-                    modalBody.innerHTML = html;
-                }
-            }
-        });
+					if (result.success) {
+						addCustomHatToOrder(result);
+						customHatModal.hide();
+					}
+				} else {
+					const html = await response.text();
+					modalBody.innerHTML = html;
+				}
+			}
+		});
 
-        function addMaterial() {
-            const container = document.getElementById("materials-container");
-            const index = container.querySelectorAll(".material-item").length;
+		function addMaterial() {
+			const container = document.getElementById("materials-container");
+			const index = container.querySelectorAll(".material-item").length;
 
-            const template = document.querySelector("#material-template .material-item");
-            const clone = template.cloneNode(true);
+			const template = document.querySelector("#material-template .material-item");
+			const clone = template.cloneNode(true);
 
-            clone.querySelector(".name").setAttribute("name", `Materials[${index}].Name`);
-            clone.querySelector(".amount").setAttribute("name", `Materials[${index}].Amount`);
-            clone.querySelector(".unit").setAttribute("name", `Materials[${index}].MeasuringUnits`);
-            clone.querySelector(".price").setAttribute("name", `Materials[${index}].Price`);
+			clone.querySelector(".name").setAttribute("name", `Materials[${index}].Name`);
+			clone.querySelector(".amount").setAttribute("name", `Materials[${index}].Amount`);
+			clone.querySelector(".unit").setAttribute("name", `Materials[${index}].MeasuringUnits`);
+			clone.querySelector(".price").setAttribute("name", `Materials[${index}].Price`);
 
-            container.appendChild(clone);
-        }
+			container.appendChild(clone);
+		}
 
-        function reindexMaterials() {
-            const items = document.querySelectorAll("#materials-container .material-item");
+		function reindexMaterials() {
+			const items = document.querySelectorAll("#materials-container .material-item");
 
-            items.forEach((item, index) => {
-                item.querySelectorAll("input").forEach(input => {
-                    if (input.name.includes("Name"))
-                        input.name = `Materials[${index}].Name`;
-                    else if (input.name.includes("Amount"))
-                        input.name = `Materials[${index}].Amount`;
-                    else if (input.name.includes("MeasuringUnits"))
-                        input.name = `Materials[${index}].MeasuringUnits`;
-                    else if (input.name.includes("Price"))
-                        input.name = `Materials[${index}].Price`;
-                });
-            });
-        }
+			items.forEach((item, index) => {
+				item.querySelectorAll("input").forEach(input => {
+					if (input.name.includes("Name"))
+						input.name = `Materials[${index}].Name`;
+					else if (input.name.includes("Amount"))
+						input.name = `Materials[${index}].Amount`;
+					else if (input.name.includes("MeasuringUnits"))
+						input.name = `Materials[${index}].MeasuringUnits`;
+					else if (input.name.includes("Price"))
+						input.name = `Materials[${index}].Price`;
+				});
+			});
+		}
 
-        function addCustomHatToOrder(hat) {
-            const tbody = document.querySelector("#customHatsTable tbody");
+		function addCustomHatToOrder(hat) {
+			const tbody = document.querySelector("#customHatsTable tbody");
 
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>
-                    <input type="hidden" name="HatRows.HId[${customHatIndex}]" value="${hat.hId}" />
-                    <input type="number" name="HatRows.Amount[${customHatIndex}]" value="1" min="1" class="form-control" style="max-width: 60px;" />
-                </td>
-                <td>${hat.name}</td>
-                <td>${hat.price} kr</td>
-            `;
+			const row = document.createElement("tr");
+			row.innerHTML = `
+				<td>
+					<input type="hidden" name="HatRows.HId[${customHatIndex}]" value="${hat.hId}" />
+					<input type="number" name="HatRows.Amount[${customHatIndex}]" value="1" min="1" class="form-control" style="max-width: 60px;" />
+				</td>
+				<td>${hat.name}</td>
+				<td class="text-truncate" style="max-width: 85px;">${hat.description}</td>
+				<td>${hat.price} kr</td>
+			`;
 
-            tbody.appendChild(row);
-            customHatIndex++;
-        }
-    </script>
+			tbody.appendChild(row);
+			customHatIndex++;
+		}
+	</script>
 }

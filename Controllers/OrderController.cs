@@ -190,10 +190,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
 
             // 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
-            if (currentEmployeeId == null)
-            {
-                return RedirectToAction("Login", "Auth");
-            }
+            if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
 
             var orderToSend = await _orderRepo.GetByIdAsync(oId);
             if (orderToSend == null) return NotFound();
