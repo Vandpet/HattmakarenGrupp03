@@ -1,5 +1,7 @@
 ﻿using HattmakarenWebbAppGrupp03.Data;
 using HattmakarenWebbAppGrupp03.Data.Repositories;
+
+using HattmakarenWebbAppGrupp03.Migrations;
 using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -161,24 +163,22 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         }
 
         //Get: Order/Details
+
         public async Task<IActionResult> Details(int oId)
         {
-            // 1. Hämta EmployeeId från Sessionen
-            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
-
-            // 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
-            if (currentEmployeeId == null)
+            if (HttpContext.Session.GetInt32("EmployeeId") == null)
             {
                 return RedirectToAction("Login", "Auth");
             }
+
 
             var currentOrder = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
             if (currentOrder == null) return NotFound();
 
             OrderDetailsViewModel viewModel = new OrderDetailsViewModel
             {
-                order = currentOrder,
-                hatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId)
+                Order = currentOrder,
+                HatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId)
             };
 
             return View(viewModel);
@@ -212,3 +212,6 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         }
     }
 }
+
+    
+ 

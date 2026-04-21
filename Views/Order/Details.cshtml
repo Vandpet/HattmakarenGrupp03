@@ -1,10 +1,11 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.OrderDetailsViewModel
 
+<<<<<<< Updated upstream
 <div class="d-flex justify-content-between align-items-center my-4">
 	<h2>Orderdetalj</h2>
     <div class=" d-flex gap-2">
-    <form asp-action="" asp-route-id="@(Model.order.OId)" method="post">
-        <input type="hidden" name="oId" value="@(Model.order.OId)" />
+    <form asp-action="" asp-route-id="@(Model.Order.OId)" method="post">
+        <input type="hidden" name="oId" value="@(Model.Order.OId)" />
         <button type="submit" class="btn rosa fw-bold m-0")>Skriv ut Order</button>
         </form>
         <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
@@ -21,9 +22,9 @@
             <div class="row">
 
                 <div class="col-md-6">
-                    <div><strong>Order:</strong> @(Model.order.OId)</div>
-                    <div><strong>Datum:</strong> @(Model.order.OrderDate.ToShortDateString())</div>
-                    <div><strong>Skapad av:</strong> @(Model.order.CreatedBy?.Name)</div>
+                    <div><strong>Order:</strong> @(Model.Order.OId)</div>
+                    <div><strong>Datum:</strong> @(Model.Order.OrderDate.ToShortDateString())</div>
+                    <div><strong>Skapad av:</strong> @(Model.Order.CreatedBy?.Name)</div>
                 </div>
 
                 <div class="col-md-6">
@@ -31,14 +32,14 @@
                         <strong>Kund:</strong>
                         <a asp-controller="Customer"
                            asp-action="View"
-                           asp-route-id="@(Model.order.CustomerId)"
+                           asp-route-id="@(Model.Order.CustomerId)"
                            class="fw-bold text-decoration-none">
-                            @(Model.order.Customer?.Name)
+                            @(Model.Order.Customer?.Name)
                         </a>
                     </div>
 
-                    <div><strong>Leverans:</strong> @(Model.order.PrelDeliveryDate.ToShortDateString())</div>
-                    <div><strong>Status:</strong> @(Model.order.Status)</div>
+                    <div><strong>Leverans:</strong> @(Model.Order.PrelDeliveryDate.ToShortDateString())</div>
+                    <div><strong>Status:</strong> @(Model.Order.Status)</div>
 
                 </div>
 
@@ -51,7 +52,7 @@
             <h6 class="card-title">Beskrivning</h6>
 
             <p class="card-text text-break">
-                @(Model.order.Description ?? "Ingen beskrivning tillgänglig.")
+                @(Model.Order.Description ?? "Ingen beskrivning tillgänglig.")
             </p>
 
         </div>
@@ -62,22 +63,22 @@
             <div class="d-flex flex-column">
 
                 <div>
-                    Express: @(Model.order.Express ? "Ja (+20%)" : "Nej")
+                    Express: @(Model.Order.Express ? "Ja (+20%)" : "Nej")
                 </div>
 
                 <div>
-                    Rabatt: @(Model.order.Discount.ToString() + "%")
+                    Rabatt: @(Model.Order.Discount.ToString() + "%")
                 </div>
 
                 <div>
-                    <small class="text-muted"> @(Model.order.DiscountDesc ?? "Ingen beskrivning tillgänglig.")</small>
+                    <small class="text-muted"> @(Model.Order.DiscountDesc ?? "Ingen beskrivning tillgänglig.")</small>
                 </div>
 
             </div>
 
             <div class="text-end">
                 <strong>Beräknat Pris:</strong><br />
-                @(Model.order.Price.ToString("C"))
+                @(Model.Order.Price.ToString("C"))
             </div>
 
         </div>
@@ -89,9 +90,9 @@
 @* OrderInnehåll *@
 <div class=" d-flex justify-content-between align-items-center">
 <h2>Orderinnehåll</h2>
-    <form asp-action="SendOrder" asp-route-id="@(Model.order.OId)" method="post">
-        <input type="hidden" name="oId" value="@(Model.order.OId)" />
-        <button type="submit" class="btn rosa fw-bold" @(Model.order.Status != "Färdig" ? "disabled" : "")>Skicka Order</button>
+    <form asp-action="SendOrder" asp-route-id="@(Model.Order.OId)" method="post">
+        <input type="hidden" name="oId" value="@(Model.Order.OId)" />
+        <button type="submit" class="btn rosa fw-bold" @(Model.Order.Status != "Färdig" ? "disabled" : "")>Skicka Order</button>
     </form>
 </div>
 <table class="table table-hover">
@@ -107,7 +108,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.hatOrders)
+        @foreach (var item in Model.HatOrders)
         {
             <tr>
                 <td>@item.HId</td>
@@ -224,3 +225,10 @@
         </div>
     </div>
 </div> *@
+
+<h2>Orderdetaljer</h2> 
+<p>OrderId: @Model.OrderId</p>
+<p>Status: @Model.StatusText</p>
+@{
+}
+

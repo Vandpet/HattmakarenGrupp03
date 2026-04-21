@@ -7,6 +7,8 @@ namespace HattmakarenWebbAppGrupp03.Models
         public int HId { get; set; }
         public Hat Hat { get; set; }
 
+
+
         public int OId { get; set; }
         public Order Order { get; set; }
 
