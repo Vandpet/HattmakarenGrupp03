@@ -113,6 +113,7 @@
                 {
                     <div class="calendar-cell @(day.IsCurrentMonth ? "" : "faded") @(day.IsToday ? "today" : "") drop-zone"
                          data-date="@day.Date.ToString("yyyy-MM-dd")"
+                         data-events='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(day.Events))'
                          onclick="openDayModal(this)">
 
 
