@@ -4,6 +4,7 @@ using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
 {
@@ -63,7 +64,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Month = selectedMonth
             };
 
-            // ✅ OSCHEMALAGDA
+            // OSCHEMALAGDA
             //var unscheduled = allHatOrders
             //    .Where(h => !scheduledHatOrderIds.Contains(h.Id))
             //    .ToList();
@@ -213,5 +214,31 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return "order-default";
         }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkDone(int orderId,
+    int hatId,
+    bool personal = false,
+    int? year = null,
+    int? month = null)
+        {
+            var hatOrder = await _context.HatOrders
+                .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
+
+            if (hatOrder == null)
+                return NotFound();
+
+            hatOrder.Status = "Färdig";
+
+            await _hatOrderRepository.UpdateAsync(hatOrder);
+
+            return RedirectToAction(nameof(Index), new
+            {
+                personal,
+                year,
+                month
+            });
+        }
+
     }
 }

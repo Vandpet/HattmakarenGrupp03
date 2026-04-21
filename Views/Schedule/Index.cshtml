@@ -172,6 +172,13 @@
     <input type="hidden" name="year" value="@Model.Year" />
     <input type="hidden" name="month" value="@Model.Month" />
 </form>
+<form id="doneForm" method="post" asp-action="MarkDone">
+    <input type="hidden" name="orderId" id="doneOrderId"/>
+    <input type="hidden" name="hatId" id="doneHatId"/>
+    <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
+    <input type="hidden" name="year" value="@Model.Year" />
+    <input type="hidden" name="month" value="@Model.Month" />
+</form>
 
 @section Scripts {
     <script>
@@ -278,9 +285,12 @@
                     div.className = "event";
 
                             div.innerHTML = `
-                    <div><strong>${ev.HatName}</strong></div>
-                    <div>Order ${ev.OrderId}</div>
-                    <div><small>${ev.EmployeeName}</small></div>
+                    <div><strong><h5>${ev.HatName}</h5></strong></div>
+                    <div><h6>Order ${ev.OrderId}</h6></div>
+                    <div>${ev.EmployeeName}</div>
+                    <button class="btn btn-danger btn-sm"  onclick="unassignTask(${ev.OrderId}, ${ev.HatId})">Oschemalägg</button>
+                    <button class="btn btn-success" onclick="markDone(${ev.OrderId}, ${ev.HatId})">Klar</button>
+                    <hr>
                     `;
 
                     container.appendChild(div);
@@ -288,6 +298,22 @@
             }
 
             document.getElementById("dayModal").style.display = "flex";
+        }
+
+        function unassignTask(orderId, hatId) {
+
+            document.getElementById("unscheduleOrderId").value = orderId;
+            document.getElementById("unscheduleHatId").value = hatId;
+
+            document.getElementById("unscheduleForm").submit();
+        }
+
+        function markDone(orderId, hatId) {
+
+            document.getElementById("doneOrderId").value = orderId;
+            document.getElementById("doneHatId").value = hatId;
+
+            document.getElementById("doneForm").submit();
         }
 
         function closeDayModal() {
