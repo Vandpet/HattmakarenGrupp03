@@ -19,6 +19,18 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             _hatOrderRepository = hatOrderRepository;
         }
 
+        private bool IsAdmin()
+        {
+            int? employeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+            if (employeeId == null)
+                return false;
+
+            var employee = _context.Employees.FirstOrDefault(e => e.EId == employeeId.Value);
+
+            return employee != null && employee.accesslevel >= 10;
+        }
+
         public async Task<IActionResult> Index(bool personal = false, int? year = null, int? month = null)
         {
             if (HttpContext.Session.GetInt32("EmployeeId") == null)
@@ -61,7 +73,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 IsPersonal = personal,
                 Year = selectedYear,
-                Month = selectedMonth
+                Month = selectedMonth,
+                IsAdmin = IsAdmin(),
             };
 
 
@@ -137,16 +150,18 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             return View(model);
         }
 
+
+        [HttpPost]
         [HttpPost]
         public async Task<IActionResult> AssignTaskToDate(
-            int orderId,
-            int hatId,
-            int employeeId,
-            DateTime date,
-            bool personal = false,
-            int? year = null,
-            int? month = null)
-            {
+    int orderId,
+    int hatId,
+    int employeeId,
+    DateTime date,
+    bool personal = false,
+    int? year = null,
+    int? month = null)
+        {
             var hatOrder = await _context.HatOrders
                 .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
 
@@ -155,10 +170,18 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             hatOrder.Date = date;
             hatOrder.Status = "Påbörjad";
-            hatOrder.EId = employeeId;
 
+            if (IsAdmin())
+            {
+                hatOrder.EId = employeeId;
+            }
+            else
+            {
+                int currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId") ?? 0;
+                hatOrder.EId = currentEmployeeId;
+            }
 
-            await _hatOrderRepository.ChangeToStartedAsync(hatOrder);
+            await _hatOrderRepository.UpdateAsync(hatOrder);
 
             return RedirectToAction(nameof(Index), new
             {
