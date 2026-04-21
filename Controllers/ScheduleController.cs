@@ -183,11 +183,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             if (hatOrder == null)
                 return NotFound();
 
-            hatOrder.Date = null;
-            hatOrder.EId = null;
-            hatOrder.Status = "Ej Påbörjad";
-
-            await _hatOrderRepository.UpdateAsync(hatOrder);
+            await _hatOrderRepository.ChangeToNotStartedAsync(hatOrder);
 
             return RedirectToAction(nameof(Index), new
             {
@@ -228,9 +224,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             if (hatOrder == null)
                 return NotFound();
 
-            hatOrder.Status = "Färdig";
-
-            await _hatOrderRepository.UpdateAsync(hatOrder);
+            await _hatOrderRepository.ChangeToCompletedAsync(hatOrder);
 
             return RedirectToAction(nameof(Index), new
             {

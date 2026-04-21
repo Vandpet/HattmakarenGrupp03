@@ -85,7 +85,25 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             await _db.SaveChangesAsync();
         }
 
-        // Denna metod kan användas i kalender
+        // Dessa metoder används i kalendern
+        public async Task ChangeToNotStartedAsync(HatOrder hatOrder)
+        {
+            hatOrder.Status = "Ej Påbörjad";
+            hatOrder.Date = null;
+            hatOrder.EId = null;
+            await _db.SaveChangesAsync();
+
+            var order = await _orderRepository.GetByIdAsync(hatOrder.OId);
+
+            // Om en hatorder på ordern inte är färdig längre blir order.status automatiskt inte färdig längre.
+            if (order.Status != "Påbörjad") order.Status = "Påbörjad";
+
+            // Kolla om alla hattar i ordern är Ej Påbörjade
+            var hatOrders = await GetByOrderIdAsync(hatOrder.OId);
+            if (hatOrders.All(ho => ho.Status == "Ej Påbörjad")) order.Status = "Ej Påbörjad";
+
+            await _db.SaveChangesAsync();
+        }
         public async Task ChangeToStartedAsync(HatOrder hatOrder)
         {
             hatOrder.Status = "Påbörjad";
@@ -93,6 +111,22 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             var order = await _orderRepository.GetByIdAsync(hatOrder.OId);
             order.Status = "Påbörjad";
             await _db.SaveChangesAsync();
+        }
+
+        public async Task ChangeToCompletedAsync(HatOrder hatOrder)
+        {
+            hatOrder.Status = "Färdig";
+            await _db.SaveChangesAsync();
+
+            var order = await _orderRepository.GetByIdAsync(hatOrder.OId);
+
+            // Kolla om alla hattar i ordern är färdiga
+            var hatOrders = await GetByOrderIdAsync(hatOrder.OId);
+            if (hatOrders.All(ho => ho.Status == "Färdig"))
+            {
+                order.Status = "Färdig";
+                await _db.SaveChangesAsync();
+            }
         }
     }
 }
