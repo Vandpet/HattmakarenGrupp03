@@ -7,6 +7,9 @@ using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 using System.Runtime.InteropServices;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
@@ -211,8 +214,74 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             await _orderRepo.UpdateAsync(orderToSend);
             return RedirectToAction(nameof(Details), new { oId });
         }
-    }
-}
 
-    
- 
+        // GET: Order/DownloadPdf
+        public async Task<IActionResult> DownloadPdf(int oId)
+        {
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (currentEmployeeId == null)
+                return RedirectToAction("Login", "Auth");
+
+            var order = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
+            if (order == null) return NotFound();
+
+            var hatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId);
+
+            var boldFont = iText.Kernel.Font.PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
+
+            using var ms = new MemoryStream();
+            var writer = new PdfWriter(ms);
+            var pdf = new PdfDocument(writer);
+            var doc = new iText.Layout.Document(pdf);
+
+            doc.Add(new Paragraph($"Order #{order.OId}").SetFontSize(20).SetFont(boldFont));
+            doc.Add(new Paragraph($"Status: {order.Status}"));
+            doc.Add(new Paragraph($"Order Date: {order.OrderDate:yyyy-MM-dd}"));
+            doc.Add(new Paragraph($"Delivery Date: {order.PrelDeliveryDate:yyyy-MM-dd}"));
+            doc.Add(new Paragraph($"Express: {(order.Express ? "Yes" : "No")}"));
+            doc.Add(new Paragraph($"Description: {order.Description}"));
+            doc.Add(new Paragraph(" "));
+
+            if (order.Customer != null)
+            {
+                doc.Add(new Paragraph("Customer").SetFontSize(14).SetFont(boldFont));
+                doc.Add(new Paragraph($"Name: {order.Customer.Name}"));
+                doc.Add(new Paragraph($"Phone: {order.Customer.PhoneNr}"));
+                doc.Add(new Paragraph(" "));
+            }
+
+            if (hatOrders != null && hatOrders.Any())
+            {
+                doc.Add(new Paragraph("Hats").SetFontSize(14).SetFont(boldFont));
+                var table = new iText.Layout.Element.Table(3).UseAllAvailableWidth();
+                table.AddHeaderCell("Hat");
+                table.AddHeaderCell("Amount");
+                table.AddHeaderCell("Price");
+
+                foreach (var hatOrder in hatOrders)
+                {
+                    if (hatOrder.Hat != null)
+                    {
+                        table.AddCell(hatOrder.Hat.Name);
+                        table.AddCell(hatOrder.Amount.ToString());
+                        table.AddCell(hatOrder.Hat.Price.ToString("C"));
+                    }
+                }
+                doc.Add(table);
+                doc.Add(new Paragraph(" "));
+            }
+
+            if (order.Discount > 0)
+                doc.Add(new Paragraph($"Discount: {order.Discount:C} — {order.DiscountDesc}"));
+
+            doc.Add(new Paragraph($"Total Price: {order.Price:C}").SetFont(boldFont));
+
+            doc.Close();
+
+            return File(ms.ToArray(), "application/pdf", $"order_{order.OId}.pdf");
+        }
+
+    }
+
+
+}

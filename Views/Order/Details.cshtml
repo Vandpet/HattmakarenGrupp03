@@ -3,11 +3,14 @@
 <div class="d-flex justify-content-between align-items-center my-4">
 	<h2>Orderdetalj</h2>
     <div class=" d-flex gap-2">
+
     <form asp-action="" asp-route-id="@(Model.Order.OId)" method="post">
         <input type="hidden" name="oId" value="@(Model.Order.OId)" />
         <button type="submit" class="btn rosa fw-bold m-0")>Skriv ut Order</button>
         </form>
+
         <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+        <a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn btn-primary fw-bold">Ladda ner PDF</a>
     </div>
 </div>
 
@@ -86,11 +89,21 @@
 
 </div>
 
+
+
 @* OrderInnehåll *@
+
+
+@* <div class="d-flex justify-content-between align-items-center my-4">
+    <h2>Orderinehåll</h2>
+    <a asp-a *ction="Index" class="btn rosa fw-bold">Skriv ut</a>
+</div> *@
+
 <div class=" d-flex justify-content-between align-items-center">
+
 <h2>Orderinnehåll</h2>
-    <form asp-action="SendOrder" asp-route-id="@(Model.Order.OId)" method="post">
-        <input type="hidden" name="oId" value="@(Model.Order.OId)" />
+    <form asp-action="SendOrder" asp-route-id="@(Model.OrderId)" method="post">
+        <input type="hidden" name="oId" value="@(Model.OrderId)" />
         <button type="submit" class="btn rosa fw-bold" @(Model.Order.Status != "Färdig" ? "disabled" : "")>Skicka Order</button>
     </form>
 </div>
@@ -198,11 +211,11 @@
         <div class="d-flex flex-row p-3">
             VÄNSTER 
             <div class="d-flex flex-column w-50 align-content-around justify-content-evenly flex-wrap gap-2">
-                <span>Ordernummer: @Model.order.OId</span>
-                <span>Beställningsdatum: @Model.order.OrderDate.ToShortDateString()</span>
-                <span>Skapad av: @Model.order.CreatedBy?.Name</span>
-                <span>Rabatt: @Model.order.Discount.ToString("P")</span>
-                <span>Beräknat pris: @Model.order.Price.ToString("C")</span>
+                <span>Ordernummer: @Model.OrderId</span>
+                <span>Beställningsdatum: @Model.OrderDate.ToShortDateString()</span>
+                <span>Skapad av: @Model.CreatedByName</span>
+                <span>Rabatt: @Model.Order?.Discount.ToString("P")</span>
+                <span>Beräknat pris: @Model.TotalPrice.ToString("C")</span>
             </div>
 
             HÖGER
@@ -211,10 +224,10 @@
                     Kund:
                     <a asp-controller="Customer" asp-action="View" asp-route-id="@Model.order.CustomerId" class="text-decoration-none fw-bold text-dark"> @Model.order.Customer?.Name</a>
                 </span>
-                <span>Beräknad leverans: @Model.order.PrelDeliveryDate.ToShortDateString()</span>
-                <span>Expressleverans: @(Model.order.Express ? "Ja" : "Nej")</span>
-                <span>Rabattbeskrivning: @Model.order.DiscountDesc</span>
-                <span>Status: @Model.order.Status</span>
+                <span>Beräknad leverans: @Model.EstimatedDeliveryDate.ToShortDateString()</span>
+                <span>Expressleverans: @(Model.Order.Express ? "Ja" : "Nej")</span>
+                <span>Rabattbeskrivning: @Model.Order.DiscountDesc</span>
+                <span>Status: @Model.Order.Status</span>
             </div>
         </div>
 
