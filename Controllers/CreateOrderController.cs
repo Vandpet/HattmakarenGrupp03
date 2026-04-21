@@ -76,6 +76,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     .Select(c => new SelectListItem { Value = c.CId.ToString(), Text = c.Name })
                     .ToListAsync(),
                 PrelDeliveryDate = DateTime.Now.AddDays(14)
+                
             };
 
             return View(viewModel);
