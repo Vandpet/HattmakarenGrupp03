@@ -63,8 +63,11 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
 
             var order = await _db.Orders.FindAsync(OId);
 
+            var discountSum = (totalPrice * order.Discount / 100);//Expressen ska inte vara rabatterad.
+
             if (order.Express) totalPrice *= 1.2m; // Lägg på 20% för expressorder
-            totalPrice -= (totalPrice * order.Discount / 100); // Dra av eventuell rabatt
+
+            totalPrice -= discountSum; // Dra av  rabatt
 
             order.Price = totalPrice;
             await _db.SaveChangesAsync();
