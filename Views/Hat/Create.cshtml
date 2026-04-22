@@ -43,6 +43,17 @@
         </div>
 
         <div class="form-group mb-3">
+            <label for="SelectedKN">Välj ett KN-Nummer</label>
+
+            <select asp-for="SelectedKN" class="form-control">
+                @foreach (var item in Model.KN_options)
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
             <label asp-for="Description">Beskrivning</label>
             <textarea asp-for="Description" class="form-control" rows="3"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
