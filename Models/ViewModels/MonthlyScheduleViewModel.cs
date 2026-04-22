@@ -40,6 +40,7 @@
         public int EmployeeId { get; set; }
         public string EmployeeName { get; set; } = "";
         public int Amount { get; set; }
+        public DateTime? PrelDeliveryDate { get; set; }
     }
 
     public class UnscheduledTaskViewModel
@@ -51,6 +52,10 @@
         public string Status { get; set; } = "";
         public string ColorClass { get; set; } = "";
         public int Amount { get; set; }
+
+        public DateTime? PrelDeliveryDate { get; set; }
+        public string CustomerName { get; set; } = "";
+        public string Description { get; set; } = "";
     }
 
     public class EmployeeViewModel
