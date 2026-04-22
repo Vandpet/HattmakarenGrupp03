@@ -235,9 +235,6 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return RedirectToAction(nameof(Details), new { oId });
         }
-    }
-}
-
         // GET: Order/DownloadPdf
         public async Task<IActionResult> DownloadPdf(int oId)
         {
@@ -303,8 +300,5 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return File(ms.ToArray(), "application/pdf", $"order_{order.OId}.pdf");
         }
-
     }
-
-
 }
