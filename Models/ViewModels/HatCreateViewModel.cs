@@ -8,6 +8,8 @@
         public IFormFile? ImageFile { get; set; }
         public string? Status { get; set; }
         public bool StandardHat { get; set; }
+        public List<string>? KN_options { get; set; }
+        public string? SelectedKN { get; set; }
 
         public string Description { get; set; }
 

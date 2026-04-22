@@ -29,7 +29,11 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         {
             //var vm = new HatCreateViewModel();
             //vm.AvailableMaterials = GetMockMaterials(); // Fyller på med test-material
-            return View("Create");
+            var vm = new HatCreateViewModel
+            {
+                KN_options = _hatRepository.GetKNStringList()
+            };
+            return View(vm);
         }
 
         [HttpPost]
@@ -64,6 +68,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 }
             }
 
+            var KN_number = vm.SelectedKN?.Split('-').FirstOrDefault()?.Trim();
+            var KN_description = vm.SelectedKN?.Split('-').Skip(1).FirstOrDefault()?.Trim();
+
             var hat = new Hat
             {
                 Name = vm.Name,
@@ -73,6 +80,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 //Status = vm.Status ?? "Accepted", Patrick tog bort status från Hat-modellen, 
                 StandardHat = vm.StandardHat,
                 Description = vm.Description,
+                KN_Number = KN_number,
+                KN_Description = KN_description,
 
                 Materials = vm.Materials?
                 .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Name))
