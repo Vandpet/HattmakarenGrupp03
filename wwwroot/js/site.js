@@ -3,14 +3,15 @@
 
 // Write your JavaScript code.
 
-
 document.addEventListener("DOMContentLoaded", function () {
 
     const sidebar = document.getElementById("sidebar");
-    const toggle = document.getElementById("menuToggle");
 
-    toggle.addEventListener("click", function () {
+    sidebar.addEventListener("mouseenter", function () {
         sidebar.classList.toggle("expanded");
     });
 
+    sidebar.addEventListener("mouseleave", function () {
+        sidebar.classList.remove("expanded");
+    });
 });
