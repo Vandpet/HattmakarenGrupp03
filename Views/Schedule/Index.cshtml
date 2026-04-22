@@ -86,17 +86,33 @@
         }
         else
         {
-            @foreach (var task in Model.UnscheduledTasks)
-            {
-                <div class="task-card @task.ColorClass"
-                     draggable="true"
-                     data-order-id="@task.OrderId"
-                     data-hat-id="@task.HatId">
-                    <div class="task-card-title">@task.Title</div>
-                    <div class="task-card-sub">@task.Amount x @task.HatName</div>
-                    <div class="task-card-status">@task.Status</div>
-                </div>
-            }
+           @foreach (var task in Model.UnscheduledTasks)
+{
+    var taskJson = System.Text.Json.JsonSerializer.Serialize(task);
+
+    <div class="task-card @task.ColorClass"
+         draggable="true"
+         data-order-id="@task.OrderId"
+         data-hat-id="@task.HatId"
+         data-task='@Html.Raw(taskJson)'
+         onclick="openTaskModal(this)">
+
+        <div class="task-card-title">@task.Title</div>
+        <div class="task-card-sub">@task.HatName</div>
+        <div class="task-card-status">@task.Status</div>
+
+        @if (task.ColorClass == "order-orange")
+        {
+            <div class="task-card-warning">Bör skickas snart</div>
+        }
+        else if (task.ColorClass == "order-red")
+        {
+            <div class="task-card-warning urgent">Bör skickas genast!</div>
+        }
+
+    </div>
+}
+            
         }
     </aside>
 
@@ -314,9 +330,15 @@
                         div.classList.remove("event-done")
                     }
 
+                        const deliveryText = ev.PrelDeliveryDate ? 
+                            new Date(ev.PrelDeliveryDate).toLocaleDateString('sv-SE')
+                        : "Saknas";
+
+
                             div.innerHTML = `
                     <div><strong><h5>${ev.Amount} x ${ev.HatName}</h5></strong></div>
                     <div><h6>Order ${ev.OrderId}</h6></div>
+                    <div>Beräknad leverans: ${deliveryText}</div>
                     <div>${ev.EmployeeName}</div>
                     <button class="btn btn-danger btn-sm"  onclick="unassignTask(${ev.OrderId}, ${ev.HatId})">Oschemalägg</button>
                     <button class="btn btn-success" onclick="markDone(${ev.OrderId}, ${ev.HatId})">Klar</button>
@@ -344,6 +366,30 @@
             document.getElementById("doneHatId").value = hatId;
 
             document.getElementById("doneForm").submit();
+        }
+
+                function openTaskModal(element) {
+            const task = JSON.parse(element.dataset.task || "{}");
+
+            const deliveryText = task.PrelDeliveryDate
+                ? new Date(task.PrelDeliveryDate).toLocaleDateString('sv-SE')
+                : "Saknas";
+
+            document.getElementById("modalDateTitle").innerText = `Order ${task.OrderId}`;
+
+            const container = document.getElementById("modalContent");
+            container.innerHTML = `
+                <div class="event">
+                    <div><strong>${task.HatName ?? ""}</strong></div>
+                    <div>Kund: ${task.CustomerName ?? ""}</div>
+                    <div>Status: ${task.Status ?? ""}</div>
+                    <div>Antal: ${task.Amount ?? ""}</div>
+                    <div>Beräknad leverans: ${deliveryText}</div>
+                    <div>Beskrivning: ${task.Description ?? ""}</div>
+                </div>
+            `;
+
+            document.getElementById("dayModal").style.display = "flex";
         }
 
         function closeDayModal() {
