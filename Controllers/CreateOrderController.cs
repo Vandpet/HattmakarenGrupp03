@@ -177,13 +177,16 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             OrderDetailsViewModel viewModel = new OrderDetailsViewModel
             {
+                OrderId = currentOrder.OId,
                 Order = currentOrder,
-                HatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId)
+                HatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId),
+                IsStarted = currentOrder.Status == "Påbörjad",
+                StatusText = currentOrder.Status
             };
 
-            return View(viewModel);
+            return View(viewModel); 
         }
-        [HttpPost]
+        [HttpPost] 
         public async Task<IActionResult> SendOrder(int oId)
         {
             // 1. Hämta EmployeeId från Sessionen
@@ -208,6 +211,27 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             }
             
             await _orderRepo.UpdateAsync(orderToSend);
+            return RedirectToAction(nameof(Details), new { oId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> StartOrder(int oId)
+        {
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (currentEmployeeId == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var order = await _orderRepo.GetByIdAsync(oId);
+            if (order == null) return NotFound();
+
+            // Sätt status
+            order.Status = "Påbörjad";
+            order.StartedById = currentEmployeeId.Value;
+            Console.WriteLine("StartedById som ska sparas: " + order.StartedById);
+            await _orderRepo.UpdateAsync(order);
+
             return RedirectToAction(nameof(Details), new { oId });
         }
     }

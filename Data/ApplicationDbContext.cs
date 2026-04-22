@@ -127,6 +127,12 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasForeignKey(ho => ho.EId)
                 .IsRequired(false);
 
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.StartedBy)
+                .WithMany()
+                .HasForeignKey(o => o.StartedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Schema
             //modelBuilder.Entity<HatSchedule>()
             //   .HasOne(s => s.HatOrder)

@@ -16,6 +16,9 @@ namespace HattmakarenWebbAppGrupp03.Models
         public DateTime PrelDeliveryDate { get; set; }
         public string Description { get; set; }
 
+        public int? StartedById { get; set; }
+        public Employee? StartedBy { get; set; }
+
         // Relation till Customer (BelongsTo)
         public int CustomerId { get; set; }
         public Customer? Customer { get; set; }

@@ -1,8 +1,11 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.OrderDetailsViewModel
 
-<<<<<<< Updated upstream
 <div class="d-flex justify-content-between align-items-center my-4">
 	<h2>Orderdetalj</h2>
+
+    <p>OrderId: @Model.OrderId</p>
+    <p>Status: @Model.StatusText</p>
+    
     <div class=" d-flex gap-2">
     <form asp-action="" asp-route-id="@(Model.Order.OId)" method="post">
         <input type="hidden" name="oId" value="@(Model.Order.OId)" />
@@ -22,8 +25,8 @@
             <div class="row">
 
                 <div class="col-md-6">
-                    <div><strong>Order:</strong> @(Model.Order.OId)</div>
-                    <div><strong>Datum:</strong> @(Model.Order.OrderDate.ToShortDateString())</div>
+                    <div><strong>Order:</strong> @(Model.OrderId)</div>
+                    <div><strong>Datum:</strong> @(Model.OrderDate.ToShortDateString())</div>
                     <div><strong>Skapad av:</strong> @(Model.Order.CreatedBy?.Name)</div>
                 </div>
 
@@ -38,9 +41,18 @@
                         </a>
                     </div>
 
-                    <div><strong>Leverans:</strong> @(Model.Order.PrelDeliveryDate.ToShortDateString())</div>
-                    <div><strong>Status:</strong> @(Model.Order.Status)</div>
-
+                    <div><strong>Leverans:</strong> @(Model.EstimatedDeliveryDate.ToShortDateString())</div>
+                    <div><strong>Status:</strong> @Model.StatusText</div>
+                    @if (Model.Order.StartedBy != null)
+{
+    <div>Påbörjad av: @Model.Order.StartedBy.Name</div>
+}
+                    @if (!Model.IsStarted)
+                    {
+                        <form asp-action="StartOrder" asp-route-oId="@Model.Order.OId" method="post">
+                            <button type="submit" class="btn btn-primary">Påbörja order</button>
+                        </form>
+                    }
                 </div>
 
             </div>
@@ -52,7 +64,7 @@
             <h6 class="card-title">Beskrivning</h6>
 
             <p class="card-text text-break">
-                @(Model.Order.Description ?? "Ingen beskrivning tillgänglig.")
+                @(Model.Description ?? "Ingen beskrivning tillgänglig.")
             </p>
 
         </div>

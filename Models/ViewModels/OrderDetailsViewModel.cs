@@ -4,6 +4,9 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 {
     public class OrderDetailsViewModel
     {
+
+       
+
         public int OrderId { get; set; }
 
         public Order? Order { get; set; }
