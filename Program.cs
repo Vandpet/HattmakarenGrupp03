@@ -24,6 +24,7 @@ builder.Services.AddScoped<HatRepository>();
 builder.Services.AddScoped<FileService>();
 builder.Services.AddScoped<HatOrderRepository>();
 builder.Services.AddScoped<OrderRepository>();
+builder.Services.AddScoped<StatisticsRepository>();
 
 
 var app = builder.Build();

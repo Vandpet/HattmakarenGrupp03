@@ -1,0 +1,91 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.HatViewViewModel
+
+<div class="container mt-5">
+	<div class="row justify-content-center">
+		<div class="col-md-8 col-lg-7">
+			<div class="card shadow">
+				<div class="card-header ljuslila">
+					<h3 class="mb-0">Hatt</h3>
+				</div>
+
+				<div class="card-body">
+					<dl class="row">
+						<dt class="col-sm-4">Id</dt>
+						<dd class="col-sm-8">@Model.Hat.HId</dd>
+
+						<dt class="col-sm-4">Namn</dt>
+						<dd class="col-sm-8">@Model.Hat.Name</dd>
+
+						<dt class="col-sm-4">Antal på denna Order</dt>
+						<dd class="col-sm-8">@Model.HatOrder.Amount</dd>
+
+						<dt class="col-sm-4">Pris</dt>
+						<dd class="col-sm-8">@Model.Hat.Price.ToString("C")</dd>
+
+						<dt class="col-sm-4">Storlek</dt>
+						<dd class="col-sm-8">@Model.Hat.Size</dd>
+
+						<dt class="col-sm-4">StandardHatt</dt>
+						<dd class="col-sm-8">@(Model.Hat.StandardHat ? "Ja" : "Nej")</dd>
+
+						<dt class="col-sm-4">Bild</dt>
+						<dd class="col-sm-8">
+							@if (string.IsNullOrEmpty(@Model.Hat?.PicturePath))
+							{
+								<span class="text-muted">Otillgänglig</span>
+							}
+							else
+							{
+								<a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#imageModal"
+								   data-img="@Model.Hat?.PicturePath"> Visa Bild</a>
+							}
+						</dd>
+
+						<dt class="col-sm-4">Beskrivning</dt>
+						<dd class="col-sm-8">@Model.Hat.Description</dd>
+
+						
+					</dl>
+
+					<div class="d-flex gap-2">
+						<a asp-controller="Order" asp-action="Details" asp-route-oId="@Model.PreviousOrder.OId" class="btn rosa fw-bold m-0">Tillbaka</a>
+						@if (Model.HatOrder.Status == "Skickad" && 
+						(Model.PreviousOrder.Status == "Skickad" || Model.PreviousOrder.Status == "Delvis Returnerad"))
+						{
+							<form asp-controller="Hat" asp-action="ReturnOrder" asp-route-oId="@Model.PreviousOrder.OId" asp-route-hId="@Model.HatOrder.HId" method="post">
+								<button type="submit" class="btn rosa fw-bold">Returnera Produkt</button>
+							</form>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="imageModal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h5 class="modal-title">Bild</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<div class="modal-body text-center">
+				<img id="modalImage" class="img-fluid" />
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<script>
+	var imageModal = document.getElementById('imageModal');
+
+	imageModal.addEventListener('show.bs.modal', function (event) {
+		var button = event.relatedTarget;
+		var imgSrc = button.getAttribute('data-img');
+		document.getElementById('modalImage').src = imgSrc;
+	});
+</script>

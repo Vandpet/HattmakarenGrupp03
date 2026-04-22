@@ -199,7 +199,9 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Size = "M",
                 StandardHat = true,
                 PicturePath = "/uploads/740ccec0-24a4-4e2f-915a-e34cd28a3ff9.jpg",
-                Description = "Testhatt"
+                Description = "Testhatt",
+                KN_Number = "6504 00 00",
+                KN_Description = "Hattar och andra huvudbonader, flätade eller hopfogade av band eller remsor av alla slags material, även ofodrade och ogarnerade"
             };
 
             // --- Order ---

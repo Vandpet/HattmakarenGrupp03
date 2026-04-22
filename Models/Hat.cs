@@ -12,6 +12,8 @@ namespace HattmakarenWebbAppGrupp03.Models
         public bool StandardHat { get; set; }
         public string PicturePath { get; set; }
         public string Description { get; set; }
+        public string KN_Number { get; set; }
+        public string KN_Description { get; set; }
 
         // Relationer
         public ICollection<HatMaterial> Materials { get; set; } = new List<HatMaterial>();

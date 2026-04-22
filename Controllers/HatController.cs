@@ -14,18 +14,21 @@ namespace HattmakarenWebbAppGrupp03.Controllers
     {
         private readonly HatRepository _hatRepository;
         private readonly OrderRepository _orderRepository;
+        private readonly HatOrderRepository _hatOrderRepository;
         private readonly FileService _fileService;
 
 
-        public HatController(HatRepository hatRepository, OrderRepository orderRepository, FileService fileService)
+        public HatController(HatRepository hatRepository, OrderRepository orderRepository, HatOrderRepository hatOrderRepository, FileService fileService)
         {
             _hatRepository = hatRepository;
             _orderRepository = orderRepository;
+            _hatOrderRepository = hatOrderRepository;
             _fileService = fileService;
         }
 
         public IActionResult Create()
         {
+
             var vm = new HatCreateViewModel
             {
                 Materials = new List<MaterialCreateViewModel>
@@ -35,6 +38,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             };
             ViewBag.IsEdit = false;
             return View("Create", vm);
+
         }
 
         [HttpPost]
@@ -69,6 +73,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 }
             }
 
+            var KN_number = vm.SelectedKN?.Split('-').FirstOrDefault()?.Trim();
+            var KN_description = vm.SelectedKN?.Split('-').Skip(1).FirstOrDefault()?.Trim();
+
             var hat = new Hat
             {
                 Name = vm.Name,
@@ -78,6 +85,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 //Status = vm.Status ?? "Accepted", Patrick tog bort status från Hat-modellen, 
                 StandardHat = vm.StandardHat,
                 Description = vm.Description,
+                KN_Number = KN_number,
+                KN_Description = KN_description,
 
                 Materials = vm.Materials?
                 .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Name))
@@ -317,13 +326,17 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             });
         }
 
+
         public async Task<IActionResult> hatView(int hId, int oId, int amount)
+
         {
             // 1. Hämta EmployeeId från Sessionen
             int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
 
             // 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
             if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
+
+            var hatOrder = await _hatOrderRepository.GetByIdAsync(hId, oId);
 
             var hat = await _hatRepository.GetByIdAsync(hId);
             if (hat == null) return NotFound();
@@ -334,10 +347,51 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 Hat = hat,
                 PreviousOrder = previousOrder,
-                Amount = amount
+                HatOrder = hatOrder
             };
 
             return View(viewModel);
+        }
+
+        public async Task<IActionResult> View(int hId, int oId)
+        {
+
+            // 1. Hämta EmployeeId från Sessionen
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+            // 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
+            if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
+
+            var hatOrder = await _hatOrderRepository.GetByIdAsync(hId, oId);
+
+            var hat = await _hatRepository.GetByIdAsync(hId);
+            if (hat == null) return NotFound();
+
+            var previousOrder = await _orderRepository.GetOrderByIdWithCustomerAndCreatorAsync(oId);
+
+            var viewModel = new HatViewViewModel
+            {
+                Hat = hat,
+                PreviousOrder = previousOrder,
+                HatOrder = hatOrder
+            };
+
+            return View(viewModel);
+        }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ReturnOrder(int oId, int hId)
+        {
+            // 1. Hämta EmployeeId från Sessionen
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            // 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
+            if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
+
+            // 3. Returnera hatten
+            var hatOrder = await _hatOrderRepository.GetByIdAsync(hId, oId);
+            await _hatOrderRepository.ChangeToReturnedAsync(hatOrder);
+
+            return RedirectToAction("Details", "Order", new { oId });
         }
     }
 }
