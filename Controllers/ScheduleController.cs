@@ -63,9 +63,10 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             // HÄMTA ALLA HATORDERS (för oschemalagda)
             var allHatOrders = await _context.HatOrders
-                .Include(h => h.Hat)
-                .Include(h => h.Order)
-                .ToListAsync();
+                 .Include(h => h.Hat)
+                 .Include(h => h.Order)
+                     .ThenInclude(o => o.Customer)
+                 .ToListAsync();
 
             //var scheduledHatOrderIds = schedules.Select(s => s.HatOrderId).ToHashSet();
 
@@ -79,7 +80,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
 
             var unscheduled = allHatOrders.Where(ho => ho.Status == "Ej Påbörjad").ToList();
-            
+
 
 
             foreach (var ho in unscheduled)
@@ -93,6 +94,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     Status = ho.Status,
                     ColorClass = GetColorClass(ho.Order, ho.Status),
                     Amount = ho.Amount,
+                    PrelDeliveryDate = ho.Order?.PrelDeliveryDate,
+                    CustomerName = ho.Order?.Customer?.Name ?? "",
+                    Description = ho.Order?.Description ?? ""
                 });
             }
 
@@ -115,8 +119,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                         IsToday = current.Date == today
                     };
 
-                    foreach(var ho in dayHatOrders)
-{
+                    foreach (var ho in dayHatOrders)
+                    {
                         cell.Events.Add(new CalendarEventViewModel
                         {
                             OrderId = ho.OId,
@@ -128,7 +132,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                             Amount = ho.Amount,
 
                             EmployeeId = ho.EId ?? 0,
-                            EmployeeName = ho.Employee?.Name ?? ""
+                            EmployeeName = ho.Employee?.Name ?? "",
+                            PrelDeliveryDate = ho.Order?.PrelDeliveryDate
                         });
                     }
 
@@ -149,18 +154,15 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return View(model);
         }
-
-
         [HttpPost]
-        [HttpPost]
-        public async Task<IActionResult> AssignTaskToDate(
-    int orderId,
-    int hatId,
-    int employeeId,
-    DateTime date,
-    bool personal = false,
-    int? year = null,
-    int? month = null)
+             public async Task<IActionResult> AssignTaskToDate(
+                        int orderId,
+                        int hatId,
+                        int employeeId,
+                        DateTime date,
+                        bool personal = false,
+                        int? year = null,
+                        int? month = null)
         {
             var hatOrder = await _context.HatOrders
                 .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
@@ -221,14 +223,17 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             if (order == null)
                 return "order-default";
 
-            if (order.Status == "Klar" || hatOrderStatus == "Klar")
-                return "order-green";
+            if (order.Status == "Klar" || order.Status == "Färdig" || order.Status == "Skickad" ||
+                hatOrderStatus == "Klar" || hatOrderStatus == "Färdig" || hatOrderStatus == "Skickad")
+                return "order-default";
 
-            if (order.PrelDeliveryDate.Date < DateTime.Today)
+            var daysLeft = (order.PrelDeliveryDate.Date - DateTime.Today).Days;
+
+            if (daysLeft <= 3)
                 return "order-red";
 
-            if (order.PrelDeliveryDate.Date <= DateTime.Today.AddDays(3))
-                return "order-yellow";
+            if (daysLeft >= 4 && daysLeft <= 7)
+                return "order-orange";
 
             return "order-default";
         }
