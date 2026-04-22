@@ -22,6 +22,7 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
         {
             return await _db.Hats
                 .Include(h => h.Materials)
+                 .ThenInclude(hm => hm.Material)
                 .FirstOrDefaultAsync(h => h.HId == id);
         }
 

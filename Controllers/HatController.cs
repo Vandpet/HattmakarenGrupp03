@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using WebApp.Services;
+using System.Globalization;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
 {
@@ -25,9 +26,15 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
         public IActionResult Create()
         {
-            //var vm = new HatCreateViewModel();
-            //vm.AvailableMaterials = GetMockMaterials(); // Fyller på med test-material
-            return View("Create");
+            var vm = new HatCreateViewModel
+            {
+                Materials = new List<MaterialCreateViewModel>
+        {
+            new MaterialCreateViewModel()
+        }
+            };
+            ViewBag.IsEdit = false;
+            return View("Create", vm);
         }
 
         [HttpPost]
@@ -79,9 +86,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     Material = new Material
                     {
                         Name = m.Name,
-                        Amount = m.Amount,
+                        Amount = (double)m.Amount,
                         MeasuringUnits = m.MeasuringUnits,
-                        Price = m.Price
+                        Price = (decimal)m.Price
                     }
                 }).ToList() ?? new List<HatMaterial>()
             };
@@ -105,7 +112,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var hats = await _hatRepository.GetAllAsync();
             return View(hats);
         }
-        public async Task<IActionResult> View(int id)
+        public async Task<IActionResult> Details(int id)
         {
             if (!IsLoggedIn())
             {
@@ -134,19 +141,40 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 return NotFound();
             }
 
-            return View(hat);
+            var vm = new HatCreateViewModel
+            {
+                HId = hat.HId,
+                Name = hat.Name,
+                Price = hat.Price,
+                Size = hat.Size,
+                StandardHat = hat.StandardHat,
+                PicturePath = hat.PicturePath,
+                Description = hat.Description,
+                Materials = hat.Materials?
+                    .Select(hm => new MaterialCreateViewModel
+                    {
+                        Name = hm.Material?.Name ?? "",
+                        Amount = (decimal)(hm.Material?.Amount ?? 0),
+                        MeasuringUnits = hm.Material?.MeasuringUnits ?? "",
+                        Price = hm.Material?.Price ?? 0
+                    })
+                    .ToList() ?? new List<MaterialCreateViewModel>()
+            };
+
+            ViewBag.IsEdit = true;
+            return View("Create", vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Hat model, IFormFile? ImageFile)
+        public async Task<IActionResult> Edit(int id, HatCreateViewModel vm)
         {
             if (!IsLoggedIn())
             {
                 return RedirectToAction("Login", "Auth");
             }
 
-            if (id != model.HId)
+            if (id != vm.HId)
             {
                 return BadRequest();
             }
@@ -156,41 +184,51 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 return NotFound();
             }
-            // Basic server-side validation
-            if (string.IsNullOrWhiteSpace(model.Name))
-            {
-                ModelState.AddModelError("Name", "Namn krävs.");
-            }
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                ViewBag.IsEdit = true;
+                return View("Create", vm);
             }
 
-            // Update scalar properties
-            hat.Name = model.Name;
-            hat.Price = model.Price;
-            hat.Size = model.Size;
-            hat.StandardHat = model.StandardHat;
-            hat.Description = model.Description;
+            hat.Name = vm.Name;
+            hat.Price = vm.Price;
+            hat.Size = vm.Size;
+            hat.StandardHat = vm.StandardHat;
+            hat.Description = vm.Description;
 
-            // Handle optional image upload
-            if (ImageFile != null)
+            if (vm.ImageFile != null)
             {
                 try
                 {
-                    var picturePath = await _fileService.SaveImageAsync(ImageFile);
+                    var picturePath = await _fileService.SaveImageAsync(vm.ImageFile);
                     hat.PicturePath = picturePath ?? hat.PicturePath;
                 }
                 catch (InvalidOperationException ex)
                 {
-                    ModelState.AddModelError(string.Empty, ex.Message);
-                    return View(hat);
+                    ModelState.AddModelError("", ex.Message);
+                    ViewBag.IsEdit = true;
+                    return View("Create", vm);
                 }
             }
 
-            // NOTE: this keeps existing Materials collection as-is.
-            // If you want to replace materials, fetch and mutate hat.Materials here.
+            hat.Materials.Clear();
+
+            foreach (var m in vm.Materials?
+                .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Name))
+                ?? Enumerable.Empty<MaterialCreateViewModel>())
+            {
+                hat.Materials.Add(new HatMaterial
+                {
+                    Material = new Material
+                    {
+                        Name = m.Name,
+                        Amount = (double)m.Amount,
+                        MeasuringUnits = m.MeasuringUnits,
+                        Price = (decimal)(double)m.Price
+                    }
+                });
+            }
 
             await _hatRepository.UpdateAsync(hat);
 
@@ -260,9 +298,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                         Material = new Material
                         {
                             Name = m.Name,
-                            Amount = m.Amount,
+                            Amount = (double)m.Amount,
                             MeasuringUnits = m.MeasuringUnits,
-                            Price = m.Price
+                            Price = (decimal)(double)m.Price
                         }
                     }).ToList() ?? new List<HatMaterial>()
             };
@@ -279,7 +317,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             });
         }
 
-        public async Task<IActionResult> View(int hId, int oId, int amount)
+        public async Task<IActionResult> hatView(int hId, int oId, int amount)
         {
             // 1. Hämta EmployeeId från Sessionen
             int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
