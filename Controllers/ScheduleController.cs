@@ -4,6 +4,7 @@ using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
 {
@@ -16,6 +17,18 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         {
             _context = context;
             _hatOrderRepository = hatOrderRepository;
+        }
+
+        private bool IsAdmin()
+        {
+            int? employeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+            if (employeeId == null)
+                return false;
+
+            var employee = _context.Employees.FirstOrDefault(e => e.EId == employeeId.Value);
+
+            return employee != null && employee.accesslevel >= 10;
         }
 
         public async Task<IActionResult> Index(bool personal = false, int? year = null, int? month = null)
@@ -60,16 +73,14 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 IsPersonal = personal,
                 Year = selectedYear,
-                Month = selectedMonth
+                Month = selectedMonth,
+                IsAdmin = IsAdmin(),
             };
 
-            // ✅ OSCHEMALAGDA
-            //var unscheduled = allHatOrders
-            //    .Where(h => !scheduledHatOrderIds.Contains(h.Id))
-            //    .ToList();
 
             var unscheduled = allHatOrders.Where(ho => ho.Status == "Ej Påbörjad").ToList();
             
+
 
             foreach (var ho in unscheduled)
             {
@@ -80,7 +91,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     Title = $"Order {ho.OId}",
                     HatName = ho.Hat?.Name ?? "",
                     Status = ho.Status,
-                    ColorClass = GetColorClass(ho.Order, ho.Status)
+                    ColorClass = GetColorClass(ho.Order, ho.Status),
+                    Amount = ho.Amount,
                 });
             }
 
@@ -113,6 +125,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                             HatName = ho.Hat?.Name ?? "",
                             Status = ho.Status,
                             ColorClass = GetColorClass(ho.Order, ho.Status),
+                            Amount = ho.Amount,
 
                             EmployeeId = ho.EId ?? 0,
                             EmployeeName = ho.Employee?.Name ?? ""
@@ -137,16 +150,18 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             return View(model);
         }
 
+
+        [HttpPost]
         [HttpPost]
         public async Task<IActionResult> AssignTaskToDate(
-            int orderId,
-            int hatId,
-            int employeeId,
-            DateTime date,
-            bool personal = false,
-            int? year = null,
-            int? month = null)
-            {
+    int orderId,
+    int hatId,
+    int employeeId,
+    DateTime date,
+    bool personal = false,
+    int? year = null,
+    int? month = null)
+        {
             var hatOrder = await _context.HatOrders
                 .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
 
@@ -155,8 +170,16 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             hatOrder.Date = date;
             hatOrder.Status = "Påbörjad";
-            hatOrder.EId = employeeId;
 
+            if (IsAdmin())
+            {
+                hatOrder.EId = employeeId;
+            }
+            else
+            {
+                int currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId") ?? 0;
+                hatOrder.EId = currentEmployeeId;
+            }
 
             await _hatOrderRepository.ChangeToStartedAsync(hatOrder);
 
@@ -182,11 +205,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             if (hatOrder == null)
                 return NotFound();
 
-            hatOrder.Date = null;
-            hatOrder.EId = null;
-            hatOrder.Status = "Ej Påbörjad";
-
-            await _hatOrderRepository.UpdateAsync(hatOrder);
+            await _hatOrderRepository.ChangeToNotStartedAsync(hatOrder);
 
             return RedirectToAction(nameof(Index), new
             {
@@ -213,5 +232,29 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return "order-default";
         }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkDone(int orderId,
+    int hatId,
+    bool personal = false,
+    int? year = null,
+    int? month = null)
+        {
+            var hatOrder = await _context.HatOrders
+                .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
+
+            if (hatOrder == null)
+                return NotFound();
+
+            await _hatOrderRepository.ChangeToCompletedAsync(hatOrder);
+
+            return RedirectToAction(nameof(Index), new
+            {
+                personal,
+                year,
+                month
+            });
+        }
+
     }
 }

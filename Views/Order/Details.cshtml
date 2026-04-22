@@ -7,11 +7,13 @@
     <p>Status: @Model.StatusText</p>
     
     <div class=" d-flex gap-2">
+
     <form asp-action="" asp-route-id="@(Model.Order.OId)" method="post">
         <input type="hidden" name="oId" value="@(Model.Order.OId)" />
-        <button type="submit" class="btn rosa fw-bold m-0")>Skriv ut Order</button>
         </form>
+
         <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+        <a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Ladda ner order PDF</a>
     </div>
 </div>
 
@@ -99,11 +101,21 @@
 
 </div>
 
+
+
 @* OrderInnehåll *@
+
+
+@* <div class="d-flex justify-content-between align-items-center my-4">
+    <h2>Orderinehåll</h2>
+    <a asp-a *ction="Index" class="btn rosa fw-bold">Skriv ut</a>
+</div> *@
+
 <div class=" d-flex justify-content-between align-items-center">
+
 <h2>Orderinnehåll</h2>
-    <form asp-action="SendOrder" asp-route-id="@(Model.Order.OId)" method="post">
-        <input type="hidden" name="oId" value="@(Model.Order.OId)" />
+    <form asp-action="SendOrder" asp-route-id="@(Model.OrderId)" method="post">
+        <input type="hidden" name="oId" value="@(Model.OrderId)" />
         <button type="submit" class="btn rosa fw-bold" @(Model.Order.Status != "Färdig" ? "disabled" : "")>Skicka Order</button>
     </form>
 </div>
@@ -116,13 +128,15 @@
             <th>Pris/Styck</th>
             <th>Storlek</th>
             <th>Bild</th>
+            <th>Beskrivning</th>
             <th>Status</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.HatOrders)
         {
-            <tr>
+            <tr onclick="window.location='@Url.Action("View", "Hat", new { hId = item.HId, oId = Model.Order.OId, amount = item.Amount })'"
+                style="cursor:pointer;">
                 <td>@item.HId</td>
                 <td>@item.Hat?.Name</td>
                 <td>@item.Amount</td>
@@ -135,10 +149,11 @@
                     }
                     else
                     {
-                        <a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#imageModal" 
-                        data-img="@item.Hat?.PicturePath"> Visa Bild</a>
+                        <a href="#" class="btn btn-sm btn-outline-info" onclick="event.stopPropagation();" data-bs-toggle="modal" data-bs-target="#imageModal"
+                            data-img="@item.Hat?.PicturePath"> Visa Bild</a>
                     }
                 </td>
+				<td style="max-width: 30px;" class="text-truncate">@item.Hat?.Description</td>
                 <td>
                     <span class="badge @(ColorForBadge(item.Status))">
                         @item.Status
@@ -211,11 +226,11 @@
         <div class="d-flex flex-row p-3">
             VÄNSTER 
             <div class="d-flex flex-column w-50 align-content-around justify-content-evenly flex-wrap gap-2">
-                <span>Ordernummer: @Model.order.OId</span>
-                <span>Beställningsdatum: @Model.order.OrderDate.ToShortDateString()</span>
-                <span>Skapad av: @Model.order.CreatedBy?.Name</span>
-                <span>Rabatt: @Model.order.Discount.ToString("P")</span>
-                <span>Beräknat pris: @Model.order.Price.ToString("C")</span>
+                <span>Ordernummer: @Model.OrderId</span>
+                <span>Beställningsdatum: @Model.OrderDate.ToShortDateString()</span>
+                <span>Skapad av: @Model.CreatedByName</span>
+                <span>Rabatt: @Model.Order?.Discount.ToString("P")</span>
+                <span>Beräknat pris: @Model.TotalPrice.ToString("C")</span>
             </div>
 
             HÖGER
@@ -224,10 +239,10 @@
                     Kund:
                     <a asp-controller="Customer" asp-action="View" asp-route-id="@Model.order.CustomerId" class="text-decoration-none fw-bold text-dark"> @Model.order.Customer?.Name</a>
                 </span>
-                <span>Beräknad leverans: @Model.order.PrelDeliveryDate.ToShortDateString()</span>
-                <span>Expressleverans: @(Model.order.Express ? "Ja" : "Nej")</span>
-                <span>Rabattbeskrivning: @Model.order.DiscountDesc</span>
-                <span>Status: @Model.order.Status</span>
+                <span>Beräknad leverans: @Model.EstimatedDeliveryDate.ToShortDateString()</span>
+                <span>Expressleverans: @(Model.Order.Express ? "Ja" : "Nej")</span>
+                <span>Rabattbeskrivning: @Model.Order.DiscountDesc</span>
+                <span>Status: @Model.Order.Status</span>
             </div>
         </div>
 
@@ -238,9 +253,9 @@
     </div>
 </div> *@
 
-<h2>Orderdetaljer</h2> 
+@* <h2>Orderdetaljer</h2> 
 <p>OrderId: @Model.OrderId</p>
 <p>Status: @Model.StatusText</p>
 @{
-}
+} *@
 

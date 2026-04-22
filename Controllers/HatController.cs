@@ -12,12 +12,14 @@ namespace HattmakarenWebbAppGrupp03.Controllers
     public class HatController : Controller
     {
         private readonly HatRepository _hatRepository;
+        private readonly OrderRepository _orderRepository;
         private readonly FileService _fileService;
 
 
-        public HatController(HatRepository hatRepository, FileService fileService)
+        public HatController(HatRepository hatRepository, OrderRepository orderRepository, FileService fileService)
         {
             _hatRepository = hatRepository;
+            _orderRepository = orderRepository;
             _fileService = fileService;
         }
 
@@ -179,10 +181,33 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 success = true,
                 hId = hat.HId,
+                description = hat.Description,
                 name = hat.Name,
                 price = hat.Price.ToString("0.00")
             });
         }
 
+        public async Task<IActionResult> View(int hId, int oId, int amount)
+        {
+            // 1. Hämta EmployeeId från Sessionen
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+            // 2. Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
+            if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
+
+            var hat = await _hatRepository.GetByIdAsync(hId);
+            if (hat == null) return NotFound();
+
+            var previousOrder = await _orderRepository.GetOrderByIdWithCustomerAndCreatorAsync(oId);
+
+            var viewModel = new HatViewViewModel
+            {
+                Hat = hat,
+                PreviousOrder = previousOrder,
+                Amount = amount
+            };
+
+            return View(viewModel);
+        }
     }
 }

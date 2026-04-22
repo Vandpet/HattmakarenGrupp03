@@ -3,6 +3,7 @@
     public class MonthScheduleViewModel
     {
         public bool IsPersonal { get; set; }
+        public bool IsAdmin { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
 
@@ -22,6 +23,7 @@
         public bool IsCurrentMonth { get; set; }
         public bool IsToday { get; set; }
 
+
         public List<CalendarEventViewModel> Events { get; set; } = new();
     }
 
@@ -37,6 +39,7 @@
         public string ColorClass { get; set; } = "";
         public int EmployeeId { get; set; }
         public string EmployeeName { get; set; } = "";
+        public int Amount { get; set; }
     }
 
     public class UnscheduledTaskViewModel
@@ -47,6 +50,7 @@
         public string HatName { get; set; } = "";
         public string Status { get; set; } = "";
         public string ColorClass { get; set; } = "";
+        public int Amount { get; set; }
     }
 
     public class EmployeeViewModel
