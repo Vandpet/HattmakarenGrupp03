@@ -13,3 +13,33 @@
 
 <h2>Total sold hats: @getAmountOfHats</h2>
 <h2>Total revenue: @getTotalRevenue</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Amount</th>
+            <th>Total Sales (SEK)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var hat in Model.AllHats)
+        {
+            // Räkna ut totalt antal för just denna hatt
+            var totalAmount = Model.AllHatOrders
+            .Where(ho => ho.HId == hat.HId)
+            .Sum(ho => ho.Amount);
+
+            // Räkna ut total försäljning i pengar för denna hatt
+            var totalSales = totalAmount * hat.Price;
+
+            <tr>
+                <td>@hat.Name</td>
+                <td>@hat.Price</td>
+                <td>@totalAmount</td>
+                <td>@totalSales</td>
+            </tr>
+        }
+    </tbody>
+</table>

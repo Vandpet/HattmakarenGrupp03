@@ -21,6 +21,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         {
             var revenue = await _statisticsRepository.getTotalRevenue();
             var totalSoldHats = await _statisticsRepository.getAmoutTotalSoldHats();
+            var allHats = await _statisticsRepository.GetAllHatsAsync();
+            var allHatOrders = await _statisticsRepository.GetAllHatOrdersAsync();
 
             Debug.WriteLine("Total sold hats: " + totalSoldHats);
             Debug.WriteLine("Total revenue: " + revenue);
@@ -28,7 +30,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var viewModel = new StatisticsViewModel
             {
                 TotalSoldHats = totalSoldHats,
-                TotalRevenue = revenue
+                TotalRevenue = revenue,
+                AllHats = allHats,
+                AllHatOrders = allHatOrders,
             };
 
             return View(viewModel);

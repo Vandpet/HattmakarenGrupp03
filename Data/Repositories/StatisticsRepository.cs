@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HattmakarenWebbAppGrupp03.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace HattmakarenWebbAppGrupp03.Data.Repositories
@@ -37,9 +38,23 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
                 .Include(ho => ho.Hat)
                 .ToListAsync();
             int totalRevenueAmount = (int)totalRevenue.Sum(ho => ho.Hat.Price * ho.Amount);
+
             return totalRevenueAmount;
 
-
         }
+
+        public async Task<List<Hat>> GetAllHatsAsync()
+        {
+            return await _db.Hats
+                .Include(h => h.Materials)
+                .ToListAsync();
+        }
+
+        public async Task<List<HatOrder>> GetAllHatOrdersAsync()
+        {
+            return await _db.HatOrders
+               .ToListAsync();
+        }
+
     }
 }
