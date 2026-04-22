@@ -5,41 +5,63 @@
     ViewData["Title"] = "Statistics";
 }
 
-@{
-	var getAmountOfHats = Model.TotalSoldHats;
-	var getTotalRevenue = Model.TotalRevenue;
- }
+<div id="content">
+    <h2 class="mb-4">Order Statistics</h2>
 
+    <div class="mb-4">
+        <form method="get" id="filterForm">
+            <label for="period" class="fw-bold">Tidsperiod:</label>
+            <select name="period" id="period" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+                <option value="all" selected='@(ViewBag.CurrentPeriod == "all")'>All tid</option>
+                <option value="week" selected='@(ViewBag.CurrentPeriod == "week")'>Senaste veckan</option>
+                <option value="month" selected='@(ViewBag.CurrentPeriod == "month")'>Senaste månaden</option>
+                <option value="quarter" selected='@(ViewBag.CurrentPeriod == "quarter")'>Senaste kvartalet</option>
+                <option value="year" selected='@(ViewBag.CurrentPeriod == "year")'>Senaste året</option>
+            </select>
+        </form>
+    </div>
 
-<h2>Total sold hats: @getAmountOfHats</h2>
-<h2>Total revenue: @getTotalRevenue</h2>
+    <div class="stats-container mb-4">
+        <div class="stats-card rosa">
+            <span class="stats-label">Total Sold Hats</span>
+            <span class="stats-value">@Model.TotalSoldHats</span>
+        </div>
+        <div class="stats-card ljuslila text-white">
+            <span class="stats-label">Total Revenue</span>
+            <span class="stats-value">@Model.TotalRevenue.ToString("C0")</span>
+        </div>
+    </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Amount</th>
-            <th>Total Sales (SEK)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var hat in Model.AllHats)
-        {
-            // Räkna ut totalt antal för just denna hatt
-            var totalAmount = Model.AllHatOrders
-            .Where(ho => ho.HId == hat.HId)
-            .Sum(ho => ho.Amount);
+    <div class="calendar-panel shadow-sm">
+        <h4 class="mb-3">Sales per Product</h4>
+        <div class="table-responsive">
+            <table class="table custom-table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Unit Price</th>
+                        <th>Quantity Sold</th>
+                        <th>Total Sales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var hat in Model.AllHats)
+                    {
+                        var totalAmount = Model.AllHatOrders
+                        .Where(ho => ho.HId == hat.HId)
+                        .Sum(ho => ho.Amount);
 
-            // Räkna ut total försäljning i pengar för denna hatt
-            var totalSales = totalAmount * hat.Price;
+                        var totalSales = totalAmount * hat.Price;
 
-            <tr>
-                <td>@hat.Name</td>
-                <td>@hat.Price</td>
-                <td>@totalAmount</td>
-                <td>@totalSales</td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        <tr>
+                            <td class="fw-bold">@hat.Name</td>
+                            <td>@hat.Price.ToString("N2") SEK</td>
+                            <td><span class="badge bg-skickad text-dark">@totalAmount</span></td>
+                            <td class="fw-bold text-purple">@totalSales.ToString("N2") SEK</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
