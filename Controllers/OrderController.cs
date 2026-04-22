@@ -41,22 +41,23 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 .Include(o => o.Customer)
                 .Include(o => o.CreatedBy)
                 .Include(o => o.HatOrders)
-                .OrderByDescending(o => o.OrderDate) // Nyast först
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
 
             // 3. Filtrera baserat på vald knapp
             orders = filter switch
             {
-                "nyligen" => orders.OrderBy(o => o.OrderDate).ToList(),
                 "påbörjade" => orders.Where(o => o.Status == "Påbörjad").ToList(),
                 "avslutade" => orders.Where(o => o.Status == "Skickad").ToList(),
                 "ej-påbörjade" => orders.Where(o => o.Status == "Ej Påbörjad").ToList(),
                 "färdig" => orders.Where(o => o.Status == "Färdig").ToList(),
-                _ => orders
+                "returnerad" => orders.Where(o => o.Status == "Helt Returnerad" || o.Status == "Delvis Returnerad").ToList(),
+                "alla-ordrar" => orders.OrderBy(o => o.OrderDate).ToList(),
+                _ => orders //"nyligen"
             };
 
             //Defaultfilter
-            if (string.IsNullOrEmpty(filter)) filter = "alla-ordrar";
+            if (string.IsNullOrEmpty(filter)) filter = "nyligen";
             ViewBag.Filter = filter;
 
             return View(orders);
