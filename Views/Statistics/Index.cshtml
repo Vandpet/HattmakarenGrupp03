@@ -1,0 +1,15 @@
+﻿@using HattmakarenWebbAppGrupp03.Models.ViewModels
+@model StatisticsViewModel
+
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+@{
+	var getAmountOfHats = Model.TotalSoldHats;
+	var getTotalRevenue = Model.TotalRevenue;
+ }
+
+
+<h2>Total sold hats: @getAmountOfHats</h2>
+<h2>Total revenue: @getTotalRevenue</h2>
