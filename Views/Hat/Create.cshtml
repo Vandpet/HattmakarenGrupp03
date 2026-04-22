@@ -85,10 +85,10 @@
         </div>
 
         <div class="form-group mb-3">
-
             <label for="SelectedKN">Välj ett KN-Nummer</label>
 
             <select asp-for="SelectedKN" class="form-control">
+                <option value="">-- Välj KN-nummer --</option>
                 @foreach (var item in Model.KN_options)
                 {
                     <option value="@item">@item</option>
