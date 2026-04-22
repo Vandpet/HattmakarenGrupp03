@@ -1,82 +1,75 @@
-﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.HatViewViewModel
+﻿@model HattmakarenWebbAppGrupp03.Models.Hat
+
+@{
+    ViewData["Title"] = "Visa hatt";
+}
 
 <div class="container mt-5">
-	<div class="row justify-content-center">
-		<div class="col-md-8 col-lg-7">
-			<div class="card shadow">
-				<div class="card-header ljuslila">
-					<h3 class="mb-0">Hatt</h3>
-				</div>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">@Model.Name</h3>
+                </div>
 
-				<div class="card-body">
-					<dl class="row">
-						<dt class="col-sm-4">Id</dt>
-						<dd class="col-sm-8">@Model.Hat.HId</dd>
+                <div class="card-body">
+                    <dl class="row">
 
-						<dt class="col-sm-4">Namn</dt>
-						<dd class="col-sm-8">@Model.Hat.Name</dd>
+                        <dt class="col-sm-4">Pris</dt>
+                        <dd class="col-sm-8">@Model.Price.ToString("C")</dd>
 
-						<dt class="col-sm-4">Antal på denna Order</dt>
-						<dd class="col-sm-8">@Model.Amount</dd>
+                        <dt class="col-sm-4">Storlek</dt>
+                        <dd class="col-sm-8">@Model.Size</dd>
 
-						<dt class="col-sm-4">Pris</dt>
-						<dd class="col-sm-8">@Model.Hat.Price.ToString("C")</dd>
+                        <dt class="col-sm-4">Bild</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrWhiteSpace(Model.PicturePath))
+                            {
+                                <img src="@Model.PicturePath" alt="@Model.Name" class="img-fluid" style="max-height:200px;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted">Ingen bild</span>
+                            }
+                        </dd>
 
-						<dt class="col-sm-4">Storlek</dt>
-						<dd class="col-sm-8">@Model.Hat.Size</dd>
+                        <dt class="col-sm-4">Standard</dt>
+                        <dd class="col-sm-8">@(Model.StandardHat ? "Ja" : "Nej")</dd>
 
-						<dt class="col-sm-4">StandardHatt</dt>
-						<dd class="col-sm-8">@(Model.Hat.StandardHat ? "Ja" : "Nej")</dd>
+                        <dt class="col-sm-4">Beskrivning</dt>
+                        <dd class="col-sm-8">@Model.Description</dd>
 
-						<dt class="col-sm-4">Bild</dt>
-						<dd class="col-sm-8">
-							@if (string.IsNullOrEmpty(@Model.Hat?.PicturePath))
-							{
-								<span class="text-muted">Otillgänglig</span>
-							}
-							else
-							{
-								<a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#imageModal"
-								   data-img="@Model.Hat?.PicturePath"> Visa Bild</a>
-							}
-						</dd>
+                        <dt class="col-sm-4">Material</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Materials != null && Model.Materials.Any())
+                            {
+                                <ul class="mb-0">
+                                    @foreach (var hm in Model.Materials)
+                                    {
+                                        <li>
+                                            @hm.Material?.Name
+                                            @if (hm.Material != null)
+                                            {
+                                                <span class="text-muted"> — @hm.Material.Amount @hm.Material.MeasuringUnits</span>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Inga material</span>
+                            }
+                        </dd>
 
-						<dt class="col-sm-4">Beskrivning</dt>
-						<dd class="col-sm-8">@Model.Hat.Description</dd>
-					</dl>
-
-					<div class="d-flex gap-2">
-						<a asp-controller="Order" asp-action="Details" asp-route-oId="@Model.PreviousOrder.OId" class="btn rosa fw-bold m-0">Tillbaka</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                    </dl>
+                    <div class="mt-3">
+                        <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
+                        <a asp-action="Edit" asp-route-id="@Model.HId" class="btn btn-primary">Redigera</a>
+                        <a asp-action="Delete" asp-route-id="@Model.HId" class="btn btn-danger">Ta bort</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div class="modal fade" id="imageModal" tabindex="-1">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-
-			<div class="modal-header">
-				<h5 class="modal-title">Bild</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-			</div>
-
-			<div class="modal-body text-center">
-				<img id="modalImage" class="img-fluid" />
-			</div>
-
-		</div>
-	</div>
-</div>
-
-<script>
-	var imageModal = document.getElementById('imageModal');
-
-	imageModal.addEventListener('show.bs.modal', function (event) {
-		var button = event.relatedTarget;
-		var imgSrc = button.getAttribute('data-img');
-		document.getElementById('modalImage').src = imgSrc;
-	});
-</script>

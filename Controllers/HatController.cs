@@ -105,6 +105,98 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var hats = await _hatRepository.GetAllAsync();
             return View(hats);
         }
+        public async Task<IActionResult> View(int id)
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var hat = await _hatRepository.GetByIdAsync(id);
+
+            if (hat == null)
+            {
+                return NotFound();
+            }
+
+            return View(hat);
+        }
+        public async Task<IActionResult> Edit(int id)
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var hat = await _hatRepository.GetByIdAsync(id);
+            if (hat == null)
+            {
+                return NotFound();
+            }
+
+            return View(hat);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Hat model, IFormFile? ImageFile)
+        {
+            if (!IsLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (id != model.HId)
+            {
+                return BadRequest();
+            }
+
+            var hat = await _hatRepository.GetByIdAsync(id);
+            if (hat == null)
+            {
+                return NotFound();
+            }
+            // Basic server-side validation
+            if (string.IsNullOrWhiteSpace(model.Name))
+            {
+                ModelState.AddModelError("Name", "Namn krävs.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Update scalar properties
+            hat.Name = model.Name;
+            hat.Price = model.Price;
+            hat.Size = model.Size;
+            hat.StandardHat = model.StandardHat;
+            hat.Description = model.Description;
+
+            // Handle optional image upload
+            if (ImageFile != null)
+            {
+                try
+                {
+                    var picturePath = await _fileService.SaveImageAsync(ImageFile);
+                    hat.PicturePath = picturePath ?? hat.PicturePath;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return View(hat);
+                }
+            }
+
+            // NOTE: this keeps existing Materials collection as-is.
+            // If you want to replace materials, fetch and mutate hat.Materials here.
+
+            await _hatRepository.UpdateAsync(hat);
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
         // Hjälpmetod för att simulera databas-material
         //private List<MaterialSelectionViewModel> GetMockMaterials()
