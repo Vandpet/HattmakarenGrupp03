@@ -63,6 +63,10 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
         public IActionResult Create()
         {
+            // Säkerhetskoll: Om sessionen gått ut eller man inte är inloggad
+            var currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
+
             var vm = new HatCreateViewModel
             {
                 Materials = new List<MaterialCreateViewModel>
@@ -143,7 +147,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             await _hatRepository.AddAsync(hat);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Hat");
         }
 
         public async Task<IActionResult> Index()
