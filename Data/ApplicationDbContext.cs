@@ -24,6 +24,9 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<HatMaterial> HatMaterials { get; set; }
         public DbSet<CustomActivity> CustomActivities { get; set; }
         public DbSet<HatSchedule> HatSchedule { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -127,6 +130,39 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .WithMany(e => e.AssignedHats)
                 .HasForeignKey(ho => ho.EId)
                 .IsRequired(false);
+
+            modelBuilder.Entity<ConversationParticipant>()
+    .HasKey(cp => new { cp.ConversationId, cp.EmployeeId });
+
+            modelBuilder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.Conversation)
+                .WithMany(c => c.Participants)
+                .HasForeignKey(cp => cp.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.Employee)
+                .WithMany()
+                .HasForeignKey(cp => cp.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.CreatedByEmployee)
+                .WithMany()
+                .HasForeignKey(c => c.CreatedByEmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.SenderEmployee)
+                .WithMany()
+                .HasForeignKey(m => m.SenderEmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Schema
             //modelBuilder.Entity<HatSchedule>()
