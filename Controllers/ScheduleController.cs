@@ -4,7 +4,9 @@ using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
 {
@@ -43,8 +45,14 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             int selectedMonth = month ?? today.Month;
 
             var firstDay = new DateTime(selectedYear, selectedMonth, 1);
-            var startDate = firstDay.AddDays(-(int)firstDay.DayOfWeek);
+            int diff = ((int)firstDay.DayOfWeek + 6) % 7;
+            var startDate = firstDay.AddDays(-diff);
 
+
+            int weekNumber = ISOWeek.GetWeekOfYear(DateTime.Today);
+
+            //int weeknumber = calender.GetWeekOfYear(new DateTime(selectedYear, selectedMonth, 1), 
+            //    CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
             var hatOrdersQuery = _context.HatOrders
                 .Include(h => h.Hat)
@@ -76,6 +84,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Year = selectedYear,
                 Month = selectedMonth,
                 IsAdmin = IsAdmin(),
+                WeekNumber = weekNumber
             };
 
 
@@ -104,7 +113,11 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             for (int week = 0; week < 6; week++)
             {
-                var weekRow = new WeekRowViewModel();
+                var weekStartDate = current;
+                var weekRow = new WeekRowViewModel
+                {
+                    WeekNumber = ISOWeek.GetWeekOfYear(weekStartDate)
+                };
 
                 for (int day = 0; day < 7; day++)
                 {
@@ -130,7 +143,6 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                             Status = ho.Status,
                             ColorClass = GetColorClass(ho.Order, ho.Status),
                             Amount = ho.Amount,
-
                             EmployeeId = ho.EId ?? 0,
                             EmployeeName = ho.Employee?.Name ?? "",
                             PrelDeliveryDate = ho.Order?.PrelDeliveryDate
@@ -216,7 +228,6 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 month
             });
         }
-
 
         private string GetColorClass(Order? order, string hatOrderStatus)
         {
