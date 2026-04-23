@@ -147,7 +147,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             await _hatRepository.AddAsync(hat);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Hat");
         }
 
         public async Task<IActionResult> Index()
