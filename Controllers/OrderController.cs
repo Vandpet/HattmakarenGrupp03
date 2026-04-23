@@ -279,6 +279,74 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             return File(ms.ToArray(), "application/pdf", $"order_{order.OId}.pdf");
         }
 
+        public async Task<IActionResult> DownloadMaterialsPdf(int oId)
+        {
+            var order = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
+            if (order == null) return NotFound();
+
+            // Fetch hat orders with materials included
+            var hatOrders = await _context.HatOrders
+                .Include(ho => ho.Hat)
+                    .ThenInclude(h => h.Materials)
+                        .ThenInclude(hm => hm.Material)
+                .Where(ho => ho.OId == oId)
+                .ToListAsync();
+
+            // Aggregate materials across all hats in this order
+            var materials = hatOrders
+                .SelectMany(ho => ho.Hat.Materials.Select(hm => new
+                {
+                    hm.Material.Name,
+                    hm.Material.MeasuringUnits,
+                    Amount = hm.Material.Amount * ho.Amount
+                }))
+                .GroupBy(m => new { m.Name, m.MeasuringUnits })
+                .Select(g => new
+                {
+                    Name = g.Key.Name,
+                    Unit = g.Key.MeasuringUnits,
+                    TotalAmount = g.Sum(x => x.Amount)
+                })
+                .ToList();
+
+            var boldFont = iText.Kernel.Font.PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
+            using var ms = new MemoryStream();
+            var writer = new PdfWriter(ms);
+            var pdf = new PdfDocument(writer);
+            var doc = new iText.Layout.Document(pdf);
+
+            doc.Add(new Paragraph($"Materials for Order #{order.OId}").SetFontSize(20).SetFont(boldFont));
+            doc.Add(new Paragraph($"Order Date: {order.OrderDate:yyyy-MM-dd}"));
+            doc.Add(new Paragraph($"Delivery Date: {order.PrelDeliveryDate:yyyy-MM-dd}"));
+            doc.Add(new Paragraph(" "));
+
+            if (materials.Any())
+            {
+                doc.Add(new Paragraph("Required Materials").SetFontSize(14).SetFont(boldFont));
+
+                var table = new iText.Layout.Element.Table(3).UseAllAvailableWidth();
+                table.AddHeaderCell("Material");
+                table.AddHeaderCell("Total Amount");
+                table.AddHeaderCell("Unit");
+
+                foreach (var m in materials)
+                {
+                    table.AddCell(m.Name);
+                    table.AddCell(m.TotalAmount.ToString("0.##"));
+                    table.AddCell(m.Unit);
+                }
+
+                doc.Add(table);
+            }
+            else
+            {
+                doc.Add(new Paragraph("No materials found for this order."));
+            }
+
+            doc.Close();
+            return File(ms.ToArray(), "application/pdf", $"materials_order_{order.OId}.pdf");
+        }
+
     }
 
 
