@@ -2,66 +2,150 @@
 @model StatisticsViewModel
 
 @{
-    ViewData["Title"] = "Statistics";
+	ViewData["Title"] = "Statistics";
 }
 
 <div id="content">
-    <h2 class="mb-4">Order Statistics</h2>
+	<h2 class="mb-4">Hat Statistics</h2>
 
-    <div class="mb-4">
-        <form method="get" id="filterForm">
-            <label for="period" class="fw-bold">Tidsperiod:</label>
-            <select name="period" id="period" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
-                <option value="all" selected='@(ViewBag.CurrentPeriod == "all")'>All tid</option>
-                <option value="week" selected='@(ViewBag.CurrentPeriod == "week")'>Senaste veckan</option>
-                <option value="month" selected='@(ViewBag.CurrentPeriod == "month")'>Senaste månaden</option>
-                <option value="quarter" selected='@(ViewBag.CurrentPeriod == "quarter")'>Senaste kvartalet</option>
-                <option value="year" selected='@(ViewBag.CurrentPeriod == "year")'>Senaste året</option>
-            </select>
-        </form>
-    </div>
+	<div class="mb-4">
+		<form method="get" id="filterForm">
 
-    <div class="stats-container mb-4">
-        <div class="stats-card rosa">
-            <span class="stats-label">Total Sold Hats</span>
-            <span class="stats-value">@Model.TotalSoldHats</span>
-        </div>
-        <div class="stats-card ljuslila text-white">
-            <span class="stats-label">Total Revenue</span>
-            <span class="stats-value">@Model.TotalRevenue.ToString("C0")</span>
-        </div>
-    </div>
+			<input type="hidden" name="sort" value="@ViewBag.Sort" />
+			<input type="hidden" name="direction" value="@ViewBag.Direction" />
 
-    <div class="calendar-panel shadow-sm">
-        <h4 class="mb-3">Sales per Product</h4>
-        <div class="table-responsive">
-            <table class="table custom-table">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Unit Price</th>
-                        <th>Quantity Sold</th>
-                        <th>Total Sales</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var hat in Model.AllHats)
-                    {
-                        var totalAmount = Model.AllHatOrders
-                        .Where(ho => ho.HId == hat.HId)
-                        .Sum(ho => ho.Amount);
+			<label for="period" class="fw-bold">Time period:</label>
+			<select name="period" id="period" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+				<option value="all" selected='@(ViewBag.CurrentPeriod == "all")'>All time</option>
+				<option value="month" selected='@(ViewBag.CurrentPeriod == "month")'>This month</option>
+				<option value="quarter" selected='@(ViewBag.CurrentPeriod == "quarter")'>This quarter</option>
+				<option value="year" selected='@(ViewBag.CurrentPeriod == "year")'>This year</option>
+			</select>
+		</form>
+	</div>
 
-                        var totalSales = totalAmount * hat.Price;
+	<div class="stats-container mb-4">
+		<div class="stats-card rosa">
+			<span class="stats-label">Total Sold Hats</span>
+			<span class="stats-value">@Model.TotalSoldHats</span>
+		</div>
+		<div class="stats-card ljuslila text-white">
+			<span class="stats-label">Total Sales</span>
+			<span class="stats-value">@Model.TotalRevenue.ToString("C0")</span>
+		</div>
+	</div>
 
-                        <tr>
-                            <td class="fw-bold">@hat.Name</td>
-                            <td>@hat.Price.ToString("N2") SEK</td>
-                            <td><span class="badge bg-skickad text-dark">@totalAmount</span></td>
-                            <td class="fw-bold text-purple">@totalSales.ToString("N2") SEK</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+
+
+	<div class="calendar-panel shadow-sm">
+		<h4 class="mb-3">Sales per Product</h4>
+		<div class="table-responsive">
+
+			<div>
+				<form method="get" asp-controller="Statistics" asp-action="Index" class="mb-3">
+
+					<input type="hidden" name="direction" id="directionInput" value="@ViewBag.Direction" />
+					<input type="hidden" name="period" value="@ViewBag.CurrentPeriod" />
+
+
+					<label class="fw-bold me-2">Sort by:</label>
+
+					<div class="btn-group">
+
+						<button type="submit" name="sort" value="sales"
+								onclick="setDirection('sales')"
+								class="btn text-start @(ViewBag.Sort == "sales" ? "btn-ljuslila" : "btn-rosa")">
+							Total Sales
+						</button>
+
+						<button type="submit" name="sort" value="quantity"
+								onclick="setDirection('quantity')"
+								class="btn text-start @(ViewBag.Sort == "quantity" ? "btn-ljuslila" : "btn-rosa")">
+							Quantity Sold
+						</button>
+
+						<button type="submit" name="sort" value="price"
+								onclick="setDirection('price')"
+								class="btn text-start @(ViewBag.Sort == "price" ? "btn-ljuslila" : "btn-rosa")">
+							Unit Price
+						</button>
+
+						<button type="submit" name="sort" value="name"
+								onclick="setDirection('name')"
+								class="btn text-start @(ViewBag.Sort == "name" ? "btn-ljuslila" : "btn-rosa")">
+							Product Name
+						</button>
+
+						<button type="submit" class="btn btn-outline-dark" onclick="toggleDirection()">
+							@(ViewBag.Direction == "asc" ? "↑↓" : "↓↑")
+						</button>
+
+					</div>
+
+				</form>
+
+			</div>
+
+			<table class="table custom-table">
+				<thead>
+					<tr>
+						<th>Product Name</th>
+						<th>Unit Price</th>
+						<th>Quantity Sold</th>
+						<th>Total Sales</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					@foreach (var hat in Model.hatStats)
+					{
+						<tr>
+							<td class="fw-bold">@hat.Name</td>
+							<td>@hat.Price.ToString("N2") SEK</td>
+							<td><span class="badge bg-skickad text-dark">@hat.Quantity</span></td>
+							<td class="fw-bold text-purple">@hat.Sales.ToString("N2") SEK</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
+
+@functions {
+	public string GetArrow(string sortType)
+	{
+		var currentSort = ViewBag.Sort as string;
+		var direction = ViewBag.Direction as string;
+
+		if (currentSort != sortType)
+			return "";
+
+		return direction == "asc" ? "↑" : "↓";
+	}
+}
+	
+<script>
+	function setDirection(sortType) {
+		const currentSort = "@ViewBag.Sort";
+		const currentDirection = "@ViewBag.Direction";
+
+		let newDirection = "desc";
+
+		if (currentSort === sortType) {
+			newDirection = currentDirection === "asc" ? "desc" : "asc";
+		}
+
+		document.getElementById("directionInput").value = newDirection;
+	}
+
+	function setSort(sortType) {
+		document.getElementById("sortInput").value = sortType;
+	}
+
+	function toggleDirection() {
+		const input = document.getElementById("directionInput");
+		input.value = input.value === "asc" ? "desc" : "asc";
+	}
+
+</script>
