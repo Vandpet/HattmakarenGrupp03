@@ -49,6 +49,7 @@
                     {
                         var totalAmount = Model.AllHatOrders
                         .Where(ho => ho.HId == hat.HId)
+                        .Where(ho => ho.Status == "Skickad")
                         .Sum(ho => ho.Amount);
 
                         var totalSales = totalAmount * hat.Price;
