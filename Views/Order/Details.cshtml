@@ -29,6 +29,7 @@
                     <div><strong>Order:</strong> @(Model.Order.OId)</div>
                     <div><strong>Datum:</strong> @(Model.Order.OrderDate.ToShortDateString())</div>
                     <div><strong>Skapad av:</strong> @(Model.Order.CreatedBy?.Name)</div>
+                    <div><strong>Utländsk kund:</strong> @(Model.IsForeignCustomer ? "Ja, ingen moms." : "Nej")</div>
                 </div>
 
                 <div class="col-md-6">
@@ -67,6 +68,10 @@
             <div class="d-flex flex-column">
 
                 <div>
+					Delivery Fee : @(Model.Order.DeliveryFee.ToString("C"))
+                </div>
+
+                <div>
                     Express: @(Model.Order.Express ? "Ja (+20%)" : "Nej")
                 </div>
 
@@ -81,8 +86,24 @@
             </div>
 
             <div class="text-end">
-                <strong>Beräknat Pris:</strong><br />
-                @(Model.Order.Price.ToString("C"))
+                @if (Model.IsForeignCustomer)
+                {
+                    <strong>Total Price (excl. VAT)</strong>
+                    <br />
+                    @(Model.PriceWithoutVat.ToString("C"))
+                }
+                else
+                {
+                    <strong>Total Price:</strong>
+                    <br />
+                    @(Model.Order.Price.ToString("C"))
+                    <br />
+
+                    <strong>(excl. VAT):</strong>
+                    <br />
+                    @(Model.PriceWithoutVat.ToString("C"))
+                }
+                
             </div>
 
         </div>
@@ -115,7 +136,7 @@
             <th>Id</th>
             <th>Namn</th>
             <th>Antal</th>
-            <th>Pris/Styck</th>
+            <th>Pris/Styck (excl. VAT)</th>
             <th>Storlek</th>
             <th>Bild</th>
             <th>Beskrivning</th>
