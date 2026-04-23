@@ -1,4 +1,5 @@
 ﻿using HattmakarenWebbAppGrupp03.Models;
+using iText.Commons.Actions.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,9 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<HatMaterial> HatMaterials { get; set; }
         public DbSet<CustomActivity> CustomActivities { get; set; }
         public DbSet<HatSchedule> HatSchedule { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -127,6 +131,40 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasForeignKey(ho => ho.EId)
                 .IsRequired(false);
 
+            //Medelanden
+            modelBuilder.Entity<ConversationParticipant>()
+                .HasKey(cp => new { cp.ConversationId, cp.EmployeeId });
+
+            modelBuilder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.Conversation)
+                .WithMany(c => c.Participants)
+                .HasForeignKey(cp => cp.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.Employee)
+                .WithMany()
+                .HasForeignKey(cp => cp.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.CreatedByEmployee)
+                .WithMany()
+                .HasForeignKey(c => c.CreatedByEmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.SenderEmployee)
+                .WithMany()
+                .HasForeignKey(m => m.SenderEmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Schema
             //modelBuilder.Entity<HatSchedule>()
             //   .HasOne(s => s.HatOrder)
@@ -145,29 +183,150 @@ namespace HattmakarenWebbAppGrupp03.Data
             var _passwordHasher = new PasswordHasher<Employee>();
 
             // --- Employee (Otto) ---
+            // --- Employee (Otto) ---
             var otto = new Employee
             {
                 Name = "Otto",
                 Adress = "Testgatan 1",
                 PhoneNr = "0700000000",
-                Email = "Otto@hatmakarna.se",
+                Email = "otto@hatmakarna.se",
                 accesslevel = 9,
                 Username = "Otto"
             };
 
+            // --- Employee (Felicia) ---
             var felicia = new Employee
             {
                 Name = "Felicia",
-                Adress = "Testgatan 1",
-                PhoneNr = "0700000000",
-                Email = "Otto@hatmakarna.se",
+                Adress = "Testgatan 2",
+                PhoneNr = "0700000001",
+                Email = "felicia@hatmakarna.se",
                 accesslevel = 10,
                 Username = "Felicia"
             };
+
+            // --- Employee (Anna) ---
+            var anna = new Employee
+            {
+                Name = "Anna",
+                Adress = "Testgatan 3",
+                PhoneNr = "0700000002",
+                Email = "anna@hatmakarna.se",
+                accesslevel = 5,
+                Username = "Anna"
+            };
+
+            // --- Employee (Johan) ---
+            var johan = new Employee
+            {
+                Name = "Johan",
+                Adress = "Testgatan 4",
+                PhoneNr = "0700000003",
+                Email = "johan@hatmakarna.se",
+                accesslevel = 4,
+                Username = "Johan"
+            };
+
+            // --- Employee (Emma) ---
+            var emma = new Employee
+            {
+                Name = "Emma",
+                Adress = "Testgatan 5",
+                PhoneNr = "0700000004",
+                Email = "emma@hatmakarna.se",
+                accesslevel = 6,
+                Username = "Emma"
+            };
+
+            // --- Employee (Lucas) ---
+            var lucas = new Employee
+            {
+                Name = "Lucas",
+                Adress = "Testgatan 6",
+                PhoneNr = "0700000005",
+                Email = "lucas@hatmakarna.se",
+                accesslevel = 3,
+                Username = "Lucas"
+            };
+
+            // --- Employee (Sara) ---
+            var sara = new Employee
+            {
+                Name = "Sara",
+                Adress = "Testgatan 7",
+                PhoneNr = "0700000006",
+                Email = "sara@hatmakarna.se",
+                accesslevel = 7,
+                Username = "Sara"
+            };
+
+            // --- Employee (Erik) ---
+            var erik = new Employee
+            {
+                Name = "Erik",
+                Adress = "Testgatan 8",
+                PhoneNr = "0700000007",
+                Email = "erik@hatmakarna.se",
+                accesslevel = 2,
+                Username = "Erik"
+            };
+
+            // --- Employee (Maja) ---
+            var maja = new Employee
+            {
+                Name = "Maja",
+                Adress = "Testgatan 9",
+                PhoneNr = "0700000008",
+                Email = "maja@hatmakarna.se",
+                accesslevel = 8,
+                Username = "Maja"
+            };
+
+            // --- Employee (David) ---
+            var david = new Employee
+            {
+                Name = "David",
+                Adress = "Testgatan 10",
+                PhoneNr = "0700000009",
+                Email = "david@hatmakarna.se",
+                accesslevel = 4,
+                Username = "David"
+            };
+
+            // --- Employee (Linda) ---
+            var linda = new Employee
+            {
+                Name = "Linda",
+                Adress = "Testgatan 11",
+                PhoneNr = "0700000010",
+                Email = "linda@hatmakarna.se",
+                accesslevel = 5,
+                Username = "Linda"
+            };
+
+            // --- Employee (Marcus) ---
+            var marcus = new Employee
+            {
+                Name = "Marcus",
+                Adress = "Testgatan 12",
+                PhoneNr = "0700000011",
+                Email = "marcus@hatmakarna.se",
+                accesslevel = 6,
+                Username = "Marcus"
+            };
+
             otto.PasswordHash = _passwordHasher.HashPassword(otto, "asdasd");
-
             felicia.PasswordHash = _passwordHasher.HashPassword(felicia, "123123");
-
+            anna.PasswordHash = _passwordHasher.HashPassword(anna, "123123");
+            johan.PasswordHash = _passwordHasher.HashPassword(johan, "123123");
+            emma.PasswordHash = _passwordHasher.HashPassword(emma, "123123");
+            lucas.PasswordHash = _passwordHasher.HashPassword(lucas, "123123");
+            sara.PasswordHash = _passwordHasher.HashPassword(sara, "123123");
+            erik.PasswordHash = _passwordHasher.HashPassword(erik, "123123");
+            maja.PasswordHash = _passwordHasher.HashPassword(maja, "123123");
+            david.PasswordHash = _passwordHasher.HashPassword(david, "123123");
+            linda.PasswordHash = _passwordHasher.HashPassword(linda, "123123");
+            marcus.PasswordHash = _passwordHasher.HashPassword(marcus, "123123");
 
 
             // --- Customer ---
@@ -308,6 +467,16 @@ namespace HattmakarenWebbAppGrupp03.Data
             context.AddRange(
                 otto,
                 felicia,
+                anna,
+                johan,
+                emma,
+                lucas,
+                sara,
+                erik,
+                maja,
+                david,
+                linda,
+                marcus,
                 customer,
                 material,
                 hat,
@@ -323,5 +492,5 @@ namespace HattmakarenWebbAppGrupp03.Data
 
             await context.SaveChangesAsync();
         }
-    }
+    }    
 }

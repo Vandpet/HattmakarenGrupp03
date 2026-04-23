@@ -1,0 +1,60 @@
+﻿@model HattmakarenWebbAppGrupp03.ViewModels.Messages.ConversationThreadViewModel
+
+@{
+    ViewData["Title"] = "Konversation";
+}
+
+<div class="mb-3">
+    <h2>@Model.DisplayName</h2>
+    <div class="text-muted">
+        Deltagare: @string.Join(", ", Model.Participants)
+    </div>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="card mb-4">
+    <div class="card-body">
+        @if (!Model.Messages.Any())
+        {
+            <p class="text-muted mb-0">Inga meddelanden i tråden ännu.</p>
+        }
+        else
+        {
+            @foreach (var message in Model.Messages)
+            {
+                <div class="mb-3 p-3 border rounded @(message.IsMine ? "bg-light" : "")">
+                    <div class="d-flex justify-content-between">
+                        <strong>@message.SenderName</strong>
+                        <small class="text-muted">@message.SentAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</small>
+                    </div>
+                    <div class="mt-2">
+                        @message.Content
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Reply" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="conversationId" value="@Model.ConversationId" />
+
+            <div class="mb-3">
+                <label for="newMessageContent" class="form-label">Svara</label>
+                <textarea name="newMessageContent" id="newMessageContent" class="form-control" rows="4"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Skicka</button>
+            <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
+        </form>
+    </div>
+</div>

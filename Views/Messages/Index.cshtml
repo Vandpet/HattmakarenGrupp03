@@ -1,0 +1,52 @@
+﻿@model List<HattmakarenWebbAppGrupp03.ViewModels.Messages.ConversationListItemViewModel>
+
+@{
+    ViewData["Title"] = "Meddelanden";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Meddelanden</h2>
+    <a asp-action="Create" class="btn btn-primary">Ny tråd</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Du har inga konversationer ännu.
+    </div>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var item in Model)
+        {
+            <a asp-action="Thread" asp-route-id="@item.ConversationId" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">
+                        @item.DisplayName
+                        @if (item.IsBroadcast)
+                        {
+                            <span class="badge bg-warning text-dark ms-2">Till alla</span>
+                        }
+                    </h5>
+                    <small>
+                        @(item.LastMessageSentAtUtc?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "")
+                    </small>
+                </div>
+
+                <p class="mb-1">
+                    @if (!string.IsNullOrWhiteSpace(item.LastSenderName))
+                    {
+                        <strong>@item.LastSenderName:</strong>
+                    }
+                    @item.LastMessagePreview
+                </p>
+
+                @if (item.UnreadCount > 0)
+                {
+                    <small class="text-primary">@item.UnreadCount olästa</small>
+                }
+            </a>
+        }
+    </div>
+}
