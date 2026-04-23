@@ -499,10 +499,25 @@ button {
     color: #73147A;
 }
 
-.sidebar .badge {
-    display: none;
+/* -- Layout för Dagvyn -- */
+/* -- Inbyggd scroll för både Vecko- och Dagvyn -- */
+.calendar-grid.view-week .calendar-cell,
+.calendar-grid.view-day .calendar-cell {
+    height: 55vh;
+    overflow-y: auto;
 }
 
-.sidebar:hover .badge {
-    display: inline-block;
+.calendar-grid.view-day {
+    display: grid;
+    grid-template-columns: 1fr; 
+
+    width: 95%;
+    max-width: 1000px; 
+    margin: 0 auto;
+}
+
+.calendar-grid.view-day .weekday {
+    text-align: center;
+    font-size: 1.3rem;
+    padding: 10px;
 }
