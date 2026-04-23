@@ -7,10 +7,11 @@
         public int Year { get; set; }
         public int Month { get; set; }
         public int WeekNumber { get; set; }
+		public DateTime SelectedDate { get; set; }
+		public string ViewMode { get; set; } = "month";
 
 
-
-        public List<WeekRowViewModel> Weeks { get; set; } = new();
+		public List<WeekRowViewModel> Weeks { get; set; } = new();
         public List<UnscheduledTaskViewModel> UnscheduledTasks { get; set; } = new();
         public List<EmployeeViewModel> Employees { get; set; } = new();
     }
