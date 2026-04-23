@@ -4,10 +4,17 @@
     {
         public int TotalSoldHats { get; set; } = 0;
         public int TotalRevenue { get; set; } = 0;
-        public IEnumerable<Hat> AllHats { get; set; } = new List<Hat>();
-        
-        public IEnumerable<HatOrder> AllHatOrders { get; set; } = new List<HatOrder>();
+        public IEnumerable<HatStatisticsRow> hatStats { get; set; } = new List<HatStatisticsRow>();
 
+    }
+
+    public class HatStatisticsRow
+    {
+        public int HatId { get; set; }
+        public string Name { get; set; } = "";
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+        public decimal Sales { get; set; }
     }
 }
 
