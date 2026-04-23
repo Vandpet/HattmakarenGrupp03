@@ -487,3 +487,10 @@ button {
     color: #73147A;
 }
 
+.sidebar .badge {
+    display: none;
+}
+
+.sidebar:hover .badge {
+    display: inline-block;
+}

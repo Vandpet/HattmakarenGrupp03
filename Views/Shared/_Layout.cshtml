@@ -85,11 +85,11 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a asp-controller="Messages" asp-action="Index" class="nav-link text-white">
-                        <span class="menu-text">Meddelanden</span>
-                    </a>
-                </li>
+                
+                    <li class="nav-item">
+                        @await Component.InvokeAsync("UnreadMessages")
+                    </li>
+              
 
             <li class="nav-item">
                 <a asp-controller="Auth" asp-action="Logout" class="nav-link text-white">

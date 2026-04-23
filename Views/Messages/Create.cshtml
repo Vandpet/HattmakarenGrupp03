@@ -31,6 +31,7 @@
                        type="checkbox"
                        name="SelectedEmployeeIds"
                        value="@employee.EmployeeId"
+                       style="cursor:pointer; border-color:blue;" 
                        @(Model.SelectedEmployeeIds.Contains(employee.EmployeeId) ? "checked" : null) />
                 <label class="form-check-label">@employee.FullName</label>
             </div>
