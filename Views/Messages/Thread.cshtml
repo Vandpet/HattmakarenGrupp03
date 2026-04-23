@@ -1,13 +1,13 @@
 ﻿@model HattmakarenWebbAppGrupp03.ViewModels.Messages.ConversationThreadViewModel
 
 @{
-    ViewData["Title"] = "Konversation";
+    ViewData["Title"] = "Conversation";
 }
 
 <div class="mb-3">
-    <h2>@Model.DisplayName</h2>
-    <div class="text-muted">
-        Deltagare: @string.Join(", ", Model.Participants)
+    <h2 class="mb-1">@Model.DisplayName</h2>
+    <div class="text-muted small">
+        Participants: @string.Join(", ", Model.Participants)
     </div>
 </div>
 
@@ -19,22 +19,33 @@
 }
 
 <div class="card mb-4">
-    <div class="card-body">
+    <div class="card-body" style="min-height:200px;">
         @if (!Model.Messages.Any())
         {
-            <p class="text-muted mb-0">Inga meddelanden i tråden ännu.</p>
+            <p class="text-muted mb-0">No messages in the thread yet.</p>
         }
         else
         {
             @foreach (var message in Model.Messages)
             {
-                <div class="mb-3 p-3 border rounded @(message.IsMine ? "bg-light" : "")">
-                    <div class="d-flex justify-content-between">
-                        <strong>@message.SenderName</strong>
-                        <small class="text-muted">@message.SentAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</small>
-                    </div>
-                    <div class="mt-2">
-                        @message.Content
+                <!-- Meddelandebubblor: egna högerställda, andras vänsterställda -->
+                <div class="d-flex mb-3 @(message.IsMine ? "justify-content-end" : "justify-content-start")">
+                    @if (!message.IsMine)
+                    {
+                        <div class="me-2 flex-shrink-0">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white"
+                                 style="width:36px; height:36px; background:#AF75B2; font-weight:600;">
+                                @((!string.IsNullOrWhiteSpace(message.SenderName) ? message.SenderName.Substring(0, 1).ToUpper() : "?"))
+                            </div>
+                        </div>
+                    }
+
+                    <div class="p-3 rounded" style="max-width:75ch; width:auto; @(message.IsMine ? "background:#E9D5EA; color:#333;" : "background:#ffffff; border:1px solid #e9e9e9;")">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <strong class="me-2" style="font-size:0.95rem;">@message.SenderName</strong>
+                            <small class="text-muted" style="font-size:0.8rem;">@message.SentAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</small>
+                        </div>
+                        <div class="mt-1" style="white-space:pre-wrap;">@message.Content</div>
                     </div>
                 </div>
             }
@@ -50,11 +61,13 @@
 
             <div class="mb-3">
                 <label for="newMessageContent" class="form-label">Svara</label>
-                <textarea name="newMessageContent" id="newMessageContent" class="form-control" rows="4"></textarea>
+                <textarea name="newMessageContent" id="newMessageContent" class="form-control" rows="4" placeholder="Skriv ett meddelande..."></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Skicka</button>
-            <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-rosa">Send</button>
+                <a asp-action="Index" class="btn btn-secondary">Back</a>
+            </div>
         </form>
     </div>
 </div>
