@@ -1,44 +1,86 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.HatCreateViewModel
 
 @{
-    ViewData["Title"] = "Skapa Hatt";
+    bool isEdit = ViewBag.IsEdit == true;
+    ViewData["Title"] = isEdit ? "Edit Hat" : "Create Hat";
 }
 
-<h2>Skapa ny hatt</h2>
+<h2>@(isEdit ? "Edit Hat" : "Create New Hat")</h2>
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
+<form asp-action="@(isEdit ? "Edit" : "Create")"
+      asp-route-id="@(isEdit ? Model.HId : null)"
+      method="post"
+      enctype="multipart/form-data">
+
     <!-- VALIDATION SUMMARY -->
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <!-- HATT-SEKTION -->
     <div class="card p-3 mb-4">
 
+        @if (isEdit)
+        {
+        <input asp-for="HId" type="hidden" />
+        }
+
         <div class="form-group form-check mb-3">
             <input asp-for="StandardHat" class="form-check-input" type="checkbox" />
-            <label asp-for="StandardHat" class="form-check-label">Standardmodell</label>
+            <label asp-for="StandardHat" class="form-check-label">Standard model</label>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Name">Namn</label>
+            <label asp-for="Name">Name</label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Price">Pris</label>
-            <input asp-for="Price" class="form-control" type="number" step="0.01" />
+            <label asp-for="Price">Price</label>
+            <input asp-for="Price" class="form-control" type="text" inputmode="decimal" data-val="false" />
             <span asp-validation-for="Price" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Size">Storlek</label>
+            <label asp-for="Size">Size</label>
             <input asp-for="Size" class="form-control" />
             <span asp-validation-for="Size" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="ImageFile">Bild</label>
-            <input asp-for="ImageFile" type="file" class="form-control" />
+            <label asp-for="ImageFile" class="form-label">Image</label>
+
+            @if (!string.IsNullOrWhiteSpace(Model.PicturePath))
+            {
+                <div class="card p-3">
+
+                    <div class="mb-3 text-center">
+                        <img src="@Model.PicturePath"
+                             alt="Current image"
+                             class="img-fluid border rounded"
+                             style="max-height:220px;" />
+                    </div>
+
+                    <div class="border rounded p-3 bg-light">
+                        <div class="fw-semibold mb-2">Replace image</div>
+
+                        <input asp-for="ImageFile" type="file" class="form-control mb-2" />
+
+                        <small class="text-muted">
+                            Choose a new file to replace current image.
+                        </small>
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <input asp-for="ImageFile" type="file" class="form-control" />
+
+                <small class="text-muted">
+                    You can upload an image if you want.
+                </small>
+            }
+
             <span asp-validation-for="ImageFile" class="text-danger"></span>
         </div>
 
@@ -46,6 +88,7 @@
             <label for="SelectedKN">Välj ett KN-Nummer</label>
 
             <select asp-for="SelectedKN" class="form-control">
+                <option value="">-- Välj KN-nummer --</option>
                 @foreach (var item in Model.KN_options)
                 {
                     <option value="@item">@item</option>
@@ -66,41 +109,75 @@
     <div class="card p-3 mb-4">
         <h4>Material</h4>
 
+        @for (int i = 0; i < Model.Materials.Count; i++)
+        {
+            <p>
+                @Model.Materials[i].Name -
+                @Model.Materials[i].Amount -
+                @Model.Materials[i].MeasuringUnits -
+                @Model.Materials[i].Price
+            </p>
+        }
+
         <div id="materials-container">
 
-            <!-- första raden -->
-            <div class="material-item border p-2 mb-3">
-                <input name="Materials[0].Name" class="form-control mb-1" placeholder="Namn" />
-                <input name="Materials[0].Amount" class="form-control mb-1" placeholder="Mängd" type="number" step="0.01" />
-                <input name="Materials[0].MeasuringUnits" class="form-control mb-1" placeholder="Enhet" />
-                <input name="Materials[0].Price" class="form-control mb-1" placeholder="Pris" type="number" step="0.01" />
-            </div>
+            @if (Model != null && Model.Materials != null && Model.Materials.Any(m => m != null))
+            {
+                for (int i = 0; i < Model.Materials.Count; i++)
+                {
+                    var material = Model.Materials[i] ?? new MaterialCreateViewModel();
+
+                    <div class="material-item border p-2 mb-3">
+                        <input name="Materials[@i].Name" class="form-control mb-1" placeholder="Name" value="@material.Name" />
+                        <input name="Materials[@i].Amount" class="form-control mb-1" placeholder="Amount" type="text" inputmode="decimal" value="@material.Amount" />
+                        <input name="Materials[@i].MeasuringUnits" class="form-control mb-1" placeholder="Unit" value="@material.MeasuringUnits" />
+                        <input name="Materials[@i].Price" class="form-control mb-1" placeholder="Price" type="text" inputmode="decimal" value="@material.Price" />
+
+                        <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn">
+                            Remove
+                        </button>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="material-item border p-2 mb-3">
+                    <input name="Materials[0].Name" class="form-control mb-1" placeholder="Name" />
+                    <input name="Materials[0].Amount" class="form-control mb-1" placeholder="Amount" type="number" step="0.01" />
+                    <input name="Materials[0].MeasuringUnits" class="form-control mb-1" placeholder="Unit" />
+                    <input name="Materials[0].Price" class="form-control mb-1" placeholder="Price" type="number" step="0.01" />
+
+                    <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn">
+                        Remove
+                    </button>
+                </div>
+            }
 
         </div>
 
         <button type="button" class="btn btn-success" onclick="addMaterial()">
-            + Lägg till nytt material
+            + Add Material
         </button>
     </div>
 
-    <!-- KNAPPAR -->
+    <!-- BUTTONS -->
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Spara hatt</button>
-        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Avbryt</a>
+        <button type="submit" class="btn btn-primary">Save Hat</button>
+        <a asp-action="Index" asp-controller="Hat" class="btn btn-secondary">Cancel</a>
     </div>
 
 </form>
 
-<!-- TEMPLATE (viktig fix för stabil binding) -->
+<!-- TEMPLATE (important fix for stable binding) -->
 <div id="material-template" style="display:none;">
     <div class="material-item border p-2 mb-3">
-        <input class="form-control mb-1 name" placeholder="Namn" />
-        <input class="form-control mb-1 amount" placeholder="Mängd" type="number" step="0.01" />
-        <input class="form-control mb-1 unit" placeholder="Enhet" />
-        <input class="form-control mb-1 price" placeholder="Pris" type="number" step="0.01" />
+        <input class="form-control mb-1 name" placeholder="Name" />
+        <input class="form-control mb-1 amount" placeholder="Amount" type="number" step="0.01" />
+        <input class="form-control mb-1 unit" placeholder="Unit" />
+        <input class="form-control mb-1 price" placeholder="Price" type="number" step="0.01" />
         
         <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn">
-            Ta bort
+            Remove
         </button>
     </div>
 </div>
