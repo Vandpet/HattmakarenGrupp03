@@ -10,13 +10,16 @@
 
         <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
         <a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Ladda ner order PDF</a>
+        <a asp-action="DownloadMaterialsPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">
+            Ladda ner material PDF
+        </a>
     </div>
 </div>
 
 @* Orderinfo *@
 <div class="d-flex justify-content-center my-4">
 
-    <div class="card shadow col-md-8 col-lg-6 p-3 ljuslila" style="border-radius: 3rem">
+    <div class="card shadow col-md-8 col-lg-6 p-3 ljuslila" style="border-radius: 1.5rem">
 
         @* Rad 1: Allmän info*@
         <div class="card-header rosa" style="border-radius: 1rem">
