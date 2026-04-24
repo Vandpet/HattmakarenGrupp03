@@ -4,6 +4,7 @@ using HattmakarenWebbAppGrupp03.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HattmakarenWebbAppGrupp03.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260423124132_AddDeliveryFeeToOrderTable")]
+    partial class AddDeliveryFeeToOrderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,58 +24,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Conversation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByEmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsBroadcast")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByEmployeeId");
-
-                    b.ToTable("Conversations");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.ConversationParticipant", b =>
-                {
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("JoinedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastReadAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ConversationId", "EmployeeId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("ConversationParticipants");
-                });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.CustomActivity", b =>
                 {
@@ -397,40 +348,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.ToTable("MaterialOrders");
                 });
 
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsSystemMessage")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("SenderEmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("SentAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("SenderEmployeeId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Order", b =>
                 {
                     b.Property<int>("OId")
@@ -459,9 +376,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Property<string>("DiscountDesc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Downloaded")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("Express")
                         .HasColumnType("bit");
@@ -502,36 +416,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.HasIndex("MoId");
 
                     b.ToTable("OrderOfMaterials");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Conversation", b =>
-                {
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "CreatedByEmployee")
-                        .WithMany()
-                        .HasForeignKey("CreatedByEmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByEmployee");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.ConversationParticipant", b =>
-                {
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Conversation", "Conversation")
-                        .WithMany("Participants")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.CustomActivity", b =>
@@ -641,25 +525,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                         .HasForeignKey("EmployeeEId");
                 });
 
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Message", b =>
-                {
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Conversation", "Conversation")
-                        .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "SenderEmployee")
-                        .WithMany()
-                        .HasForeignKey("SenderEmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("SenderEmployee");
-                });
-
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Order", b =>
                 {
                     b.HasOne("HattmakarenWebbAppGrupp03.Models.Employee", "CreatedBy")
@@ -696,13 +561,6 @@ namespace HattmakarenWebbAppGrupp03.Migrations
                     b.Navigation("MaterialOrder");
 
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Conversation", b =>
-                {
-                    b.Navigation("Messages");
-
-                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("HattmakarenWebbAppGrupp03.Models.Customer", b =>

@@ -12,9 +12,6 @@
       method="post"
       enctype="multipart/form-data">
 
-    <!-- VALIDATION SUMMARY -->
-    <div asp-validation-summary="All" class="text-danger"></div>
-
     <!-- HATT-SEKTION -->
     <div class="card p-3 mb-4">
 
@@ -94,6 +91,7 @@
                     <option value="@item">@item</option>
                 }
             </select>
+            <span asp-validation-for="SelectedKN" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">

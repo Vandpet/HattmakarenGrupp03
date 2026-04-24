@@ -1,4 +1,6 @@
-﻿namespace HattmakarenWebbAppGrupp03.Models.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 {
     public class HatCreateViewModel
     {
@@ -11,6 +13,7 @@
         public string? Status { get; set; }
         public bool StandardHat { get; set; }
         public List<string>? KN_options { get; set; }
+        [Required(ErrorMessage = "Du måste välja ett KN-nummer")]
         public string? SelectedKN { get; set; }
 
         public string Description { get; set; }

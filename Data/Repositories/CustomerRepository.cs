@@ -31,11 +31,18 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             await _db.SaveChangesAsync();
         }
 
-        // Glöm inte att Customer ska raderas annorlunda 
-        //public async Task DeleteAsync(Customer customer)
-        //{
-        //    _db.Customers.Remove(customer);
-        //    await _db.SaveChangesAsync();
-        //}
+        // Specialmetoder
+        // Om kund är från utlandet
+        public async Task<bool> IsForeignCustomerAsync(int CId)
+        {
+            var customer = await GetByIdAsync(CId);
+            if (!customer.Country.ToLower().Trim().Equals("sweden") &&
+                !customer.Country.ToLower().Trim().Equals("sverige"))
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

@@ -19,12 +19,14 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         private readonly ApplicationDbContext _context;
         private readonly HatOrderRepository _hatOrderRepo;
         private readonly OrderRepository _orderRepo;
+        private readonly CustomerRepository _customerRepo;
 
-        public OrderController(ApplicationDbContext context, HatOrderRepository hatOrderRepo, OrderRepository orderRepo)
+        public OrderController(ApplicationDbContext context, HatOrderRepository hatOrderRepo, OrderRepository orderRepo, CustomerRepository customerRepo)
         {
             _context = context;
             _hatOrderRepo = hatOrderRepo;
             _orderRepo = orderRepo;
+            _customerRepo = customerRepo;
         }
 
         // GET: Order
@@ -122,7 +124,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     DiscountDesc = model.DiscountDesc ?? "Ingen beskrivning tillgänglig",
                     OrderDate = DateTime.Now,
                     PrelDeliveryDate = model.PrelDeliveryDate,
-                    Description = model.Description ?? "Ingen beskrivning tillgänglig"
+                    Description = model.Description ?? "Ingen beskrivning tillgänglig",
+                    DeliveryFee = model.DeliveryFee
                 };
 
                 //Ordern måste skapas, då får vi ett OId att leka med.
@@ -183,7 +186,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             OrderDetailsViewModel viewModel = new OrderDetailsViewModel
             {
                 Order = currentOrder,
-                HatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId)
+                HatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId),
+                PriceWithoutVat = await _hatOrderRepo.GetPriceWithoutVatAsync(oId),
+                IsForeignCustomer = await _customerRepo.IsForeignCustomerAsync(currentOrder.CustomerId)
             };
 
             return View(viewModel);

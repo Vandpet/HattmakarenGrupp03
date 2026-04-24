@@ -63,14 +63,24 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
 
             var order = await _db.Orders.FindAsync(OId);
 
+            totalPrice += order.DeliveryFee; // Lägg på fraktkostnad efter expressen
+
+            totalPrice *= 1.25m; // Lägg på moms
+
             var discountSum = (totalPrice * order.Discount / 100);//Expressen ska inte vara rabatterad.
 
             if (order.Express) totalPrice *= 1.2m; // Lägg på 20% för expressorder
 
-            totalPrice -= discountSum; // Dra av  rabatt
+            totalPrice -= discountSum; // Dra av rabatt
 
             order.Price = totalPrice;
             await _db.SaveChangesAsync();
+        }
+        public async Task<decimal> GetPriceWithoutVatAsync(int OId)
+        {
+            //Hämtar ordern utan express
+            var order = await _db.Orders.FindAsync(OId);
+            return (order.Price / 1.25m); // Ta bort moms
         }
         public async Task<List<HatOrder>> GetByOrderIdAsync(int OId)
         {
