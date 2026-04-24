@@ -242,7 +242,7 @@ button {
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: 50px repeat(7, minmax(0,1fr));
     gap: 6px;
 }
 
@@ -252,6 +252,18 @@ button {
     color: #666;
     padding: 4px 0 8px 0;
     font-size: 0.9rem;
+
+    .week-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        min-height: auto;
+    }
 }
 
 .calendar-cell {
@@ -315,20 +327,24 @@ button {
     margin-top: 2px;
 }
 
-.order-red {
-    background: #f8d7da;
+.order-default {
+    background: #ffffff;
+    border: 2px solid #dcdcdc;
 }
 
-.order-yellow {
-    background: #fff3cd;
+.order-orange {
+    background: #ffffff;
+    border: 2px solid #f59e0b;
+}
+
+.order-red {
+    background: #ffffff;
+    border: 2px solid #dc2626;
 }
 
 .order-green {
-    background: #d1e7dd;
-}
-
-.order-default {
-    background: #e2e3e5;
+    background: #ffffff;
+    border: 2px solid #16a34a;
 }
 
 .modal-overlay {
@@ -414,4 +430,94 @@ button {
     color: #333;
     font-weight: bold;
 
+}
+
+/*css för statistiksidan*/
+
+.stats-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.stats-card {
+    flex: 1;
+    min-width: 200px;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.stats-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.stats-value {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+    .custom-table thead th {
+        background-color: transparent;
+        border-bottom: 2px solid #E9D5EA;
+        color: #666;
+        padding: 12px;
+        font-weight: 600;
+    }
+
+    .custom-table tbody tr {
+        background-color: #fff;
+        transition: transform 0.2s;
+    }
+
+        .custom-table tbody tr:hover {
+            background-color: #fcf8fd;
+            transform: scale(1.005);
+        }
+
+    .custom-table td {
+        padding: 15px 12px;
+        vertical-align: middle;
+        border-top: 1px solid #eee;
+    }
+
+.text-purple {
+    color: #73147A;
+}
+
+/* -- Layout för Dagvyn -- */
+/* -- Inbyggd scroll för både Vecko- och Dagvyn -- */
+.calendar-grid.view-week .calendar-cell,
+.calendar-grid.view-day .calendar-cell {
+    height: 55vh;
+    overflow-y: auto;
+}
+
+.calendar-grid.view-day {
+    display: grid;
+    grid-template-columns: 1fr; 
+
+    width: 95%;
+    max-width: 1000px; 
+    margin: 0 auto;
+}
+
+.calendar-grid.view-day .weekday {
+    text-align: center;
+    font-size: 1.3rem;
+    padding: 10px;
 }

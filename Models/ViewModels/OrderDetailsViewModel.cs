@@ -35,7 +35,8 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 
         public List<HatOrder> HatOrders { get; set; } = new();
 
-
+        public decimal PriceWithoutVat { get; set; }
+        public bool IsForeignCustomer { get; set; } //Om kunden är från annat land.
 
     }
 }

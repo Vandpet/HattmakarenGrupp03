@@ -1,4 +1,5 @@
-﻿using HattmakarenWebbAppGrupp03.Models;
+﻿using HattmakarenWebbAppGrupp03.Data.Repositories;
+using HattmakarenWebbAppGrupp03.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,9 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<HatMaterial> HatMaterials { get; set; }
         public DbSet<CustomActivity> CustomActivities { get; set; }
         public DbSet<HatSchedule> HatSchedule { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -131,6 +135,38 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasOne(o => o.StartedBy)
                 .WithMany()
                 .HasForeignKey(o => o.StartedById)
+                
+            modelBuilder.Entity<ConversationParticipant>()
+    .HasKey(cp => new { cp.ConversationId, cp.EmployeeId });
+
+            modelBuilder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.Conversation)
+                .WithMany(c => c.Participants)
+                .HasForeignKey(cp => cp.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.Employee)
+                .WithMany()
+                .HasForeignKey(cp => cp.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.CreatedByEmployee)
+                .WithMany()
+                .HasForeignKey(c => c.CreatedByEmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.SenderEmployee)
+                .WithMany()
+                .HasForeignKey(m => m.SenderEmployeeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Schema
@@ -188,6 +224,17 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Language = "SV"
             };
 
+            var customer1 = new Customer
+            {
+                Name = "Italiensk Kund",
+                Adress = "Kundgatan 2",
+                PhoneNr = "0711111111",
+                Country = "Italy",
+                Email = "italienskkund@example.com",
+                City = "Rome",
+                Language = "IT"
+            };
+
             // --- Material ---
             var material = new Material
             {
@@ -205,13 +252,14 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Size = "M",
                 StandardHat = true,
                 PicturePath = "/uploads/740ccec0-24a4-4e2f-915a-e34cd28a3ff9.jpg",
-                Description = "Testhatt"
+                Description = "Testhatt",
+                KN_Number = "6504 00 00",
+                KN_Description = "Färdiga flätade hattar och huvudbonader"
             };
 
             // --- Order ---
             var order = new Order
             {
-                Price = 200m,
                 Status = "Ej Påbörjad",
                 Express = false,
                 Discount = 0,
@@ -219,15 +267,15 @@ namespace HattmakarenWebbAppGrupp03.Data
                 OrderDate = DateTime.Now,
                 PrelDeliveryDate = DateTime.Now.AddDays(7),
                 Description = "Testorder",
-                Customer = customer,
-                CreatedBy = otto
+                Customer = customer1,
+                CreatedBy = otto,
+                DeliveryFee = 0
             };
 
 
 
             var order1 = new Order
             {
-                Price = 200m,
                 Status = "Påbörjad",
                 Express = false,
                 Discount = 0,
@@ -236,12 +284,12 @@ namespace HattmakarenWebbAppGrupp03.Data
                 PrelDeliveryDate = DateTime.Now.AddDays(5),
                 Description = "Order påbörjad",
                 Customer = customer,
-                CreatedBy = otto
+                CreatedBy = otto,
+                DeliveryFee = 50
             };
 
             var order2 = new Order
             {
-                Price = 300m,
                 Status = "Färdig",
                 Express = false,
                 Discount = 0,
@@ -250,12 +298,12 @@ namespace HattmakarenWebbAppGrupp03.Data
                 PrelDeliveryDate = DateTime.Now.AddDays(2),
                 Description = "Order färdig",
                 Customer = customer,
-                CreatedBy = otto
+                CreatedBy = otto,
+                DeliveryFee = 100
             };
 
             var order3 = new Order
             {
-                Price = 400m,
                 Status = "Skickad",
                 Express = true,
                 Discount = 10,
@@ -264,7 +312,8 @@ namespace HattmakarenWebbAppGrupp03.Data
                 PrelDeliveryDate = DateTime.Now.AddDays(-1),
                 Description = "Order skickad",
                 Customer = customer,
-                CreatedBy = otto
+                CreatedBy = otto,
+                DeliveryFee = 150
             };
 
             var hatorder = new HatOrder
@@ -325,6 +374,13 @@ namespace HattmakarenWebbAppGrupp03.Data
                 hatOrder3
             );
 
+            await context.SaveChangesAsync();
+
+            HatOrderRepository _hatOrderRepo = new HatOrderRepository(context, new OrderRepository(context));
+            await _hatOrderRepo.SetPriceOnOrderAsync(order.OId);
+            await _hatOrderRepo.SetPriceOnOrderAsync(order1.OId);
+            await _hatOrderRepo.SetPriceOnOrderAsync(order2.OId);
+            await _hatOrderRepo.SetPriceOnOrderAsync(order3.OId);
             await context.SaveChangesAsync();
         }
     }

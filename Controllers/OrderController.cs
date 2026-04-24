@@ -19,12 +19,14 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         private readonly ApplicationDbContext _context;
         private readonly HatOrderRepository _hatOrderRepo;
         private readonly OrderRepository _orderRepo;
+        private readonly CustomerRepository _customerRepo;
 
-        public OrderController(ApplicationDbContext context, HatOrderRepository hatOrderRepo, OrderRepository orderRepo)
+        public OrderController(ApplicationDbContext context, HatOrderRepository hatOrderRepo, OrderRepository orderRepo, CustomerRepository customerRepo)
         {
             _context = context;
             _hatOrderRepo = hatOrderRepo;
             _orderRepo = orderRepo;
+            _customerRepo = customerRepo;
         }
 
         // GET: Order
@@ -41,22 +43,23 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 .Include(o => o.Customer)
                 .Include(o => o.CreatedBy)
                 .Include(o => o.HatOrders)
-                .OrderByDescending(o => o.OrderDate) // Nyast först
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
 
             // 3. Filtrera baserat på vald knapp
             orders = filter switch
             {
-                "nyligen" => orders.OrderBy(o => o.OrderDate).ToList(),
                 "påbörjade" => orders.Where(o => o.Status == "Påbörjad").ToList(),
                 "avslutade" => orders.Where(o => o.Status == "Skickad").ToList(),
                 "ej-påbörjade" => orders.Where(o => o.Status == "Ej Påbörjad").ToList(),
                 "färdig" => orders.Where(o => o.Status == "Färdig").ToList(),
-                _ => orders
+                "returnerad" => orders.Where(o => o.Status == "Helt Returnerad" || o.Status == "Delvis Returnerad").ToList(),
+                "alla-ordrar" => orders.OrderBy(o => o.OrderDate).ToList(),
+                _ => orders //"nyligen"
             };
 
             //Defaultfilter
-            if (string.IsNullOrEmpty(filter)) filter = "alla-ordrar";
+            if (string.IsNullOrEmpty(filter)) filter = "nyligen";
             ViewBag.Filter = filter;
 
             return View(orders);
@@ -121,7 +124,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     DiscountDesc = model.DiscountDesc ?? "Ingen beskrivning tillgänglig",
                     OrderDate = DateTime.Now,
                     PrelDeliveryDate = model.PrelDeliveryDate,
-                    Description = model.Description ?? "Ingen beskrivning tillgänglig"
+                    Description = model.Description ?? "Ingen beskrivning tillgänglig",
+                    DeliveryFee = model.DeliveryFee
                 };
 
                 //Ordern måste skapas, då får vi ett OId att leka med.
@@ -181,16 +185,15 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             OrderDetailsViewModel viewModel = new OrderDetailsViewModel
             {
-                OrderId = currentOrder.OId,
                 Order = currentOrder,
                 HatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId),
-                IsStarted = currentOrder.Status == "Påbörjad",
-                StatusText = currentOrder.Status
+                PriceWithoutVat = await _hatOrderRepo.GetPriceWithoutVatAsync(oId),
+                IsForeignCustomer = await _customerRepo.IsForeignCustomerAsync(currentOrder.CustomerId)
             };
 
-            return View(viewModel); 
+            return View(viewModel);
         }
-        [HttpPost] 
+        [HttpPost]
         public async Task<IActionResult> SendOrder(int oId)
         {
             // 1. Hämta EmployeeId från Sessionen
@@ -215,26 +218,6 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             return RedirectToAction(nameof(Details), new { oId });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> StartOrder(int oId)
-        {
-            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
-            if (currentEmployeeId == null)
-            {
-                return RedirectToAction("Login", "Auth");
-            }
-
-            var order = await _orderRepo.GetByIdAsync(oId);
-            if (order == null) return NotFound();
-
-            // Sätt status
-            order.Status = "Påbörjad";
-            order.StartedById = currentEmployeeId.Value;
-            Console.WriteLine("StartedById som ska sparas: " + order.StartedById);
-            await _orderRepo.UpdateAsync(order);
-
-            return RedirectToAction(nameof(Details), new { oId });
-        }
         // GET: Order/DownloadPdf
         public async Task<IActionResult> DownloadPdf(int oId)
         {
@@ -300,5 +283,76 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return File(ms.ToArray(), "application/pdf", $"order_{order.OId}.pdf");
         }
+
+        public async Task<IActionResult> DownloadMaterialsPdf(int oId)
+        {
+            var order = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
+            if (order == null) return NotFound();
+
+            // Fetch hat orders with materials included
+            var hatOrders = await _context.HatOrders
+                .Include(ho => ho.Hat)
+                    .ThenInclude(h => h.Materials)
+                        .ThenInclude(hm => hm.Material)
+                .Where(ho => ho.OId == oId)
+                .ToListAsync();
+
+            // Aggregate materials across all hats in this order
+            var materials = hatOrders
+                .SelectMany(ho => ho.Hat.Materials.Select(hm => new
+                {
+                    hm.Material.Name,
+                    hm.Material.MeasuringUnits,
+                    Amount = hm.Material.Amount * ho.Amount
+                }))
+                .GroupBy(m => new { m.Name, m.MeasuringUnits })
+                .Select(g => new
+                {
+                    Name = g.Key.Name,
+                    Unit = g.Key.MeasuringUnits,
+                    TotalAmount = g.Sum(x => x.Amount)
+                })
+                .ToList();
+
+            var boldFont = iText.Kernel.Font.PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
+            using var ms = new MemoryStream();
+            var writer = new PdfWriter(ms);
+            var pdf = new PdfDocument(writer);
+            var doc = new iText.Layout.Document(pdf);
+
+            doc.Add(new Paragraph($"Materials for Order #{order.OId}").SetFontSize(20).SetFont(boldFont));
+            doc.Add(new Paragraph($"Order Date: {order.OrderDate:yyyy-MM-dd}"));
+            doc.Add(new Paragraph($"Delivery Date: {order.PrelDeliveryDate:yyyy-MM-dd}"));
+            doc.Add(new Paragraph(" "));
+
+            if (materials.Any())
+            {
+                doc.Add(new Paragraph("Required Materials").SetFontSize(14).SetFont(boldFont));
+
+                var table = new iText.Layout.Element.Table(3).UseAllAvailableWidth();
+                table.AddHeaderCell("Material");
+                table.AddHeaderCell("Total Amount");
+                table.AddHeaderCell("Unit");
+
+                foreach (var m in materials)
+                {
+                    table.AddCell(m.Name);
+                    table.AddCell(m.TotalAmount.ToString("0.##"));
+                    table.AddCell(m.Unit);
+                }
+
+                doc.Add(table);
+            }
+            else
+            {
+                doc.Add(new Paragraph("No materials found for this order."));
+            }
+
+            doc.Close();
+            return File(ms.ToArray(), "application/pdf", $"materials_order_{order.OId}.pdf");
+        }
+
     }
+
+
 }

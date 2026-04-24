@@ -4,7 +4,9 @@ using HattmakarenWebbAppGrupp03.Models;
 using HattmakarenWebbAppGrupp03.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace HattmakarenWebbAppGrupp03.Controllers
 {
@@ -31,20 +33,47 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             return employee != null && employee.accesslevel >= 10;
         }
 
-        public async Task<IActionResult> Index(bool personal = false, int? year = null, int? month = null)
-        {
-            if (HttpContext.Session.GetInt32("EmployeeId") == null)
-                return RedirectToAction("Login", "Auth");
+		public async Task<IActionResult> Index(bool personal = false, DateTime? targetDate = null, string viewMode = "month")
+		{
+			if (HttpContext.Session.GetInt32("EmployeeId") == null)
+				return RedirectToAction("Login", "Auth");
 
-            int currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId")!.Value;
+			int currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId")!.Value;
 
-            DateTime today = DateTime.Today;
-            int selectedYear = year ?? today.Year;
-            int selectedMonth = month ?? today.Month;
+			DateTime selectedDate = targetDate ?? DateTime.Today;
+			viewMode = viewMode.ToLower();
 
-            var firstDay = new DateTime(selectedYear, selectedMonth, 1);
-            var startDate = firstDay.AddDays(-(int)firstDay.DayOfWeek);
+			DateTime startDate;
+			int weeksToGenerate;
+			int daysInWeek;
 
+			if (viewMode == "day")
+			{
+				startDate = selectedDate.Date;
+				weeksToGenerate = 1;
+				daysInWeek = 1;
+			}
+			else if (viewMode == "week")
+			{
+				int diff = ((int)selectedDate.DayOfWeek + 6) % 7;
+				startDate = selectedDate.AddDays(-diff).Date;
+				weeksToGenerate = 1;
+				daysInWeek = 7;
+			}
+			else
+			{
+				var firstDay = new DateTime(selectedDate.Year, selectedDate.Month, 1);
+				int diff = ((int)firstDay.DayOfWeek + 6) % 7;
+				startDate = firstDay.AddDays(-diff).Date;
+				weeksToGenerate = 6;
+				daysInWeek = 7;
+			}
+
+
+			int weekNumber = ISOWeek.GetWeekOfYear(DateTime.Today);
+
+            //int weeknumber = calender.GetWeekOfYear(new DateTime(selectedYear, selectedMonth, 1), 
+            //    CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
             var hatOrdersQuery = _context.HatOrders
                 .Include(h => h.Hat)
@@ -63,23 +92,31 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             // HÄMTA ALLA HATORDERS (för oschemalagda)
             var allHatOrders = await _context.HatOrders
-                .Include(h => h.Hat)
-                .Include(h => h.Order)
-                .ToListAsync();
+				.Include(h => h.Hat)
+				.Include(h => h.Order)
+                     .ThenInclude(o => o.Customer)
+				.ToListAsync();
 
-            //var scheduledHatOrderIds = schedules.Select(s => s.HatOrderId).ToHashSet();
+			//var scheduledHatOrderIds = schedules.Select(s => s.HatOrderId).ToHashSet();
 
-            var model = new MonthScheduleViewModel
-            {
-                IsPersonal = personal,
-                Year = selectedYear,
-                Month = selectedMonth,
-                IsAdmin = IsAdmin(),
-            };
+			var model = new MonthScheduleViewModel
+			{
+				IsPersonal = personal,
+				Year = selectedDate.Year,
+				Month = selectedDate.Month,
+				SelectedDate = selectedDate,
+				ViewMode = viewMode,
+				IsAdmin = IsAdmin(),
+				WeekNumber = weekNumber
+			};
 
 
-            var unscheduled = allHatOrders.Where(ho => ho.Status == "Ej Påbörjad").ToList();
-            
+			var unscheduled = allHatOrders
+				.Where(ho => ho.Status == "Ej Påbörjad")
+				.OrderBy(ho => ho.Order?.PrelDeliveryDate)
+				.ThenBy(ho => ho.OId)
+				.ToList();
+
 
 
             foreach (var ho in unscheduled)
@@ -93,30 +130,37 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     Status = ho.Status,
                     ColorClass = GetColorClass(ho.Order, ho.Status),
                     Amount = ho.Amount,
+                    PrelDeliveryDate = ho.Order?.PrelDeliveryDate,
+                    CustomerName = ho.Order?.Customer?.Name ?? "",
+                    Description = ho.Order?.Description ?? ""
                 });
             }
 
             DateTime current = startDate;
 
-            for (int week = 0; week < 6; week++)
-            {
-                var weekRow = new WeekRowViewModel();
-
-                for (int day = 0; day < 7; day++)
+			for (int week = 0; week < weeksToGenerate; week++)
+			{
+                var weekStartDate = current;
+                var weekRow = new WeekRowViewModel
                 {
+                    WeekNumber = ISOWeek.GetWeekOfYear(weekStartDate)
+                };
+
+				for (int day = 0; day < daysInWeek; day++)
+				{
                     var dayHatOrders = hatOrders
                     .Where(h => h.Date == current.Date)
                     .ToList();
 
-                    var cell = new CalendarCellViewModel
-                    {
-                        Date = current,
-                        IsCurrentMonth = current.Month == selectedMonth,
-                        IsToday = current.Date == today
-                    };
+					var cell = new CalendarCellViewModel
+					{
+						Date = current,
+						IsCurrentMonth = current.Month == selectedDate.Month, 
+						IsToday = current.Date == DateTime.Today              
+					};
 
-                    foreach(var ho in dayHatOrders)
-{
+					foreach (var ho in dayHatOrders)
+                    {
                         cell.Events.Add(new CalendarEventViewModel
                         {
                             OrderId = ho.OId,
@@ -126,9 +170,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                             Status = ho.Status,
                             ColorClass = GetColorClass(ho.Order, ho.Status),
                             Amount = ho.Amount,
-
                             EmployeeId = ho.EId ?? 0,
-                            EmployeeName = ho.Employee?.Name ?? ""
+                            EmployeeName = ho.Employee?.Name ?? "",
+                            PrelDeliveryDate = ho.Order?.PrelDeliveryDate
                         });
                     }
 
@@ -149,112 +193,112 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return View(model);
         }
+		[HttpPost]
+		public async Task<IActionResult> AssignTaskToDate(
+			int orderId,
+			int hatId,
+			int employeeId,
+			DateTime date,
+			bool personal = false,
+			DateTime? targetDate = null,
+			string viewMode = "month")
+		{
+			var hatOrder = await _context.HatOrders
+				.FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
 
+			if (hatOrder == null)
+				return NotFound();
 
-        [HttpPost]
-        [HttpPost]
-        public async Task<IActionResult> AssignTaskToDate(
-    int orderId,
-    int hatId,
-    int employeeId,
-    DateTime date,
-    bool personal = false,
-    int? year = null,
-    int? month = null)
-        {
-            var hatOrder = await _context.HatOrders
-                .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
+			hatOrder.Date = date;
+			hatOrder.Status = "Påbörjad";
 
-            if (hatOrder == null)
-                return NotFound();
+			if (IsAdmin())
+			{
+				hatOrder.EId = employeeId;
+			}
+			else
+			{
+				int currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId") ?? 0;
+				hatOrder.EId = currentEmployeeId;
+			}
 
-            hatOrder.Date = date;
-            hatOrder.Status = "Påbörjad";
+			await _hatOrderRepository.ChangeToStartedAsync(hatOrder);
 
-            if (IsAdmin())
-            {
-                hatOrder.EId = employeeId;
-            }
-            else
-            {
-                int currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId") ?? 0;
-                hatOrder.EId = currentEmployeeId;
-            }
+			return RedirectToAction(nameof(Index), new
+			{
+				personal,
+				targetDate,
+				viewMode
+			});
+		}
 
-            await _hatOrderRepository.ChangeToStartedAsync(hatOrder);
+		[HttpPost]
+		public async Task<IActionResult> UnassignTask(
+			int orderId,
+			int hatId,
+			bool personal = false,
+			DateTime? targetDate = null,
+			string viewMode = "month")
+		{
+			var hatOrder = await _context.HatOrders
+				.FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
 
-            return RedirectToAction(nameof(Index), new
-            {
-                personal,
-                year = year ?? date.Year,
-                month = month ?? date.Month
-            });
-        }
+			if (hatOrder == null)
+				return NotFound();
 
-        [HttpPost]
-        public async Task<IActionResult> UnassignTask(
-    int orderId,
-    int hatId,
-    bool personal = false,
-    int? year = null,
-    int? month = null)
-        {
-            var hatOrder = await _context.HatOrders
-                .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
+			await _hatOrderRepository.ChangeToNotStartedAsync(hatOrder);
 
-            if (hatOrder == null)
-                return NotFound();
+			return RedirectToAction(nameof(Index), new
+			{
+				personal,
+				targetDate,
+				viewMode
+			});
+		}
 
-            await _hatOrderRepository.ChangeToNotStartedAsync(hatOrder);
-
-            return RedirectToAction(nameof(Index), new
-            {
-                personal,
-                year,
-                month
-            });
-        }
-
-
-        private string GetColorClass(Order? order, string hatOrderStatus)
+		private string GetColorClass(Order? order, string hatOrderStatus)
         {
             if (order == null)
                 return "order-default";
 
-            if (order.Status == "Klar" || hatOrderStatus == "Klar")
-                return "order-green";
+            if (order.Status == "Klar" || order.Status == "Färdig" || order.Status == "Skickad" ||
+                hatOrderStatus == "Klar" || hatOrderStatus == "Färdig" || hatOrderStatus == "Skickad")
+                return "order-default";
 
-            if (order.PrelDeliveryDate.Date < DateTime.Today)
+            var daysLeft = (order.PrelDeliveryDate.Date - DateTime.Today).Days;
+
+            if (daysLeft <= 3)
                 return "order-red";
 
-            if (order.PrelDeliveryDate.Date <= DateTime.Today.AddDays(3))
-                return "order-yellow";
+            if (daysLeft >= 4 && daysLeft <= 7)
+                return "order-orange";
 
             return "order-default";
         }
 
-        [HttpPost]
-        public async Task<IActionResult> MarkDone(int orderId,
-    int hatId,
-    bool personal = false,
-    int? year = null,
-    int? month = null)
-        {
-            var hatOrder = await _context.HatOrders
-                .FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
+		[HttpPost]
+		public async Task<IActionResult> MarkDone(
+			int orderId,
+			int hatId,
+			bool personal = false,
+			DateTime? targetDate = null,
+			string viewMode = "month")
+		{
+			var hatOrder = await _context.HatOrders
+				.FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
 
-            if (hatOrder == null)
-                return NotFound();
+			if (hatOrder == null)
+				return NotFound();
 
-            await _hatOrderRepository.ChangeToCompletedAsync(hatOrder);
+			await _hatOrderRepository.ChangeToCompletedAsync(hatOrder);
 
-            return RedirectToAction(nameof(Index), new
-            {
-                personal,
-                year,
-                month
-            });
-        }
+			return RedirectToAction(nameof(Index), new
+			{
+				personal,
+				targetDate,
+				viewMode
+			});
+		}
 
-    }
+	}
 }

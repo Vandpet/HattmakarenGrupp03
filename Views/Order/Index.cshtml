@@ -12,10 +12,6 @@
 
 <div>
     <form method="get" asp-controller="Order" asp-action="Index">
-        <label class="btn text-start @(selected == "alla-ordrar" ? "btn-ljuslila" : "btn-rosa")">
-            <input type="radio" name="filter" value="alla-ordrar" onchange="this.form.submit()" class="d-none" />
-            Alla Ordrar
-        </label>
         <label class="btn text-start @(selected == "nyligen" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="nyligen" onchange="this.form.submit()" class="d-none" />
             Nyligen Tillagda
@@ -34,7 +30,15 @@
         </label>
         <label class="btn text-start @(selected == "avslutade" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="avslutade" onchange="this.form.submit()" class="d-none" />
-            Avslutade Ordrar
+            Skickade Ordrar
+        </label>
+        <label class="btn text-start @(selected == "returnerad" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="returnerad" onchange="this.form.submit()" class="d-none" />
+            Returnerade Ordrar
+        </label>
+        <label class="btn text-start @(selected == "alla-ordrar" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="alla-ordrar" onchange="this.form.submit()" class="d-none" />
+            Alla Ordrar
         </label>
     </form>
 
@@ -50,7 +54,7 @@
             <th>Skapad av</th>
             <th>Antal</th>
             <th>Status</th>
-            <th>Pris</th>
+            <th>Pris(inkl.moms)</th>
             <th>Express</th>
             <th>Hantera</th>
         </tr>

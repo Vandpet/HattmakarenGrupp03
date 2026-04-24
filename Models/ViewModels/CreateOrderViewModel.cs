@@ -20,6 +20,7 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
         public decimal Discount { get; set; }
         [StringLength(50)]
         public string? DiscountDesc { get; set; } = "";
+		public int DeliveryFee { get; set; } = 90;
 
 
         // Listor för att fylla dropdowns i vyn

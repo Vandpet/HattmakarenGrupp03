@@ -63,14 +63,24 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
 
             var order = await _db.Orders.FindAsync(OId);
 
+            totalPrice += order.DeliveryFee; // Lägg på fraktkostnad efter expressen
+
+            totalPrice *= 1.25m; // Lägg på moms
+
             var discountSum = (totalPrice * order.Discount / 100);//Expressen ska inte vara rabatterad.
 
             if (order.Express) totalPrice *= 1.2m; // Lägg på 20% för expressorder
 
-            totalPrice -= discountSum; // Dra av  rabatt
+            totalPrice -= discountSum; // Dra av rabatt
 
             order.Price = totalPrice;
             await _db.SaveChangesAsync();
+        }
+        public async Task<decimal> GetPriceWithoutVatAsync(int OId)
+        {
+            //Hämtar ordern utan express
+            var order = await _db.Orders.FindAsync(OId);
+            return (order.Price / 1.25m); // Ta bort moms
         }
         public async Task<List<HatOrder>> GetByOrderIdAsync(int OId)
         {
@@ -112,7 +122,6 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             order.Status = "Påbörjad";
             await _db.SaveChangesAsync();
         }
-
         public async Task ChangeToCompletedAsync(HatOrder hatOrder)
         {
             hatOrder.Status = "Färdig";
@@ -127,6 +136,20 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
                 order.Status = "Färdig";
                 await _db.SaveChangesAsync();
             }
+        }
+        public async Task ChangeToReturnedAsync(HatOrder hatOrder)
+        {
+            hatOrder.Status = "Returnerad";
+            await _db.SaveChangesAsync();
+
+            var order = await _orderRepository.GetByIdAsync(hatOrder.OId);
+
+            var hatOrders = await GetByOrderIdAsync(hatOrder.OId);
+            // Om alla hatordrar på ordern är returnerad blir order.status automatiskt returnerad.
+            if (hatOrders.All(ho => ho.Status == "Returnerad")) order.Status = "Helt Returnerad";
+            else order.Status = "Delvis Returnerad"; // Om inte alla är returnerade men en är det så är ordern delvis returnerad.
+
+            await _db.SaveChangesAsync();
         }
     }
 }
