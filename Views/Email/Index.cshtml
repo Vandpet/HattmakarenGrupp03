@@ -1,0 +1,47 @@
+﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Email>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="lila-text">Kundinkorg</h2>
+        <a asp-action="SyncEmails" class="btn btn-ljuslila">Synka med Outlook</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="rosa text-white">
+                    <tr>
+                        <th>Från</th>
+                        <th>Ämne</th>
+                        <th>Mottaget</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var email in Model)
+                    {
+                        <tr class="@(email.IsRead ? "" : "fw-bold")">
+                            <td>@email.SenderEmail</td>
+                            <td>@email.Subject</td>
+                            <td>@email.ReceivedDate.ToString("g")</td>
+                            <td>
+                                @if (!email.IsRead)
+                                {
+                                    <span class="badge bg-primary">Nytt</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-dark">Lästat</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@email.Id" class="btn btn-sm btn-outline-secondary">Läs</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
