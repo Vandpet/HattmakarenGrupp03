@@ -11,10 +11,10 @@ namespace HattmakarenWebbAppGrupp03.ViewModels.Messages
 
         [Required]
         [StringLength(5000)]
-        [Display(Name = "Meddelande")]
+        [Display(Name = "Message")]
         public string Content { get; set; } = string.Empty;
 
-        [Display(Name = "Skicka till alla")]
+        [Display(Name = "Send to everyone")]
         public bool SendToAll { get; set; }
 
         public List<EmployeeSelectionViewModel> AvailableEmployees { get; set; } = new();
