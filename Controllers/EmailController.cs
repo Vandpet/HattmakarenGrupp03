@@ -23,7 +23,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var email = await _context.Email
                 .OrderByDescending(e => e.ReceivedDate)
                 .ToListAsync();
+            await SyncEmails();
             return View(email);
+
         }
 
         public async Task<IActionResult> SyncEmails()
@@ -42,14 +44,24 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Enkel metod för att visa innehållet i ett specifikt mail
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            var email = await _context.Email.FirstOrDefaultAsync(e => e.Id == id);
-            if (email == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            email.IsRead = true; // Markera som läst när man öppnar det
+            var email = await _context.Email
+                .FirstOrDefaultAsync(m => m.Id == id);
+            email.IsRead = true; 
+            _context.Email.Update(email);
             await _context.SaveChangesAsync();
+
+
+            if (email == null)
+            {
+                return NotFound();
+            }
 
             return View(email);
         }

@@ -8,9 +8,9 @@ namespace HattmakarenWebbAppGrupp03.Services
 {
     public class EmailService
     {
-        private readonly string _email = "hattmakaren1@outlook.com";
+        private readonly string _email = "hattmakarenprojekt@gmail.com";
         // Jag har tagit bort eventuella dolda mellanslag i ditt lösenord här under
-        private readonly string _password = "dxiijljssxzphgny";
+        private readonly string _password = "jonmuxicanzartse";
 
         public async Task<List<Email>> GetLatestEmailsAsync()
         {
@@ -18,14 +18,8 @@ namespace HattmakarenWebbAppGrupp03.Services
 
             using (var client = new ImapClient())
             {
-                // 1. Anslut till Outlooks server
-                await client.ConnectAsync("outlook.office365.com", 993, SecureSocketOptions.SslOnConnect);
-
-                // --- SECURITY FIX START ---
-                // Vi tar bort XOAUTH2 för att tvinga MailKit att använda "Basic Authentication" 
-                // med ditt 16-siffriga applösenord. Detta löser ofta "AUTHENTICATE failed".
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
-                // --- SECURITY FIX END ---
+                // 1. Anslut till gmail server
+                await client.ConnectAsync("imap.gmail.com", 993, true);
 
                 // 2. Logga in
                 await client.AuthenticateAsync(_email, _password);
