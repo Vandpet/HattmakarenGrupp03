@@ -134,7 +134,7 @@ namespace HattmakarenWebbAppGrupp03.Data
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.StartedBy)
                 .WithMany()
-                .HasForeignKey(o => o.StartedById)
+                .HasForeignKey(o => o.StartedById);
                 
             modelBuilder.Entity<ConversationParticipant>()
     .HasKey(cp => new { cp.ConversationId, cp.EmployeeId });

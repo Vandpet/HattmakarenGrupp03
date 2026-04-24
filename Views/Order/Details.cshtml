@@ -3,125 +3,112 @@
 <div class="d-flex justify-content-between align-items-center my-4">
 	<h2>Orderdetalj</h2>
 
-    <p>OrderId: @Model.OrderId</p>
-    <p>Status: @Model.StatusText</p>
-    
-    <div class=" d-flex gap-2">
+	<div class=" d-flex gap-2">
 
-    <form asp-action="" asp-route-id="@(Model.Order.OId)" method="post">
-        <input type="hidden" name="oId" value="@(Model.Order.OId)" />
-        </form>
+		<form asp-action="" asp-route-id="@(Model.Order.OId)" method="post">
+			<input type="hidden" name="oId" value="@(Model.Order.OId)" />
+		</form>
 
-        <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
-        <a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Ladda ner order PDF</a>
-        <a asp-action="DownloadMaterialsPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">
-            Ladda ner material PDF
-        </a>
-    </div>
+		<a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+		<a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Ladda ner order PDF</a>
+		<a asp-action="DownloadMaterialsPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">
+			Ladda ner material PDF
+		</a>
+	</div>
 </div>
 
 @* Orderinfo *@
 <div class="d-flex justify-content-center my-4">
 
-    <div class="card shadow col-md-8 col-lg-6 p-3 ljuslila" style="border-radius: 1.5rem">
+	<div class="card shadow col-md-8 col-lg-6 p-3 ljuslila" style="border-radius: 1.5rem">
 
-        @* Rad 1: Allmän info*@
-        <div class="card-header rosa" style="border-radius: 1rem">
-            <div class="row">
+		@* Rad 1: Allmän info*@
+		<div class="card-header rosa" style="border-radius: 1rem">
+			<div class="row">
 
-                <div class="col-md-6">
-                    <div><strong>Order:</strong> @(Model.OrderId)</div>
-                    <div><strong>Datum:</strong> @(Model.OrderDate.ToShortDateString())</div>
-                    <div><strong>Skapad av:</strong> @(Model.Order.CreatedBy?.Name)</div>
-                    <div><strong>Utländsk kund:</strong> @(Model.IsForeignCustomer ? "Ja, ingen moms." : "Nej")</div>
-                </div>
+				<div class="col-md-6">
+					<div><strong>Order:</strong> @(Model.Order.OId)</div>
+					<div><strong>Datum:</strong> @(Model.Order.OrderDate.ToShortDateString())</div>
+					<div><strong>Skapad av:</strong> @(Model.Order.CreatedBy?.Name)</div>
+					<div><strong>Utländsk kund:</strong> @(Model.IsForeignCustomer ? "Ja, ingen moms." : "Nej")</div>
+				</div>
 
-                <div class="col-md-6">
-                    <div>
-                        <strong>Kund:</strong>
-                        <a asp-controller="Customer"
-                           asp-action="View"
-                           asp-route-id="@(Model.Order.CustomerId)"
-                           class="fw-bold text-decoration-none">
-                            @(Model.Order.Customer?.Name)
-                        </a>
-                    </div>
+				<div class="col-md-6">
+					<div>
+						<strong>Kund:</strong>
+						<a asp-controller="Customer"
+						   asp-action="View"
+						   asp-route-id="@(Model.Order.CustomerId)"
+						   class="fw-bold text-decoration-none">
+							@(Model.Order.Customer?.Name)
+						</a>
+					</div>
 
-                    <div><strong>Leverans:</strong> @(Model.EstimatedDeliveryDate.ToShortDateString())</div>
-                    <div><strong>Status:</strong> @Model.StatusText</div>
-                    @if (Model.Order.StartedBy != null)
-{
-    <div>Påbörjad av: @Model.Order.StartedBy.Name</div>
-}
-                    @if (!Model.IsStarted)
-                    {
-                        <form asp-action="StartOrder" asp-route-oId="@Model.Order.OId" method="post">
-                            <button type="submit" class="btn btn-primary">Påbörja order</button>
-                        </form>
-                    }
-                </div>
+					<div><strong>Leverans:</strong> @(Model.Order.PrelDeliveryDate.ToShortDateString())</div>
+					<div><strong>Status:</strong> @Model.Order.Status</div>
+				</div>
 
-            </div>
-        </div>
+			</div>
+		</div>
 
-        @* Rad 2: Beskrivning*@
-        <div class="card-body rosa my-1" style="border-radius: 1rem">
+		@* Rad 2: Beskrivning*@
+		<div class="card-body rosa my-1" style="border-radius: 1rem">
 
-            <h6 class="card-title">Beskrivning</h6>
+			<h6 class="card-title">Beskrivning</h6>
 
-            <p class="card-text text-break">
-                @(Model.Description ?? "Ingen beskrivning tillgänglig.")
-            </p>
+			<p class="card-text text-break">
+				@(Model.Order.Description ?? "Ingen beskrivning tillgänglig.")
+			</p>
 
-        </div>
+		</div>
 
-        @* Rad 3: Prisdetaljer*@
-        <div class="card-footer rosa d-flex justify-content-between align-items-start" style="border-radius: 1rem">
+		@* Rad 3: Prisdetaljer*@
+		<div class="card-footer rosa d-flex justify-content-between align-items-start" style="border-radius: 1rem">
 
-            <div class="d-flex flex-column">
+			<div class="d-flex flex-column">
 
-                <div>
+				<div>
 					Delivery Fee : @(Model.Order.DeliveryFee.ToString("C"))
-                </div>
+				</div>
 
-                <div>
-                    Express: @(Model.Order.Express ? "Ja (+20%)" : "Nej")
-                </div>
+				<div>
+					Express: @(Model.Order.Express ? "Ja (+20%)" : "Nej")
+				</div>
 
-                <div>
-                    Rabatt: @(Model.Order.Discount.ToString() + "%")
-                </div>
+				<div>
+					Rabatt: @(Model.Order.Discount.ToString() + "%")
+				</div>
 
-                <div>
-                    <small class="text-muted"> @(Model.Order.DiscountDesc ?? "Ingen beskrivning tillgänglig.")</small>
-                </div>
+				<div>
+					<small class="text-muted"> @(Model.Order.DiscountDesc ?? "Ingen beskrivning tillgänglig.")</small>
+				</div>
 
-            </div>
+			</div>
 
-            <div class="text-end">
-                @if (Model.IsForeignCustomer)
-                {
-                    <strong>Total Price (excl. VAT)</strong>
-                    <br />
-                    @(Model.PriceWithoutVat.ToString("C"))
-                }
-                else
-                {
-                    <strong>Total Price:</strong>
-                    <br />
-                    @(Model.Order.Price.ToString("C"))
-                    <br />
+			<div class="text-end">
+				@if (Model.IsForeignCustomer)
+				{
+					<strong>Total Price (excl. VAT)</strong>
+					<br />
+					@(Model.PriceWithoutVat.ToString("C"))
+				}
+				else
+				{
+					<strong>Total Price:</strong>
+					<br />
+					@(Model.Order.Price.ToString("C"))
+					<br />
 
-                    <strong>(excl. VAT):</strong>
-                    <br />
-                    @(Model.PriceWithoutVat.ToString("C"))
-                }
-                
-            </div>
+					<strong>(excl. VAT):</strong>
+					<br />
+					@(Model.PriceWithoutVat.ToString("C"))
+				}
 
-        </div>
+			</div>
 
-    </div>
+		</div>
+
+	</div>
 
 </div>
 
@@ -137,106 +124,157 @@
 
 <div class=" d-flex justify-content-between align-items-center">
 
-<h2>Orderinnehåll</h2>
-    <form asp-action="SendOrder" asp-route-id="@(Model.Order.OId)" method="post">
-        <input type="hidden" name="oId" value="@(Model.Order.OId)" />
-        <button type="submit" class="btn rosa fw-bold" @(Model.Order.Status != "Färdig" ? "disabled" : "")>Skicka Order</button>
-    </form>
+	<h2>Orderinnehåll</h2>
+
+	<div>
+		<button type="button" class="btn rosa fw-bold" data-bs-toggle="modal" data-bs-target="#materialModal">
+			Skapa materialbeställning
+		</button>
+
+		<form asp-action="SendOrder" asp-route-id="@(Model.Order.OId)" method="post">
+			<input type="hidden" name="oId" value="@(Model.Order.OId)" />
+			<button type="submit" class="btn rosa fw-bold" @(Model.Order.Status != "Färdig" ? "disabled" : "")>Skicka Order</button>
+		</form>
+	</div>
 </div>
 <table class="table table-hover">
-    <thead class="thead-dark">
-        <tr>
-            <th>Id</th>
-            <th>Namn</th>
-            <th>Antal</th>
-            <th>Pris/Styck (excl. VAT)</th>
-            <th>Storlek</th>
-            <th>Bild</th>
-            <th>Beskrivning</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.HatOrders)
-        {
-            <tr onclick="window.location='@Url.Action("View", "Hat", new { hId = item.HId, oId = Model.Order.OId})'"
-                style="cursor:pointer;">
-                <td>@item.HId</td>
-                <td>@item.Hat?.Name</td>
-                <td>@item.Amount</td>
-                <td>@item.Hat?.Price.ToString("C")</td>
-                <td>@item.Hat?.Size</td>
-                <td>
-                    @if (string.IsNullOrEmpty(item.Hat?.PicturePath))
-                    {
-                        <span class="text-muted">Otillgänglig</span>
-                    }
-                    else
-                    {
-                        <a href="#" class="btn btn-sm btn-outline-info" onclick="event.stopPropagation();" data-bs-toggle="modal" data-bs-target="#imageModal"
-                            data-img="@item.Hat?.PicturePath"> Visa Bild</a>
-                    }
-                </td>
+	<thead class="thead-dark">
+		<tr>
+			<th>Id</th>
+			<th>Namn</th>
+			<th>Antal</th>
+			<th>Pris/Styck (excl. VAT)</th>
+			<th>Storlek</th>
+			<th>Bild</th>
+			<th>Beskrivning</th>
+			<th>Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.HatOrders)
+		{
+			<tr onclick="window.location='@Url.Action("View", "Hat", new { hId = item.HId, oId = Model.Order.OId })'"
+				style="cursor:pointer;">
+				<td>@item.HId</td>
+				<td>@item.Hat?.Name</td>
+				<td>@item.Amount</td>
+				<td>@item.Hat?.Price.ToString("C")</td>
+				<td>@item.Hat?.Size</td>
+				<td>
+					@if (string.IsNullOrEmpty(item.Hat?.PicturePath))
+					{
+						<span class="text-muted">Otillgänglig</span>
+					}
+					else
+					{
+						<a href="#" class="btn btn-sm btn-outline-info" onclick="event.stopPropagation();" data-bs-toggle="modal" data-bs-target="#imageModal"
+						   data-img="@item.Hat?.PicturePath"> Visa Bild</a>
+					}
+				</td>
 				<td style="max-width: 30px;" class="text-truncate">@item.Hat?.Description</td>
-                <td>
-                    <span class="badge @(ColorForBadge(item.Status))">
-                        @item.Status
-                    </span>
-                </td>
-            </tr>
-        }
-    </tbody>
+				<td>
+					<span class="badge @(ColorForBadge(item.Status))">
+						@item.Status
+					</span>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
+
+<div class="modal fade" id="materialModal" tabindex="-1" aria-labelledby="materialModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+
+
+			<div class="modal-header">
+				<h5 class="modal-title" id="materialModalLabel">Materialbeställning</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Stäng"></button>
+			</div>
+
+
+			<div class="modal-body">
+				<p><strong>Order:</strong> @Model.Order.OId</p>
+
+
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Material</th>
+							<th>Mängd</th>
+							<th>Enhet</th>
+							<th>Pris</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var material in Model.Materials)
+						{
+							<tr>
+								<td>@material.Name</td>
+								<td>@material.Amount</td>
+								<td>@material.MeasuringUnits</td>
+								<td>@material.Price.ToString("C")</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+
+
+
+		</div>
+	</div>
+</div>
 
 @* Modal för att visa bild *@
 <div class="modal fade" id="imageModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title">Bild</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
+			<div class="modal-header">
+				<h5 class="modal-title">Bild</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
 
-            <div class="modal-body text-center">
-                <img id="modalImage" class="img-fluid" />
-            </div>
+			<div class="modal-body text-center">
+				<img id="modalImage" class="img-fluid" />
+			</div>
 
-        </div>
-    </div>
+		</div>
+	</div>
 </div>
 
 <script>
-    var imageModal = document.getElementById('imageModal');
+	var imageModal = document.getElementById('imageModal');
 
-    imageModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        var imgSrc = button.getAttribute('data-img');
-        document.getElementById('modalImage').src = imgSrc;
-    });
+	imageModal.addEventListener('show.bs.modal', function (event) {
+		var button = event.relatedTarget;
+		var imgSrc = button.getAttribute('data-img');
+		document.getElementById('modalImage').src = imgSrc;
+	});
 </script>
 
 @functions {
-    public string ColorForBadge(string itemStatus)
-    {
-        if (itemStatus == "Ej Påbörjad")
-        {
-            return "bg-secondary";
-        }
-        else if (itemStatus == "Påbörjad")
-        {
-            return "bg-primary";
-        }
-        else if (itemStatus == "Färdig")
-        {
-            return "bg-success";
-        }
-        else // if (itemStatus == "Skickad")
-        {
-            return "bg-skickad text-dark";
+	public string ColorForBadge(string itemStatus)
+	{
+		if (itemStatus == "Ej Påbörjad")
+		{
+			return "bg-secondary";
+		}
+		else if (itemStatus == "Påbörjad")
+		{
+			return "bg-primary";
+		}
+		else if (itemStatus == "Färdig")
+		{
+			return "bg-success";
+		}
+		else // if (itemStatus == "Skickad")
+		{
+			return "bg-skickad text-dark";
 
-        }
-    }
+		}
+	}
 }
 
 
