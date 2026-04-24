@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="itext7" Version="9.6.0" />
     <PackageReference Include="itext7.bouncy-castle-adapter" Version="9.6.0" />
+    <PackageReference Include="MailKit" Version="4.16.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.25">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
