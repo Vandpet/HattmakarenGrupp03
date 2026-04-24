@@ -28,6 +28,8 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<Email> Email { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
