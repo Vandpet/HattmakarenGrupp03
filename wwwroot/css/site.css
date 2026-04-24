@@ -429,7 +429,10 @@ button {
     background-color: #73147A;
     color: #333;
     font-weight: bold;
+}
 
+.btn.rosa.fw-bold{
+    margin: 0rem;
 }
 
 /*css för statistiksidan*/
