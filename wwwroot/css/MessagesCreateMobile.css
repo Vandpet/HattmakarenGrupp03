@@ -1,0 +1,94 @@
+﻿/* =========================
+   CREATE CONVERSATION - MOBILE
+   ========================= */
+
+@media (max-width: 768px) {
+
+    #content {
+        margin-left: 0px !important;
+    }
+
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+        margin: 10px;
+        border-radius: 12px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    /* ===== INPUT FIELDS ===== */
+    .form-control {
+        width: 100%;
+        font-size: 0.95rem;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+    }
+
+    /* ===== CHECKBOX LIST ===== */
+    .row {
+        margin: 0;
+    }
+
+    .col-12.col-md-6 {
+        padding: 0;
+    }
+
+    .form-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        background: #f8f8f8;
+        margin-bottom: 6px;
+    }
+
+    .form-check-input {
+        transform: scale(1.1);
+    }
+
+    .form-check-label {
+        font-size: 0.9rem;
+    }
+
+    /* ===== SWITCH ===== */
+    .form-switch {
+        padding-left: 2.5rem;
+    }
+
+    /* ===== BUTTONS ===== */
+    .d-flex.gap-2 {
+        flex-direction: column;
+        gap: 10px !important;
+    }
+
+    .btn {
+        width: 100%;
+        min-height: 44px;
+        font-size: 0.95rem;
+    }
+
+    .btn-secondary {
+        background: #ddd;
+        color: #333;
+    }
+
+    /* ===== VALIDATION ===== */
+    .text-danger {
+        font-size: 0.85rem;
+    }
+}
