@@ -284,6 +284,32 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             return File(ms.ToArray(), "application/pdf", $"order_{order.OId}.pdf");
         }
 
+        // GET: Order/ShippingLabel
+        public async Task<IActionResult> ShippingLabel(int oId)
+        {
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
+
+            var order = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
+            if (order == null) return NotFound();
+
+            var vm = new ShippingLabelViewModel
+            {
+                OId = order.OId,
+                CustomerName = order.Customer?.Name,
+                CustomerAddress = order.Customer?.Adress,       // anpassa till dina fält
+                CustomerCity = order.Customer?.City,
+                CustomerCountry = order.Customer?.Country,
+                CustomerId = order.Customer?.CId.ToString(),
+                DateCreated = order.OrderDate,
+                HatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId)
+                // X-fälten lämnas tomma — fylls i av användaren
+            };
+
+            return View(vm);
+        }
+
+        // Material PDF downloader
         public async Task<IActionResult> DownloadMaterialsPdf(int oId)
         {
             var order = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
@@ -351,7 +377,97 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             doc.Close();
             return File(ms.ToArray(), "application/pdf", $"materials_order_{order.OId}.pdf");
         }
+        [HttpPost]
+        public async Task<IActionResult> DownloadShippingLabel(ShippingLabelViewModel vm)
+        {
+            int? currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (currentEmployeeId == null) return RedirectToAction("Login", "Auth");
 
+            var hatOrders = await _context.HatOrders
+                .Include(ho => ho.Hat)
+                .Where(ho => ho.OId == vm.OId)
+                .ToListAsync();
+
+            double vatRate = 0.25;
+            var boldFont = iText.Kernel.Font.PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
+
+            using var ms = new MemoryStream();
+            var writer = new PdfWriter(ms);
+            var pdf = new PdfDocument(writer);
+            var doc = new iText.Layout.Document(pdf);
+
+            // Avsändare
+            doc.Add(new Paragraph("Hattmakaren AB").SetFont(boldFont).SetFontSize(16));
+            doc.Add(new Paragraph(vm.CompanyAddress));
+            doc.Add(new Paragraph(vm.CompanyPostalCode.ToUpper()));
+            doc.Add(new Paragraph(vm.CompanyCity.ToUpper()));
+            doc.Add(new Paragraph(vm.CompanyCountry.ToUpper()));
+            doc.Add(new Paragraph(" "));
+
+            // Mottagare
+            doc.Add(new Paragraph("Reciver").SetFont(boldFont).SetFontSize(14));
+            doc.Add(new Paragraph($"Customer nr: {vm.CustomerId}"));
+            doc.Add(new Paragraph(vm.CustomerName));
+            doc.Add(new Paragraph(vm.CustomerAddress.ToUpper()));
+            doc.Add(new Paragraph(vm.CustomerCity.ToUpper()).SetFont(boldFont));
+            doc.Add(new Paragraph(vm.CustomerCountry.ToUpper()).SetFont(boldFont));
+            doc.Add(new Paragraph(" "));
+
+            // Försändelse-info
+            doc.Add(new Paragraph($"Date: {vm.DateCreated:yyyy-MM-dd}"));
+            doc.Add(new Paragraph($"Contents: {vm.Contents}"));
+            doc.Add(new Paragraph($"Weight: {vm.Weight} kg"));
+            doc.Add(new Paragraph(" "));
+
+            // Hatt-tabell
+            doc.Add(new Paragraph("Contents").SetFont(boldFont).SetFontSize(14));
+            var table = new iText.Layout.Element.Table(5).UseAllAvailableWidth();
+            table.AddHeaderCell("Hat name");
+            table.AddHeaderCell("Amount");
+            table.AddHeaderCell("KN-number");
+            table.AddHeaderCell("KN-description");
+            table.AddHeaderCell("Price");
+
+            double totalExVat = 0;
+
+            foreach (var ho in hatOrders)
+            {
+                if (ho.Hat == null) continue;
+
+
+                decimal priceExVat = ho.Hat.Price * ho.Amount;  // redan ex moms
+                totalExVat += (double)priceExVat;
+
+                table.AddCell(ho.Hat.Name);
+                table.AddCell(ho.Amount.ToString());
+                table.AddCell(ho.Hat.KN_Number ?? "-");       // lägg till KnNumber på Hat-modellen om det saknas
+                table.AddCell(ho.Hat.KN_Description ?? "-");  // samma
+                table.AddCell(priceExVat.ToString("-"));
+            }
+            doc.Add(table);
+            doc.Add(new Paragraph(" "));
+
+            // Prissummering
+            double vat = vm.ShipOutsideCountry ? 0 : totalExVat * 0.25;
+            double total = totalExVat + vat + vm.DeliveryPrice;
+
+            //doc.Add(new Paragraph($"Delivery fee: {vm.DeliveryPrice:C}"));
+            //if (!vm.ShipOutsideCountry)
+            //    doc.Add(new Paragraph($"Moms (25%): {vat:C}"));
+            //else
+            //    doc.Add(new Paragraph("Moms: 0 (leverans utanför Sverige)"));
+
+            doc.Add(new Paragraph($"Subtotal: {totalExVat:C}"));
+            doc.Add(new Paragraph($"Delivery fee: {vm.DeliveryPrice:C}"));
+            doc.Add(new Paragraph(vm.ShipOutsideCountry
+                ? "TAX: 0 (export)"
+                : $"TAX (25%): {vat:C}"));
+
+            doc.Add(new Paragraph($"Total: {total:C}").SetFont(boldFont));
+
+            doc.Close();
+            return File(ms.ToArray(), "application/pdf", $"fraktsedel_order_{vm.OId}.pdf");
+        }
     }
 
 
