@@ -57,6 +57,7 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             return await _db.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.CreatedBy)
+                .Include(o => o.StartedBy)
                 .FirstOrDefaultAsync(o => o.OId == id);
         }
     }
