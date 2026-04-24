@@ -28,6 +28,8 @@ namespace HattmakarenWebbAppGrupp03.Data
         public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<Email> Email { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -131,6 +133,11 @@ namespace HattmakarenWebbAppGrupp03.Data
                 .HasForeignKey(ho => ho.EId)
                 .IsRequired(false);
 
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.StartedBy)
+                .WithMany()
+                .HasForeignKey(o => o.StartedById);
+                
             modelBuilder.Entity<ConversationParticipant>()
     .HasKey(cp => new { cp.ConversationId, cp.EmployeeId });
 

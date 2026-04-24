@@ -183,12 +183,22 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var currentOrder = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
             if (currentOrder == null) return NotFound();
 
+            var materials = await _context.HatOrders
+                .Where(ho => ho.OId == oId)
+                .Include(ho => ho.Hat)
+                .ThenInclude(h => h.Materials)
+                .ThenInclude(hm => hm.Material)
+                .SelectMany(ho => ho.Hat.Materials.Select(hm => hm.Material))
+                .Distinct()
+                .ToListAsync();
+
             OrderDetailsViewModel viewModel = new OrderDetailsViewModel
             {
                 Order = currentOrder,
                 HatOrders = await _hatOrderRepo.GetByOrderIdAsync(oId),
                 PriceWithoutVat = await _hatOrderRepo.GetPriceWithoutVatAsync(oId),
-                IsForeignCustomer = await _customerRepo.IsForeignCustomerAsync(currentOrder.CustomerId)
+                IsForeignCustomer = await _customerRepo.IsForeignCustomerAsync(currentOrder.CustomerId),
+                Materials = materials
             };
 
             return View(viewModel);

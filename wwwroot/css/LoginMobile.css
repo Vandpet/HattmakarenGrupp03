@@ -1,0 +1,77 @@
+﻿/* Grundstilen du redan hade */
+@media (max-width: 768px) {
+    body {
+        margin: 0;
+        background-image: url('../images/login-background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        overflow-x: hidden;
+        display: flex;
+        align-items: center;
+        min-height: 100vh; /* Centrerar boxen vertikalt på skärmen */
+    }
+
+    /* Justering för containern */
+    .container {
+        width: 100%;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-top: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    /* Gör inloggningskortet lite genomskinligt och snyggt */
+    .card {
+        background-color: rgba(255, 255, 255, 0.95);
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    /* Header-justering */
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        text-align: center;
+        padding: 20px;
+    }
+
+        .card-header h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+    /* Större och tydligare fält för fingrar */
+    .form-control {
+        height: 50px;
+        font-size: 16px; /* Förhindrar att iPhone zoomar in automatiskt vid klick */
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    /* Stor, tydlig inloggningsknapp */
+    .btn-primary {
+        height: 50px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 8px;
+        margin-top: 10px;
+        background-color: #007bff; /* Matcha din bg-primary */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Alert-boxen för SetupFirstUser */
+    .alert {
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+}
