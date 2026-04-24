@@ -149,7 +149,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 				for (int day = 0; day < daysInWeek; day++)
 				{
                     var dayHatOrders = hatOrders
-                    .Where(h => h.Date == current.Date)
+                    .Where(h => h.Date == current.Date && 
+					h.Status != "Returnerad" &&
+					h.Status != "Skickad")
                     .ToList();
 
 					var cell = new CalendarCellViewModel
