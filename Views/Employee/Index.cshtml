@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Employee>
 
+<link rel="stylesheet" href="~/css/EmployeeIndexMobile.css" asp-append-version="true" />
+
+
 @{
     ViewData["Title"] = "Användare";
     int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");
