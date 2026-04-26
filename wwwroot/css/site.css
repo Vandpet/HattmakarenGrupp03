@@ -112,13 +112,6 @@ button {
     }
 }
 
-
-/* Färg för Badge i orderöversikten */
-.bg-skickad {
-    background-color: #E9D5EA;
-
-}
-
 /* ===== SCHEMA / KALENDER ===== */
 
 .schedule-header {
@@ -429,7 +422,23 @@ button {
     background-color: #73147A;
     color: #333;
     font-weight: bold;
+}
 
+/* Färg för Badge i orderöversikten */
+.bg-rosa {
+    background-color: #E9D5EA;
+}
+
+.bg-ljuslila {
+    background-color: #AF75B2;
+}
+
+.bg-lila {
+    background-color: #73147A;
+}
+
+.btn.rosa.fw-bold{
+    margin: 0rem;
 }
 
 /*css för statistiksidan*/
@@ -520,4 +529,37 @@ button {
     text-align: center;
     font-size: 1.3rem;
     padding: 10px;
+}
+
+/*HatCards*/
+/*Trunkerar text över tre rader långa*/
+/*.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}*/
+
+/*Denna scale:ar gridden*/
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 16px;
+}
+
+.hat-img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+    max-width: 100%;
+}
+
+.truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
 }
