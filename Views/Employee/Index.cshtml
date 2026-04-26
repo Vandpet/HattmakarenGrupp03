@@ -9,13 +9,13 @@
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Användare</h2>
+        <h2 class="mb-0">User</h2>
         <div class="d-flex gap-2">
             @if (isAdmin)
             {
-                <a asp-controller="Employee" asp-action="Create" class="btn btn-success">Ny användare</a>
+                <a asp-controller="Employee" asp-action="Create" class="btn btn-success">New User</a>
             }
-            <a asp-controller="Auth" asp-action="Logout" class="btn btn-outline-danger">Logga ut</a>
+            <a asp-controller="Auth" asp-action="Logout" class="btn btn-outline-danger">Logout</a>
         </div>
     </div>
 
@@ -25,14 +25,14 @@
                 <thead class="bg-primary text-white">
                     <tr>
                         <th>ID</th>
-                        <th>Namn</th>
-                        <th>Adress</th>
-                        <th>Telefon</th>
-                        <th>E-post</th>
-                        <th>Användarnamn</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Username</th>
                         @if (isAdmin)
-                        {   
-                        <th>Accessnivå</th>
+                        {
+                        <th>Access Level</th>
                         }
                         <th style="width: 180px;">Åtgärder</th>
                       

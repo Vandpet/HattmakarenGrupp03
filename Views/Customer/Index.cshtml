@@ -7,9 +7,9 @@
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Kunder</h2>
+        <h2 class="mb-0">Customers</h2>
         <div class="d-flex gap-2">
-                <a asp-controller="Customer" asp-action="Create" class="btn btn-success">Ny kund</a>
+                <a asp-controller="Customer" asp-action="Create" class="btn btn-success">New customer</a>
         </div>
     </div>
 
@@ -19,14 +19,14 @@
                 <thead class="bg-primary text-white">
                     <tr>
                         <th>ID</th>
-                        <th>Namn</th>
-                        <th>Adress</th>
-                        <th>Telefon</th>
-                        <th>E-post</th>
-                        <th>Land</th>
-                        <th>Stad</th>
-                        <th>Språk</th>
-                            <th style="width: 180px;">Åtgärder</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Phone number</th>
+                        <th>Email</th>
+                        <th>Country</th>
+                        <th>City</th>
+                        <th>Language</th>
+                        <th style="width: 180px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,21 +41,13 @@
                             <td>@customer.Country</td>
                             <td>@customer.City</td>
                             <td>@customer.Language</td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                    <a asp-action="View" asp-route-id="@customer.CId" class="btn btn-sm btn-primary">
-                                        Visa
-                                    </a>
-
-                                        <a asp-action="Edit" asp-route-id="@customer.CId" class="btn btn-sm btn-primary">
-                                            Redigera
-                                        </a>
-
-                                            <a asp-action="Delete" asp-route-id="@customer.CId" class="btn btn-sm btn-danger">
-                                                Ta bort
-                                            </a>
-                                    </div>
-                                </td>
+                            <td>
+                               <div class="d-flex gap-2">
+                                <a asp-action="View" asp-route-id="@customer.CId" class="btn btn-sm btn-primary">Show</a>
+                                <a asp-action="Edit" asp-route-id="@customer.CId" class="btn btn-sm btn-primary">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@customer.CId" class="btn btn-sm btn-danger">Remove</a>
+                               </div>
+                            </td>
                         </tr>
                     }
                 </tbody>
