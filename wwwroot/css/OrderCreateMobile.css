@@ -1,0 +1,77 @@
+﻿@media (max-width: 768px) {
+
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    #content {
+        margin-left: 0px !important;
+    }
+
+    /* ===== FORM ===== */
+    .form-group,
+    .form-control {
+        width: 100%;
+    }
+
+    textarea.form-control {
+        min-height: 80px;
+    }
+
+    /* ===== FLEX ===== */
+    .d-flex {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* ===== TABELL ===== */
+    .table {
+        min-width: 600px;
+    }
+
+        .table th,
+        .table td {
+            white-space: nowrap;
+            font-size: 0.85rem;
+            padding: 6px 8px;
+        }
+
+    .table-responsive {
+        overflow-x: auto;
+        max-width: 100%;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ===== INPUT ===== */
+    input[type="number"] {
+        min-height: 38px;
+    }
+
+    /* ===== KNAPPAR ===== */
+    button.btn {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    #openCustomHatModalBtn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    /* ===== TEXT ===== */
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    /* ===== CHECKBOX ===== */
+    .form-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+}

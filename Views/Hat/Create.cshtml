@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.HatCreateViewModel
 
+<link rel="stylesheet" href="~/css/CreateHatMobile.css" asp-append-version="true" />
+
+
 @{
     bool isEdit = ViewBag.IsEdit == true;
     ViewData["Title"] = isEdit ? "Edit Hat" : "Create Hat";

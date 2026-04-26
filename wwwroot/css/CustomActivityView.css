@@ -1,0 +1,126 @@
+﻿/* ==========================================
+   CUSTOM ACTIVITY DETAILS - MOBILE FIX
+   ========================================== */
+
+@media (max-width: 768px) {
+    /* 1. NOLLSTÄLL ALLT SOM KNUFFAR SIDAN ÅT HÖGER */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #content, .main-content, main {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* 2. CONTAINER - Centrerar kortet med luft på båda sidor */
+    .container.mt-5 {
+        margin-top: 20px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    /* 3. ROW & COLUMN - Ser till att de inte sticker ut */
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    .col-md-8, .col-lg-7 {
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* 4. KORTET */
+    .card {
+        border: none;
+        border-radius: 12px;
+        width: 100% !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    }
+
+    .card-header.ljuslila {
+        padding: 20px !important;
+        text-align: center;
+        border-radius: 12px 12px 0 0;
+    }
+
+    /* 5. DESCRIPTION LIST (Här fixar vi läsbarheten) */
+    /* Gör så att rubrik (dt) och innehåll (dd) hamnar på egna rader */
+    dt.col-sm-4 {
+        font-weight: bold;
+        color: #8e44ad; /* Lila nyans för rubriken */
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        margin-top: 10px;
+        width: 100% !important;
+    }
+
+    dd.col-sm-8 {
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
+        width: 100% !important;
+        font-size: 1.05rem;
+    }
+
+        /* Beskrivningen får ta den plats den behöver */
+        dd.col-sm-8:last-of-type {
+            border-bottom: none;
+            white-space: pre-wrap; /* Behåller radbrytningar i beskrivningen */
+        }
+
+    /* 6. KNAPPEN */
+    .d-flex.gap-2 {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .btn.rosa {
+        width: 100% !important;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+        /* 1. Göm sidebaren utanför skärmen till vänster */
+        #sidebar, .sidebar, nav.flex-column {
+            position: fixed !important;
+            left: -250px !important; /* Flytta ut den helt */
+            top: 0;
+            height: 100vh;
+            width: 250px;
+            transition: all 0.3s ease; /* Gör så den glider in snyggt */
+            z-index: 9999 !important;
+            display: block !important;
+        }
+
+            /* 2. När sidebaren har klassen "active", visa den */
+            #sidebar.active, .sidebar.active {
+                left: 0 !important;
+            }
+
+        /* 3. Tvinga innehållet att använda HELA bredden nu när menyn är borta */
+        #content, main, .container {
+            margin-left: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 15px !important;
+        }
+    }
+}

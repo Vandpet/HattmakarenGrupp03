@@ -1,4 +1,7 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.OrderDetailsViewModel
+<link rel="stylesheet" href="~/css/OrderDetailsMobile.css" asp-append-version="true" />
+@* Lade också till <dv class="table-responsive"></dv> på tabellerna
+ *@
 
 <div class="d-flex justify-content-between align-items-center my-4">
 	<h2>Orderdetalj</h2>
@@ -147,6 +150,7 @@
 		</form>
 	</div>
 </div>
+<div class="table-responsive">
 <table class="table table-hover">
 	<thead class="thead-dark">
 		<tr>
@@ -191,6 +195,7 @@
 		}
 	</tbody>
 </table>
+</div>
 
 <div class="modal fade" id="materialModal" tabindex="-1" aria-labelledby="materialModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
@@ -206,7 +211,7 @@
 			<div class="modal-body">
 				<p><strong>Order:</strong> @Model.Order.OId</p>
 
-
+				<div class="table-responsive">
 				<table class="table table-hover">
 					<thead>
 						<tr>
@@ -228,6 +233,7 @@
 						}
 					</tbody>
 				</table>
+				</div>
 			</div>
 
 

@@ -1,0 +1,143 @@
+﻿/* ==========================================
+   DETAILS HAT - MOBILE FIX
+   ========================================== */
+
+@media (max-width: 768px) {
+    /* 1. RESET & SIDEBAR HIDE - Fixar sidförskjutningen */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Flyttar ut sidebaren utanför skärmen */
+    #sidebar, .sidebar, nav.flex-column {
+        position: fixed !important;
+        left: -250px !important;
+        z-index: 9999;
+        transition: 0.3s;
+    }
+
+    /* Tvingar innehållet att använda 100% av bredden */
+    #content, .main-content, main {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        left: 0 !important;
+    }
+
+    /* 2. CONTAINER & CENTRERING */
+    .container.mt-5 {
+        margin-top: 20px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    /* 3. ROW & COLUMN FIX */
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    .col-md-8, .col-lg-6 {
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* 4. KORTET */
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .card-header.ljuslila {
+        padding: 15px !important;
+        text-align: center;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    /* 5. DESCRIPTION LIST (Hatt-info) */
+    /* Staplar rubrik och data vertikalt */
+    dl.row {
+        margin: 0 !important;
+        display: block !important;
+    }
+
+    dt.col-sm-4 {
+        width: 100% !important;
+        font-weight: bold;
+        color: #8e44ad; /* Lila accent */
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        margin-top: 15px;
+        padding: 0 !important;
+    }
+
+    dd.col-sm-8 {
+        width: 100% !important;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
+        font-size: 1.1rem;
+        padding-left: 0 !important;
+    }
+
+        /* Bild-hantering */
+        dd.col-sm-8 img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        /* Material-listan */
+        dd.col-sm-8 ul {
+            padding-left: 1.2rem;
+            margin-top: 10px;
+        }
+
+        dd.col-sm-8:last-of-type {
+            border-bottom: none;
+        }
+
+    /* 6. KNAPPARNA - Staplas vertikalt */
+    .mt-3 {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px;
+        margin-top: 25px !important;
+    }
+
+    .btn.rosa {
+        width: 100% !important;
+        height: 50px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin: 0 !important;
+        border-radius: 8px;
+        font-size: 1.1rem;
+    }
+
+    /* Ordning på knapparna */
+    a[asp-action="Edit"] {
+        order: 1; /* Redigera överst */
+    }
+
+    a[asp-action="Index"] {
+        order: 2; /* Tillbaka underst */
+    }
+}

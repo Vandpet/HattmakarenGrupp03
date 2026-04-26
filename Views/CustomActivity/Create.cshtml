@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.CustomActivityCreateViewModel
 
+<link rel="stylesheet" href="~/css/CustomActivityCreate.css" asp-append-version="true" />
+
+
 @{
     ViewData["Title"] = "Skapa arbetsuppgift";
     int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");
