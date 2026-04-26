@@ -34,7 +34,7 @@
                         {
                         <th>Access Level</th>
                         }
-                        <th style="width: 180px;">Åtgärder</th>
+                        <th style="width: 180px;">Actions</th>
                       
                     </tr>
                 </thead>
@@ -58,14 +58,14 @@
                             @if (isAdmin || isCurrentUser)
                                 {
                                 
-                                <a asp-action="Edit" asp-route-id="@employee.EId" class="btn btn-sm btn-primary">Redigera</a>
+                                <a asp-action="Edit" asp-route-id="@employee.EId" class="btn btn-sm btn-primary">Edjt</a>
                                
                                 }
 
                              @if (isAdmin)
                                 {
                                
-                                    <a asp-action="Delete" asp-route-id="@employee.EId" class="btn btn-sm btn-danger">Ta bort</a>
+                                    <a asp-action="Delete" asp-route-id="@employee.EId" class="btn btn-sm btn-danger">Remove</a>
                                  
                                 }
                             </td>

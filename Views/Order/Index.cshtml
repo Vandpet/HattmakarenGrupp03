@@ -4,8 +4,8 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Orderöversikt</h2>
-    <a asp-action="Create" class="btn btn-success">Ny Beställning +</a>
+    <h2>Order overview</h2>
+    <a asp-action="Create" class="btn btn-success">New Order +</a>
 </div>
 
 
@@ -14,31 +14,31 @@
     <form method="get" asp-controller="Order" asp-action="Index">
         <label class="btn text-start @(selected == "nyligen" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="nyligen" onchange="this.form.submit()" class="d-none" />
-            Nyligen Tillagda
+            Recently Added
         </label>
         <label class="btn text-start @(selected == "ej-påbörjade" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="ej-påbörjade" onchange="this.form.submit()" class="d-none" />
-            Ej Påbörjade Ordrar
+            Not Started
         </label>
         <label class="btn text-start @(selected == "påbörjade" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="påbörjade" onchange="this.form.submit()" class="d-none" />
-            Påbörjade Ordrar
+            Started
         </label>
         <label class="btn text-start @(selected == "färdig" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="färdig" onchange="this.form.submit()" class="d-none" />
-            Färdiga Ordrar
+            Completed
         </label>
         <label class="btn text-start @(selected == "avslutade" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="avslutade" onchange="this.form.submit()" class="d-none" />
-            Skickade Ordrar
+            Shipped
         </label>
         <label class="btn text-start @(selected == "returnerad" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="returnerad" onchange="this.form.submit()" class="d-none" />
-            Returnerade Ordrar
+            Returned
         </label>
         <label class="btn text-start @(selected == "alla-ordrar" ? "btn-ljuslila" : "btn-rosa")">
             <input type="radio" name="filter" value="alla-ordrar" onchange="this.form.submit()" class="d-none" />
-            Alla Ordrar
+            All
         </label>
     </form>
 
@@ -47,16 +47,16 @@
 <table class="table table-hover">
     <thead class="thead-dark">
         <tr>
-            <th>Ordernr</th>
-            <th>Datum</th>
-            <th>Beräknad leverans</th>
-            <th>Kund</th>
-            <th>Skapad av</th>
-            <th>Antal</th>
+            <th>Order nr</th>
+            <th>Date</th>
+            <th>Estimated Delivery</th>
+            <th>Customer</th>
+            <th>Created By</th>
+            <th>Quantity</th>
             <th>Status</th>
-            <th>Pris(inkl.moms)</th>
+            <th>Price (incl. VAT)</th>
             <th>Express</th>
-            <th>Hantera</th>
+            <th>Manage</th>
         </tr>
     </thead>
     <tbody>
@@ -78,16 +78,16 @@
                 <td>
                     @if (item.Express)
                     {
-                        <span class="text-danger" title="Prioriteras!">⚡ Ja</span>
+                        <span class="text-danger" title="Prioriteras!">⚡ Yes</span>
                     }
                     else
                     {
-                        <span>Nej</span>
+                        <span>No</span>
                     }
                 </td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a asp-action="Details" asp-route-oId="@item.OId" class="btn btn-sm btn-outline-info">Visa</a>
+                        <a asp-action="Details" asp-route-oId="@item.OId" class="btn btn-sm btn-outline-info">View</a>
                     </div>
                 </td>
             </tr>
@@ -97,28 +97,29 @@
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">Inga ordrar hittades i systemet.</div>
+    <div class="alert alert-info">No orders found in the system.</div>
 }
 
 @functions {
     public string ColorForBadge(string itemStatus)
     {
-        if (itemStatus == "Ej Påbörjad")
+        if (itemStatus == "Not Started")
         {
             return "bg-secondary";
         }
-        else if (itemStatus == "Påbörjad")
+        else if (itemStatus == "Started")
         {
             return "bg-primary";
         }
-        else if (itemStatus == "Färdig")
+        else if (itemStatus == "Completed")
         {
             return "bg-success";
         }
-        else // if (itemStatus == "Skickad")
+        else // if (itemStatus == "Shipped")
         {
             return "bg-skickad text-dark";
 
         }
     }
 }
+

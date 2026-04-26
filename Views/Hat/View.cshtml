@@ -13,26 +13,26 @@
 						<dt class="col-sm-4">Id</dt>
 						<dd class="col-sm-8">@Model.Hat.HId</dd>
 
-						<dt class="col-sm-4">Namn</dt>
+						<dt class="col-sm-4">Name</dt>
 						<dd class="col-sm-8">@Model.Hat.Name</dd>
 
-						<dt class="col-sm-4">Antal på denna Order</dt>
+						<dt class="col-sm-4">Quantity on this Order</dt>
 						<dd class="col-sm-8">@Model.HatOrder.Amount</dd>
 
-						<dt class="col-sm-4">Pris</dt>
+						<dt class="col-sm-4">Price</dt>
 						<dd class="col-sm-8">@Model.Hat.Price.ToString("C")</dd>
 
-						<dt class="col-sm-4">Storlek</dt>
+						<dt class="col-sm-4">Size</dt>
 						<dd class="col-sm-8">@Model.Hat.Size</dd>
 
-						<dt class="col-sm-4">StandardHatt</dt>
-						<dd class="col-sm-8">@(Model.Hat.StandardHat ? "Ja" : "Nej")</dd>
+						<dt class="col-sm-4">Standard Hat</dt>
+						<dd class="col-sm-8">@(Model.Hat.StandardHat ? "Yes" : "No")</dd>
 
-						<dt class="col-sm-4">Bild</dt>
+						<dt class="col-sm-4">Image</dt>
 						<dd class="col-sm-8">
 							@if (string.IsNullOrEmpty(@Model.Hat?.PicturePath))
 							{
-								<span class="text-muted">Otillgänglig</span>
+								<span class="text-muted">Unavailable</span>
 							}
 							else
 							{
@@ -46,19 +46,19 @@
 						<dt class="col-sm-4">KN-Description</dt>
 						<dd class="col-sm-8">@Model.Hat.KN_Description</dd>
 
-						<dt class="col-sm-4">Beskrivning</dt>
+						<dt class="col-sm-4">Description</dt>
 						<dd class="col-sm-8">@Model.Hat.Description</dd>
 
 						
 					</dl>
 
 					<div class="d-flex gap-2">
-						<a asp-controller="Order" asp-action="Details" asp-route-oId="@Model.PreviousOrder.OId" class="btn rosa fw-bold" style="margin: 0 0.5rem 1rem 0;">Tillbaka</a>
-						@if (Model.HatOrder.Status == "Skickad" && 
-						(Model.PreviousOrder.Status == "Skickad" || Model.PreviousOrder.Status == "Delvis Returnerad"))
+						<a asp-controller="Order" asp-action="Details" asp-route-oId="@Model.PreviousOrder.OId" class="btn rosa fw-bold" style="margin: 0 0.5rem 1rem 0;">Back</a>
+						@if (Model.HatOrder.Status == "Shipped" && 
+						(Model.PreviousOrder.Status == "Shipped" || Model.PreviousOrder.Status == "Partially Returned"))
 						{
 							<form asp-controller="Hat" asp-action="ReturnOrder" asp-route-oId="@Model.PreviousOrder.OId" asp-route-hId="@Model.HatOrder.HId" method="post">
-								<button type="submit" class="btn rosa fw-bold">Returnera Produkt</button>
+								<button type="submit" class="btn rosa fw-bold">Return Product</button>
 							</form>
 						}
 					</div>
@@ -73,7 +73,7 @@
 		<div class="modal-content">
 
 			<div class="modal-header">
-				<h5 class="modal-title">Bild</h5>
+				<h5 class="modal-title">Image</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
 

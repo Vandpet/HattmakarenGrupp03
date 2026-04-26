@@ -1,20 +1,20 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.OrderDetailsViewModel
 
 <div class="d-flex justify-content-between align-items-center my-4">
-	<h2>Orderdetalj</h2>
+	<h2>Order Details</h2>
 
     <div class=" d-flex gap-2">
 
         <form asp-action="" asp-route-id="@(Model.Order.OId)" method="post">
             <input type="hidden" name="oId" value="@(Model.Order.OId)" />
         </form>
-        <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
-        <a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Ladda ner order PDF</a>
+        <a asp-action="Index" class="btn rosa fw-bold">Back</a>
+        <a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Download Order PDF</a>
         <a asp-action="DownloadMaterialsPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">
-            Ladda ner material PDF
+            Download Material PDF
         </a>
         <a asp-action="ShippingLabel" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">
-            Skapa fraktsedel
+            Create Shipping Label
         </a>
     </div>
 
@@ -22,10 +22,10 @@
 			Preview MaterialOrder
 		</a>
 		<a asp-action="DownloadMaterialsPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">
-			Ladda ner material PDF
+			Download Material PDF
 		</a>
-		<a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Ladda ner order PDF</a>
-		<a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+		<a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Download Order PDF</a>
+		<a asp-action="Index" class="btn rosa fw-bold">Back</a>
 	</div>
 </div>
 
@@ -40,14 +40,14 @@
 
 				<div class="col-md-6">
 					<div><strong>Order:</strong> @(Model.Order.OId)</div>
-					<div><strong>Datum:</strong> @(Model.Order.OrderDate.ToShortDateString())</div>
-					<div><strong>Skapad av:</strong> @(Model.Order.CreatedBy?.Name)</div>
-					<div><strong>Utländsk kund:</strong> @(Model.IsForeignCustomer ? "Ja, ingen moms." : "Nej")</div>
+					<div><strong>Date:</strong> @(Model.Order.OrderDate.ToShortDateString())</div>
+					<div><strong>Created by:</strong> @(Model.Order.CreatedBy?.Name)</div>
+					<div><strong>Global customer:</strong> @(Model.IsForeignCustomer ? "Yes, no tax." : "No")</div>
 				</div>
 
 				<div class="col-md-6">
 					<div>
-						<strong>Kund:</strong>
+						<strong>Customer:</strong>
 						<a asp-controller="Customer"
 						   asp-action="View"
 						   asp-route-id="@(Model.Order.CustomerId)"
@@ -56,7 +56,7 @@
 						</a>
 					</div>
 
-					<div><strong>Leverans:</strong> @(Model.Order.PrelDeliveryDate.ToShortDateString())</div>
+					<div><strong>Delivery:</strong> @(Model.Order.PrelDeliveryDate.ToShortDateString())</div>
 					<div><strong>Status:</strong> @Model.Order.Status</div>
 				</div>
 
@@ -66,10 +66,10 @@
 		@* Rad 2: Beskrivning*@
 		<div class="card-body rosa my-1" style="border-radius: 1rem">
 
-			<h6 class="card-title">Beskrivning</h6>
+			<h6 class="card-title">Description</h6>
 
 			<p class="card-text text-break">
-				@(Model.Order.Description ?? "Ingen beskrivning tillgänglig.")
+				@(Model.Order.Description ?? "No description available.")
 			</p>
 
 		</div>
@@ -88,11 +88,11 @@
 				</div>
 
 				<div>
-					Rabatt: @(Model.Order.Discount.ToString() + "%")
+					Discount: @(Model.Order.Discount.ToString() + "%")
 				</div>
 
 				<div>
-					<small class="text-muted"> @(Model.Order.DiscountDesc ?? "Ingen beskrivning tillgänglig.")</small>
+					<small class="text-muted"> @(Model.Order.DiscountDesc ?? "No description available.")</small>
 				</div>
 
 			</div>
@@ -136,14 +136,14 @@
 
 <div class=" d-flex justify-content-between align-items-center">
 
-	<h2>Orderinnehåll</h2>
+	<h2>Order Content</h2>
 
 	<div>
 
 
 		<form asp-action="SendOrder" asp-route-id="@(Model.Order.OId)" method="post">
 			<input type="hidden" name="oId" value="@(Model.Order.OId)" />
-			<button type="submit" class="btn rosa fw-bold" @(Model.Order.Status != "Färdig" ? "disabled" : "")>Skicka Order</button>
+			<button type="submit" class="btn rosa fw-bold" @(Model.Order.Status != "Färdig" ? "disabled" : "")>Send Order</button>
 		</form>
 	</div>
 </div>
@@ -151,12 +151,12 @@
 	<thead class="thead-dark">
 		<tr>
 			<th>Id</th>
-			<th>Namn</th>
-			<th>Antal</th>
-			<th>Pris/Styck (excl. VAT)</th>
-			<th>Storlek</th>
-			<th>Bild</th>
-			<th>Beskrivning</th>
+			<th>Name</th>
+			<th>Quantity</th>
+			<th>Price per unit (excl. VAT)</th>
+			<th>Size</th>
+			<th>Image</th>
+			<th>Description</th>
 			<th>Status</th>
 		</tr>
 	</thead>
@@ -173,12 +173,12 @@
 				<td>
 					@if (string.IsNullOrEmpty(item.Hat?.PicturePath))
 					{
-						<span class="text-muted">Otillgänglig</span>
+						<span class="text-muted">Unavailable</span>
 					}
 					else
 					{
 						<a href="#" class="btn btn-sm btn-outline-info" onclick="event.stopPropagation();" data-bs-toggle="modal" data-bs-target="#imageModal"
-						   data-img="@item.Hat?.PicturePath"> Visa Bild</a>
+						   data-img="@item.Hat?.PicturePath"> View Image</a>
 					}
 				</td>
 				<td style="max-width: 30px;" class="text-truncate">@item.Hat?.Description</td>
@@ -198,8 +198,8 @@
 
 
 			<div class="modal-header">
-				<h5 class="modal-title" id="materialModalLabel">Materialbeställning</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Stäng"></button>
+				<h5 class="modal-title" id="materialModalLabel">Material order</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 
 
@@ -211,9 +211,9 @@
 					<thead>
 						<tr>
 							<th>Material</th>
-							<th>Mängd</th>
-							<th>Enhet</th>
-							<th>Pris</th>
+							<th>Quantity</th>
+							<th>Unit</th>
+							<th>Price</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -242,7 +242,7 @@
 		<div class="modal-content">
 
 			<div class="modal-header">
-				<h5 class="modal-title">Bild</h5>
+				<h5 class="modal-title">Image</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
 

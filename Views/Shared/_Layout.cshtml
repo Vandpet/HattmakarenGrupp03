@@ -26,35 +26,35 @@
 
         <ul class="nav flex-column">
 
-            <h3>Meny</h3>
+            <h3>Menu</h3>
 
             <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Home" asp-action="Index">
-                    <span class="menu-text">Hem</span>
+                    <span class="menu-text">Home</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Order" asp-action="Create">
-                    <span class="menu-text">Lägg ny kundorder</span>
+                    <span class="menu-text">Create New Order</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Customer" asp-action="Create">
-                    <span class="menu-text">Registrera kund</span>
+                    <span class="menu-text">Register Customer</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Order" asp-action="Index">
-                    <span class="menu-text">Ordrar</span>
+                    <span class="menu-text">Orders</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Hat" asp-action="Index">
-                    <span class="menu-text">Hattar</span>
+                    <span class="menu-text">Hats</span>
                 </a>
             </li>
 
@@ -66,19 +66,19 @@
 
             <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Schedule" asp-action="Index">
-                    <span class="menu-text">Schema</span>
+                    <span class="menu-text">Schedule</span>
                 </a>
             </li>
 
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="CustomActivity" asp-action="Index">
-                        <span class="menu-text">Arbetsuppgifter</span>
+                        <span class="menu-text">Tasks</span>
                     </a>
                 </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Employee" asp-action="Index">
-                    <span class="menu-text">Alla användare</span>
+                    <span class="menu-text">All Users</span>
                 </a>
             </li>
 
@@ -87,7 +87,7 @@
                        asp-controller="Employee"
                        asp-action="View"
                        asp-route-id="@currentEmployeeId">
-                        <span class="menu-text">Min profil</span>
+                        <span class="menu-text">Profile</span>
                     </a>
                 </li>
 
@@ -95,20 +95,16 @@
                     <a class="nav-link text-white"
                            asp-controller="Email"
                            asp-action="Index">
-                        <span class="menu-text">Mail Inbox</span>
+                        <span class="menu-text">Email Inbox</span>
                     </a>
                 </li>
-
-
-                
-                    <li class="nav-item">
-                        @await Component.InvokeAsync("UnreadMessages")
-                    </li>
+                <li class="nav-item">
+                   @await Component.InvokeAsync("UnreadMessages")
+                </li>
               
-
             <li class="nav-item">
                 <a asp-controller="Auth" asp-action="Logout" class="nav-link text-white">
-                    <span class="menu-text">Logga ut</span>
+                    <span class="menu-text">Logout</span>
                 </a>
             </li>
 
@@ -119,7 +115,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Employee" asp-action="Create">
-                        <span class="menu-text">Skapa användare</span>
+                        <span class="menu-text">Create User</span>
                     </a>
                 </li>
             }

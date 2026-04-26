@@ -1,18 +1,18 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.CreateOrderViewModel
 
-<h2>Skapa ny order (Lagerförda modeller)</h2>
+<h2>Create New Order (In-Stock Models)</h2>
 
 <form asp-action="Create" method="post">
 	<div class="form-group">
-		<label>Välj Kund</label>
+		<label>Choose Customer</label>
 		<select asp-for="SelectedCustomerId" asp-items="Model.CustomerList" class="form-control">
-			<option value="">-- Välj kund --</option>
+			<option value="">-- Choose customer --</option>
 		</select>
 		<span asp-validation-for="SelectedCustomerId" class="text-danger"></span>
 	</div>
 
 	<hr />
-	<h4>Välj Hattar</h4>
+	<h4>Choose hats</h4>
 
 	<div class="text-danger mb-2">
 		<div asp-validation-summary="ModelOnly"></div>
@@ -21,10 +21,10 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th>Välj</th>
-				<th>Namn</th>
-				<th>Storlek</th>
-				<th>Pris</th>
+				<th>Choose</th>
+				<th>Name</th>
+				<th>Size</th>
+				<th>Price</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -46,14 +46,14 @@
 		</tbody>
 	</table>
 
-	<h4>Specialbeställda hattar</h4>
+	<h4>Custom hats</h4>
 	<table class="table" id="customHatsTable">
 		<thead>
 			<tr>
-				<th>Välj</th>
-				<th>Namn</th>
-				<th>Beskrivning</th>
-				<th>Pris</th>
+				<th>Choose</th>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Price</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -63,31 +63,31 @@
 
 	<div>
 		<button type="button" class="btn rosa fw-bold m-0" id="openCustomHatModalBtn">
-			Skapa Specialbeställd Hatt
+			Create Custom Hat
 		</button>
 	</div>
 
 
 	<div class="form-group mt-3">
-		<label asp-for="PrelDeliveryDate">Preliminärt leveransdatum</label>
+		<label asp-for="PrelDeliveryDate">Preliminary Delivery Date</label>
 		<input asp-for="PrelDeliveryDate" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
 		<span asp-validation-for="PrelDeliveryDate" class="text-danger"></span>
 	</div>
 
 	<div class="form-group mt-3">
-		<label asp-for="Description">Beskrivning/Notering</label>
+		<label asp-for="Description">Description/Note</label>
 		<textarea asp-for="Description" class="form-control"></textarea>
 	</div>
 
 	<div class="d-flex gap-3 align-items-end">
 		<div class="form-group mt-3">
-			<label asp-for="Discount">Rabatt (%)</label>
+			<label asp-for="Discount">Discount (%)</label>
 			<input asp-for="Discount" type="number" min="0" max="100" class="form-control" style="max-width: 60px" />
 			<span asp-validation-for="Discount" class="text-danger"></span>
 		</div>
 
 		<div class="form-group flex-grow-1">
-			<label asp-for="DiscountDesc">Rabattbeskrivning (max 50 tecken)</label>
+			<label asp-for="DiscountDesc">Discount Description (max 50 characters)</label>
 			<input asp-for="DiscountDesc" maxlength="50" class="form-control" />
 			<span asp-validation-for="DiscountDesc" class="text-danger"></span>
 		</div>
@@ -101,21 +101,21 @@
 
 	<div class="form-check mt-3">
 		<input asp-for="IsExpress" class="form-check-input" />
-		<label asp-for="IsExpress" class="form-check-label">Expressbeställning (+20%)</label>
+		<label asp-for="IsExpress" class="form-check-label">Express Order (+20%)</label>
 	</div>
 
-	<button type="submit" class="btn rosa fw-bold m-0 mt-3">Skapa Order</button>
+	<button type="submit" class="btn rosa fw-bold m-0 mt-3">Create Order</button>
 </form>
 
 <div class="modal fade" id="customHatModal" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Skapa specialbeställd hatt</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Stäng"></button>
+				<h5 class="modal-title">Create custom hat</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body" id="customHatModalBody">
-				<div>Laddar formulär...</div>
+				<div>Loading form...</div>
 			</div>
 		</div>
 	</div>
