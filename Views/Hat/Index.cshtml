@@ -65,7 +65,7 @@
 							<td>
 								@if (hat.StandardHat)
 								{
-									<span class="badge bg-skickad text-purple">Standard</span>
+									<span class="badge bg-rosa text-purple">Standard</span>
 								}
 								else
 								{
@@ -91,7 +91,69 @@
 					}
 				</tbody>
 			</table>
+
+
 		</div>
+	</div>
+
+	<div class="grid-container" id="hatGrid">
+		@foreach (var hat in Model)
+		{
+			<div class="d-flex flex-column align-items-center p-2 card shadow grid-item">
+
+				@* BILD *@
+				<div class="card p-2">
+					@if (!string.IsNullOrWhiteSpace(hat.PicturePath))
+					{
+						<img src="@hat.PicturePath" alt="@hat.Name" class="hat-img shadow" />
+					}
+					else
+					{
+						<img src="/uploads/36bf70c5-8064-45e2-a730-d779ff0bf64f.jpg" alt="Image unavailable" class="hat-img shadow" />
+					}
+				</div>
+
+				@* NAME *@
+				<div class="mt-2">
+					<h4>@hat.Name</h4>
+				</div>
+
+				@* INFO *@
+				<div class="d-flex flex-row w-100 justify-content-around my-2">
+					<div class="d-flex flex-column">
+						<span><strong>Id:</strong> @hat.HId</span>
+						@* <span><strong>Name:</strong> @hat.Name</span> *@
+						<span><strong>Size:</strong> @hat.Size</span>
+					</div>
+
+					<div class="d-flex flex-column">
+						<span><strong>Price:</strong> @hat.Price.ToString("C")</span>
+						<span class="badge bg-ljuslila text-black">
+							@(hat.StandardHat ? "Standard hat" : "Special hat")
+						</span>
+					</div>
+				</div>
+
+				@* BESKRIVNING *@
+				<div class="d-flex justify-content-center card mb-2" style="width: 90%">
+					<p class="m-1 truncate-3 text-muted">
+						@hat.Description
+					</p>
+				</div>
+
+				@* KNAPPAR *@
+				<div class="w-100 d-flex justify-content-around mt-auto">
+					<a asp-action="Details" asp-route-id="@hat.HId" class="btn btn-sm btn-rosa py-1 px-3" style="width: 45%;">View</a>
+
+					@* <span class="badge bg-ljuslila text-black align-self-center">
+						@(hat.StandardHat ? "Standard" : "Special")
+					</span> *@
+
+					<a asp-action="Edit" asp-route-id="@hat.HId" class="btn btn-sm btn-rosa py-1 px-3" style="width: 45%;">Edit</a>
+				</div>
+
+			</div>
+		}
 	</div>
 </div>
 

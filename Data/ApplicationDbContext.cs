@@ -259,6 +259,42 @@ namespace HattmakarenWebbAppGrupp03.Data
                 KN_Description = "Färdiga flätade hattar och huvudbonader"
             };
 
+            var hat1 = new Hat
+            {
+                Name = "Hundhatt",
+                Price = 500m,
+                Size = "petit",
+                StandardHat = false,
+                PicturePath = "/uploads/a34ba6d8-a3c3-4c43-afeb-c493eae1b0df.webp",
+                Description = "Hundhatt, specialbeställd för hundar",
+                KN_Number = "6504 00 00",
+                KN_Description = "Färdiga flätade hattar och huvudbonader"
+            };
+
+            var hat2 = new Hat
+            {
+                Name = "Hatt utan bild",
+                Price = 500m,
+                Size = "vet ej",
+                StandardHat = false,
+                PicturePath = "",
+                Description = "En hatt utan bild",
+                KN_Number = "6504 00 00",
+                KN_Description = "Färdiga flätade hattar och huvudbonader"
+            };
+
+            var hat3 = new Hat
+            {
+                Name = "CowboyHatt",
+                Price = 500m,
+                Size = "pyttelitet",
+                StandardHat = true,
+                PicturePath = "/uploads/5138f31d-9454-4155-af25-a95c4f004557.jpg",
+                Description = "Hatt för en groda. Lorem ipsum dolor sit amet.",
+                KN_Number = "6504 00 00",
+                KN_Description = "Färdiga flätade hattar och huvudbonader"
+            };
+
             // --- Order ---
             var order = new Order
             {
@@ -366,6 +402,9 @@ namespace HattmakarenWebbAppGrupp03.Data
                 customer,
                 material,
                 hat,
+                hat1,
+                hat2,
+                hat3,
                 order,
                 order1,
                 order2,
