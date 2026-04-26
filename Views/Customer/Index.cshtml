@@ -4,65 +4,65 @@
 
 
 @{
-    ViewData["Title"] = "Kunder";
-    int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
+	ViewData["Title"] = "Kunder";
+	int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
 }
 
 <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Kunder</h2>
-        <div class="d-flex gap-2">
-                <a asp-controller="Customer" asp-action="Create" class="btn btn-success">Ny kund</a>
-        </div>
-    </div>
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h2 class="mb-0">Kunder</h2>
+		<div class="d-flex gap-2">
+			<a asp-controller="Customer" asp-action="Create" class="btn btn-success">Ny kund</a>
+		</div>
+	</div>
 
-    <div class="card shadow">
-        <div class="card-body">
-            <table class="table table-striped table-hover align-middle mb-0">
-                <thead class="bg-primary text-white">
-                    <tr>
-                        <th>ID</th>
-                        <th>Namn</th>
-                        <th>Adress</th>
-                        <th>Telefon</th>
-                        <th>E-post</th>
-                        <th>Land</th>
-                        <th>Stad</th>
-                        <th>Språk</th>
-                            <th style="width: 180px;">Åtgärder</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var customer in Model)
-                    {
-                        <tr>
-                            <td>@customer.CId</td>
-                            <td>@customer.Name</td>
-                            <td>@customer.Adress</td>
-                            <td>@customer.PhoneNr</td>
-                            <td><a href="mailto:@customer.Email">@customer.Email</a></td>
-                            <td>@customer.Country</td>
-                            <td>@customer.City</td>
-                            <td>@customer.Language</td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                    <a asp-action="View" asp-route-id="@customer.CId" class="btn btn-sm btn-primary">
-                                        Visa
-                                    </a>
+	<div class="card shadow">
+		<div class="card-body">
+			<table class="table table-striped table-hover align-middle mb-0">
+				<thead class="ljuslila">
+					<tr>
+						<th>ID</th>
+						<th>Namn</th>
+						<th>Adress</th>
+						<th>Telefon</th>
+						<th>E-post</th>
+						<th>Land</th>
+						<th>Stad</th>
+						<th>Språk</th>
+						<th style="width: 180px;">Åtgärder</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var customer in Model)
+					{
+						<tr>
+							<td>@customer.CId</td>
+							<td>@customer.Name</td>
+							<td>@customer.Adress</td>
+							<td>@customer.PhoneNr</td>
+							<td><a href="mailto:@customer.Email">@customer.Email</a></td>
+							<td>@customer.Country</td>
+							<td>@customer.City</td>
+							<td>@customer.Language</td>
+							<td>
+								<div class="d-flex align-items-center gap-2">
+									<a asp-action="View" asp-route-id="@customer.CId" class="btn btn-sm btn-outline-info">
+										Visa
+									</a>
 
-                                        <a asp-action="Edit" asp-route-id="@customer.CId" class="btn btn-sm btn-primary">
-                                            Redigera
-                                        </a>
+									<a asp-action="Edit" asp-route-id="@customer.CId" class="btn btn-sm btn-outline-info">
+										Redigera
+									</a>
 
-                                            <a asp-action="Delete" asp-route-id="@customer.CId" class="btn btn-sm btn-danger">
-                                                Ta bort
-                                            </a>
-                                    </div>
-                                </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+									<a asp-action="Delete" asp-route-id="@customer.CId" class="btn btn-sm btn-outline-danger text-nowrap">
+										Ta bort
+									</a>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
