@@ -8,101 +8,39 @@
 	int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
 }
 
-<div class="container mt-5">
-	<div class="d-flex justify-content-between align-items-center mb-4">
-		<h2 class="mb-0">Hats</h2>
-		<div class="d-flex gap-2">
-			<a asp-controller="Hat" asp-action="Create" class="btn btn-rosa">New Hat</a>
-		</div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<h2 class="mb-0">Hats</h2>
+	<div class="d-flex gap-2">
+		<a asp-controller="Hat" asp-action="Create" class="btn btn-rosa">New Hat</a>
 	</div>
+</div>
 
-	<div class="card shadow">
-		<div class="card-header ljuslila text-white">
-			<div class="row g-2 align-items-center">
-				<div class="col-md-6">
-					<input type="text" id="hatSearch" class="form-control" placeholder="Search hats..." />
-				</div>
+<div class="card shadow">
+	<div class="card-header ljuslila text-white">
+		<div class="row g-2 align-items-center">
+			<div class="col-md-6">
+				<input type="text" id="hatSearch" class="form-control" placeholder="Search hats..." />
+			</div>
 
-				<div class="col-md-6 d-flex justify-content-md-end align-items-center">
-					<div class="form-check form-switch mb-0 d-flex align-items-center gap-2">
-						<input class="form-check-input mt-0"
-							   type="checkbox"
-							   id="showSpecialHats"
-							   style="cursor:pointer; border-color:white;" />
-						<label class="form-check-label text-white mb-0" for="showSpecialHats" style="cursor:pointer;">
-							Show special hats
-						</label>
-					</div>
+			<div class="col-md-6 d-flex justify-content-md-end align-items-center">
+				<div class="form-check form-switch mb-0 d-flex align-items-center gap-2">
+					<input class="form-check-input mt-0"
+						   type="checkbox"
+						   id="showSpecialHats"
+						   style="cursor:pointer; border-color:white;" />
+					<label class="form-check-label text-white mb-0" for="showSpecialHats" style="cursor:pointer;">
+						Show special hats
+					</label>
 				</div>
 			</div>
 		</div>
-
-		<div class="card-body">
-			<table class="table table-hover align-middle mb-0" id="hatTable">
-				<thead class="lila text-white">
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Price</th>
-						<th>Size</th>
-						<th>Image</th>
-						<th>Standard</th>
-						<th>Description</th>
-						<th style="width: 180px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var hat in Model)
-					{
-						<tr data-standard="@hat.StandardHat.ToString().ToLower()">
-							<td>@hat.HId</td>
-							<td>@hat.Name</td>
-							<td>@hat.Price.ToString("C")</td>
-							<td>@hat.Size</td>
-							<td>
-								@if (!string.IsNullOrWhiteSpace(hat.PicturePath))
-								{
-									<img src="@hat.PicturePath" alt="@hat.Name" class="img-thumbnail" style="height:48px; width:auto;" />
-								}
-							</td>
-							<td>
-								@if (hat.StandardHat)
-								{
-									<span class="badge bg-rosa text-purple">Standard</span>
-								}
-								else
-								{
-									<span class="badge bg-light text-muted">Special</span>
-								}
-							</td>
-							<td>
-								@{
-									var desc = hat.Description ?? "";
-									var shortDesc = desc.Length > 60
-									? desc.Substring(0, 60) + "..."
-									: desc;
-								}
-								@shortDesc
-							</td>
-							<td>
-								<div class="d-flex gap-2">
-									<a asp-action="Details" asp-route-id="@hat.HId" class="btn btn-sm btn-ljuslila">View</a>
-									<a asp-action="Edit" asp-route-id="@hat.HId" class="btn btn-sm btn-ljuslila">Edit</a>
-								</div>
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-
-
-		</div>
 	</div>
+</div>
 
 	<div class="grid-container" id="hatGrid">
 		@foreach (var hat in Model)
 		{
-			<div class="d-flex flex-column align-items-center p-2 card shadow grid-item">
+		<div class="d-flex flex-column align-items-center p-2 card shadow grid-item" data-standard="@hat.StandardHat.ToString().ToLower()">
 
 				@* BILD *@
 				<div class="card p-2">
@@ -166,23 +104,30 @@
 		function filterHats() {
 			const searchValue = normalizeText(document.getElementById("hatSearch").value);
 			const showSpecial = document.getElementById("showSpecialHats").checked;
-			const rows = document.querySelectorAll("#hatTable tbody tr");
+			const cards = document.querySelectorAll("#hatGrid .grid-item");
 
-			rows.forEach(row => {
-				const isStandard = row.dataset.standard === "true";
-				const rowText = normalizeText(row.innerText);
+			cards.forEach(card => {
+				const isStandard = card.dataset.standard === "true";
+				const cardText = normalizeText(card.innerText);
 
-				const matchesSearch = rowText.includes(searchValue);
-				const matchesStandardFilter = showSpecial ? true : isStandard;
+				console.log(normalizeText(card.innerText));
 
-				row.style.display = (matchesSearch && matchesStandardFilter) ? "" : "none";
+				const matchesSearch = cardText.includes(searchValue);
+				const matchesStandardFilter = showSpecial || isStandard;
+
+				if (matchesSearch && matchesStandardFilter) {
+					card.classList.remove("d-none");
+						} else {
+					card.classList.add("d-none");
+				}
 			});
 		}
 
+		document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById("hatSearch").addEventListener("input", filterHats);
 		document.getElementById("showSpecialHats").addEventListener("change", filterHats);
 
-		document.addEventListener("DOMContentLoaded", function () {
+
 			filterHats();
 		});
 	</script>
