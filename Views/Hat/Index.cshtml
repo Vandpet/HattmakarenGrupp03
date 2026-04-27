@@ -88,37 +88,6 @@
                     <a asp-action="Details" asp-route-id="@hat.HId" class="btn btn-sm btn-rosa py-1 px-3" style="width: 45%;">View</a>
                     <a asp-action="Edit" asp-route-id="@hat.HId" class="btn btn-sm btn-rosa py-1 px-3" style="width: 45%;">Edit</a>
                 </div>
-
-<<<<<<< Updated upstream
-					<div class="d-flex flex-column">
-						<span><strong>Price:</strong> @hat.Price.ToString("C")</span>
-						<span class="badge bg-ljuslila text-black">
-							@(hat.StandardHat ? "Standard hat" : "Special hat")
-						</span>
-					</div>
-				</div>
-
-				@* BESKRIVNING *@
-				<div class="d-flex justify-content-center card mb-2" style="width: 90%">
-					<p class="m-1 truncate-3 text-muted">
-						@hat.Description
-					</p>
-				</div>
-
-				@* KNAPPAR *@
-				<div class="w-100 d-flex justify-content-around mt-auto">
-					<a asp-action="Details" asp-route-id="@hat.HId" class="btn rosa fw-bold py-1 px-3" style="width: 45%;">View</a>
-					<a asp-action="Edit" asp-route-id="@hat.HId" class="btn rosa fw-bold py-1 px-3" style="width: 45%;">Edit</a>
-				</div>
-
-			</div>
-		}
-	</div>
-=======
-            </div>
-        }
-    </div>
->>>>>>> Stashed changes
 </div>
 
 @section Scripts {
