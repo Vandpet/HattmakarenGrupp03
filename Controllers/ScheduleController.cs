@@ -89,6 +89,20 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             var hatOrders = await hatOrdersQuery.ToListAsync();
 
+            var activitiesQuery = _context.CustomActivities
+                .Include(a => a.Employee)
+                .AsQueryable();
+
+            if (personal)
+            {
+                activitiesQuery = activitiesQuery.Where(a => a.EId == currentEmployeeId);
+            }
+
+            var activities = await activitiesQuery
+                .OrderBy(a => a.Date)
+                .ThenBy(a => a.Time)
+                .ToListAsync();
+
 
             // HÄMTA ALLA HATORDERS (för oschemalagda)
             var allHatOrders = await _context.HatOrders
@@ -175,6 +189,32 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                             EmployeeId = ho.EId ?? 0,
                             EmployeeName = ho.Employee?.Name ?? "",
                             PrelDeliveryDate = ho.Order?.PrelDeliveryDate
+                        });
+                    }
+
+                    var dayActivities = activities
+                            .Where(a => a.Date.HasValue && a.Date.Value.Date == current.Date)
+                            .OrderBy(a => a.Time)
+                            .ToList();
+
+                    foreach (var activity in dayActivities)
+                    {
+                        cell.Events.Add(new CalendarEventViewModel
+                        {
+                            ActivityId = activity.AId,
+                            EventType = "Activity",
+
+                            OrderId = 0,
+                            HatId = 0,
+                            Title = activity.Name,
+                            HatName = activity.Name,
+                            Status = "Arbetsuppgift",
+                            ColorClass = "order-default",
+                            Amount = 1,
+                            EmployeeId = activity.EId,
+                            EmployeeName = activity.Employee?.Name ?? "",
+                            PrelDeliveryDate = null,
+                            Time = activity.Time
                         });
                     }
 
@@ -302,5 +342,29 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 			});
 		}
 
-	}
+        [HttpPost]
+        public async Task<IActionResult> DeleteActivity(
+    int activityId,
+    bool personal = false,
+    DateTime? targetDate = null,
+    string viewMode = "month")
+        {
+            var activity = await _context.CustomActivities
+                .FirstOrDefaultAsync(a => a.AId == activityId);
+
+            if (activity == null)
+                return NotFound();
+
+            _context.CustomActivities.Remove(activity);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index), new
+            {
+                personal,
+                targetDate,
+                viewMode
+            });
+        }
+
+    }
 }

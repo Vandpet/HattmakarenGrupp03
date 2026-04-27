@@ -9,13 +9,7 @@
         width: 100%;
     }
 
-    /* Göm sidebaren utanför skärmen */
-    #sidebar, .sidebar, nav.flex-column {
-        position: fixed !important;
-        left: -250px !important;
-        z-index: 9999;
-        transition: 0.3s;
-    }
+    
 
     #content, .main-content, main {
         margin-left: 0 !important;
@@ -74,7 +68,7 @@
 
     /* Dölj tabellens rubrikrad */
     thead {
-        display: none;
+        display: none !important;
     }
 
     /* Varje användare blir ett vitt kort */
@@ -111,44 +105,37 @@
         td:nth-of-type(1):before {
             content: "ID:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(2):before {
             content: "Namn:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(3):before {
             content: "Adress:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(4):before {
             content: "Telefon:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(5):before {
             content: "E-post:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(6):before {
             content: "Username:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         /* Om Admin: visa etikett för Accessnivå */
         td:nth-of-type(7):not(:last-child):before {
             content: "Accessnivå:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         /* Justera knappar för Redigera/Ta bort */

@@ -38,7 +38,11 @@
                             <input asp-for="Date" class="form-control" type="date" />
                             <span asp-validation-for="Date" class="text-danger"></span>
                         </div>
-
+                        <div class="mb-3">
+                            <label asp-for="Time" class="form-label">Tid</label>
+                            <input asp-for="Time" type="time" class="form-control" />
+                            <span asp-validation-for="Time" class="text-danger"></span>
+                        </div>
                         @if (isAdmin)
                         {
                             <div class="mb-3">

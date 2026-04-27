@@ -37,6 +37,9 @@
         public int OrderId { get; set; }
         public int HatId { get; set; }
 
+        public int? ActivityId { get; set; }
+        public string EventType { get; set; } = "Order";
+
         public string Title { get; set; } = "";
         public string HatName { get; set; } = "";
 
@@ -48,7 +51,7 @@
         public DateTime? PrelDeliveryDate { get; set; }
 
         public string ViewMode { get; set; } = "month";
-
+        public TimeSpan? Time { get; set; }
     }
 
     public class UnscheduledTaskViewModel

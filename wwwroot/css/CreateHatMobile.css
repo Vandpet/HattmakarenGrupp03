@@ -11,12 +11,7 @@
         padding: 0;
     }
 
-    #sidebar, .sidebar, nav.flex-column {
-        position: fixed !important;
-        left: -250px !important;
-        z-index: 9999;
-        transition: 0.3s;
-    }
+  
 
     #content, .main-content, main {
         margin-left: 0 !important;

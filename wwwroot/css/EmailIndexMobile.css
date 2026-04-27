@@ -11,13 +11,7 @@
         padding: 0;
     }
 
-    /* Göm sidebaren utanför skärmen */
-    #sidebar, .sidebar, nav.flex-column {
-        position: fixed !important;
-        left: -250px !important;
-        z-index: 9999;
-        transition: 0.3s;
-    }
+  
 
     /* Tvinga innehållet att använda hela bredden */
     #content, .main-content, main {
@@ -59,7 +53,7 @@
 
     /* Dölj rubrikraden */
     thead {
-        display: none;
+        display: none !important;
     }
 
     /* Varje mail blir ett kort */

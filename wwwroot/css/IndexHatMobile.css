@@ -9,12 +9,7 @@
         width: 100%;
     }
 
-    #sidebar, .sidebar, nav.flex-column {
-        position: fixed !important;
-        left: -250px !important;
-        z-index: 9999;
-        transition: 0.3s;
-    }
+    
 
     #content, .main-content, main {
         margin-left: 0 !important;
@@ -80,7 +75,7 @@
     }
 
     thead {
-        display: none;
+        display: none !important;
     }
 
     tr {
@@ -130,43 +125,36 @@
         td:nth-of-type(1):before {
             content: "ID:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(2):before {
             content: "Namn:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(3):before {
             content: "Pris:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(4):before {
             content: "Storlek:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(5):before {
             content: "Bild:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(6):before {
             content: "Standard:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         td:nth-of-type(7):before {
             content: "Beskrivning:";
             font-weight: bold;
-            color: #0d6efd;
         }
 
         /* Beskrivningen får ta mer plats och radbrytas */
