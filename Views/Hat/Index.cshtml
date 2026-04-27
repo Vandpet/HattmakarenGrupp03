@@ -117,20 +117,19 @@
 				</div>
 
 				@* NAME *@
-				<div class="mt-2">
-					<h4>@hat.Name</h4>
+				<div class="mt-2" style="max-width: 90%">
+					<h4 class="truncate-1">@hat.Name</h4>
 				</div>
 
 				@* INFO *@
 				<div class="d-flex flex-row w-100 justify-content-around my-2">
-					<div class="d-flex flex-column">
-						<span><strong>Id:</strong> @hat.HId</span>
-						@* <span><strong>Name:</strong> @hat.Name</span> *@
-						<span><strong>Size:</strong> @hat.Size</span>
+					<div class="d-flex flex-column" style="max-width:45%">
+						<span class="truncate-1"><strong>Id:</strong> @hat.HId</span>
+						<span class="truncate-1"><strong>Size:</strong> @hat.Size</span>
 					</div>
 
-					<div class="d-flex flex-column">
-						<span><strong>Price:</strong> @hat.Price.ToString("C")</span>
+					<div class="d-flex flex-column" style="max-width:45%">
+						<span class="truncate-1"><strong>Price:</strong> @hat.Price.ToString("C")</span>
 						<span class="badge bg-ljuslila text-black">
 							@(hat.StandardHat ? "Standard hat" : "Special hat")
 						</span>
