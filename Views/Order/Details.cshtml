@@ -12,13 +12,28 @@
             <input type="hidden" name="oId" value="@(Model.Order.OId)" />
         </form>
         <a asp-action="Index" class="btn rosa fw-bold">Back</a>
-        <a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Download Order PDF</a>
-        <a asp-action="DownloadMaterialsPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">
-            Download Material PDF
-        </a>
+        <a asp-action="DownloadPdf" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">Download order PDF</a>
+        @if (Model.Order.Downloaded)
+        {
+            <a asp-action="DownloadMaterialsPdf" asp-route-oId="@Model.Order.OId"
+               class="btn fw-bold"
+               style="background-color: #aaa; color: white;">
+                Material list donwloaded. Download again.
+            </a>
+        }
+        else
+        {
+                   <a asp-action="DownloadMaterialsPdf" asp-route-oId="@Model.Order.OId"
+               class="btn rosa fw-bold"
+               id="materialPdfBtn">
+                Download material list PDF
+            </a>
+        }
+        
         <a asp-action="ShippingLabel" asp-route-oId="@Model.Order.OId" class="btn rosa fw-bold">
             Create Shipping Label
         </a>
+
     </div>
 
 		<a href="#" type="button" class="btn rosa fw-bold" data-bs-toggle="modal" data-bs-target="#materialModal">
