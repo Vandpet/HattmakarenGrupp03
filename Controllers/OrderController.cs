@@ -326,6 +326,11 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var order = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
             if (order == null) return NotFound();
 
+            //Markera som nedladdad och spara
+            order.Downloaded = true;
+            await _orderRepo.UpdateAsync(order);
+
+
             // Fetch hat orders with materials included
             var hatOrders = await _context.HatOrders
                 .Include(ho => ho.Hat)
