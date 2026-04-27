@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Order>
 
 <link rel="stylesheet" href="~/css/OrderIndexMobile.css" asp-append-version="true" />
-@*Lade också till <div class="table-responsive"></div> på tabellen*@
-
 @{
 	var selected = ViewBag.Filter as string;
 }
@@ -106,21 +104,21 @@
 @functions {
     public string ColorForBadge(string itemStatus)
     {
-        if (itemStatus == "Not Started")
+        if (itemStatus == "Ej Påbörjad")
         {
             return "bg-secondary";
         }
-        else if (itemStatus == "Started")
+        else if (itemStatus == "Påbörjad")
         {
             return "bg-primary";
         }
-        else if (itemStatus == "Completed")
+        else if (itemStatus == "Färdig")
         {
             return "bg-success";
         }
-        else // if (itemStatus == "Shipped")
+        else // if (itemStatus == "Skickad")
         {
-            return "bg-skickad text-dark";
+            return "bg-rosa text-dark";
 
         }
     }

@@ -146,13 +146,8 @@
 
 				@* KNAPPAR *@
 				<div class="w-100 d-flex justify-content-around mt-auto">
-					<a asp-action="Details" asp-route-id="@hat.HId" class="btn btn-sm btn-rosa py-1 px-3" style="width: 45%;">View</a>
-
-					@* <span class="badge bg-ljuslila text-black align-self-center">
-						@(hat.StandardHat ? "Standard" : "Special")
-					</span> *@
-
-					<a asp-action="Edit" asp-route-id="@hat.HId" class="btn btn-sm btn-rosa py-1 px-3" style="width: 45%;">Edit</a>
+					<a asp-action="Details" asp-route-id="@hat.HId" class="btn rosa fw-bold py-1 px-3" style="width: 45%;">View</a>
+					<a asp-action="Edit" asp-route-id="@hat.HId" class="btn rosa fw-bold py-1 px-3" style="width: 45%;">Edit</a>
 				</div>
 
 			</div>

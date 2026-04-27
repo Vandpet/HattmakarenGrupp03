@@ -1,24 +1,24 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #E9D5EA;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #E9D5EA;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .sidebar {
@@ -48,7 +48,7 @@ body {
 button {
     border: none;
     background-color: transparent;
-    margin: 0 0.5rem 1rem 0 ;
+    margin: 0 0.5rem 1rem 0;
 }
 
 .menu-text {
@@ -65,7 +65,7 @@ button {
 }
 
 .sidebar.expanded ~ #content {
-/*    margin-left: 20rem;*/
+    /*    margin-left: 20rem;*/
 }
 
 .sidebar.expanded h3 {
@@ -102,7 +102,7 @@ button {
     }
 }
 
-@keyframes fadein-headers{
+@keyframes fadein-headers {
     from {
         visibility: hidden;
     }
@@ -245,18 +245,20 @@ button {
     color: #666;
     padding: 4px 0 8px 0;
     font-size: 0.9rem;
+    .week-number
 
-    .week-number {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        padding: 0;
-        min-height: auto;
-    }
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    min-height: auto;
+}
+
 }
 
 .calendar-cell {
@@ -287,6 +289,7 @@ button {
     .calendar-cell.drag-hover {
         background: #efe3f0;
     }
+
 .drop-unscheduled.drag-hover {
     background: #efe3f0;
     outline: 2px dashed #984B9C;
@@ -471,9 +474,24 @@ button {
     background-color: #73147A;
 }
 
-.btn.rosa.fw-bold{
+.btn.rosa.fw-bold {
+    /*  background-color: #E9D5EA; Den rosa färgen*/
     margin: 0rem;
+    transition: all 0.2s ease;
 }
+
+    .btn.rosa.fw-bold:hover {
+        background-color: #d8c0d8;
+        color: #000;
+        border-color: #d8c0d8;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .btn.rosa.fw-bold:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
 
 /*css för statistiksidan*/
 
@@ -552,18 +570,17 @@ button {
 
 .calendar-grid.view-day {
     display: grid;
-    grid-template-columns: 1fr; 
-
+    grid-template-columns: 1fr;
     width: 95%;
-    max-width: 1000px; 
+    max-width: 1000px;
     margin: 0 auto;
 }
 
-.calendar-grid.view-day .weekday {
-    text-align: center;
-    font-size: 1.3rem;
-    padding: 10px;
-}
+    .calendar-grid.view-day .weekday {
+        text-align: center;
+        font-size: 1.3rem;
+        padding: 10px;
+    }
 
 /*HatCards*/
 /*Trunkerar text över tre rader långa*/
@@ -597,6 +614,7 @@ button {
     min-width: 0;
     justify-content: center;
 }
+
 .home-today-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
