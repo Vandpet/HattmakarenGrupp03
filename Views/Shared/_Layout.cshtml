@@ -20,9 +20,16 @@
     @if (isLoggedIn){
 
     <div id="sidebar" class="sidebar">
-        <button class="button meny-btn" id="menuToggle">
-            ☰
-        </button>
+        <div class="sidebar-top">
+            <button class="button meny-btn" id="menuToggle">
+                ☰
+            </button>
+
+            <div class="unread-collapsed">
+                @* Shown only when sidebar is collapsed *@
+                @await Component.InvokeAsync("UnreadMessages")
+            </div>
+        </div>
 
         <ul class="nav flex-column">
 
@@ -101,7 +108,8 @@
 
 
                 
-                    <li class="nav-item">
+                    <li class="nav-item unread-in-menu">
+                        @* Shown only when sidebar is expanded *@
                         @await Component.InvokeAsync("UnreadMessages")
                     </li>
               
@@ -128,11 +136,6 @@
     </div>
 
     }
-
-
-
-
-
     <div id="content" class="container">
         <main role="main" class="pb-3">
             @RenderBody()
