@@ -152,7 +152,7 @@
 
 		<form asp-action="SendOrder" asp-route-id="@(Model.Order.OId)" method="post">
 			<input type="hidden" name="oId" value="@(Model.Order.OId)" />
-			<button type="submit" class="btn rosa fw-bold" @(Model.Order.Status != "Färdig" ? "disabled" : "")>Send Order</button>
+			<button type="submit" class="btn rosa fw-bold" @(Model.Order.Status != "Completed" ? "disabled" : "")>Send Order</button>
 		</form>
 	</div>
 </div>
@@ -279,19 +279,19 @@
 @functions {
 	public string ColorForBadge(string itemStatus)
 	{
-		if (itemStatus == "Ej Påbörjad")
+		if (itemStatus == "Not Started")
 		{
 			return "bg-secondary";
 		}
-		else if (itemStatus == "Påbörjad")
+		else if (itemStatus == "Started")
 		{
 			return "bg-primary";
 		}
-		else if (itemStatus == "Färdig")
+		else if (itemStatus == "Completed")
 		{
 			return "bg-success";
 		}
-		else // if (itemStatus == "Skickad")
+		else // if (itemStatus == "Shipped" or partly or fully returned)
 		{
 			return "bg-rosa text-dark";
 

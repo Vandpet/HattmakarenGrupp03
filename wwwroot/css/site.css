@@ -31,6 +31,8 @@ body {
     background: #E9D5EA;
     padding: 10px;
     transition: width 0.3s;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
     .sidebar.expanded {
@@ -368,6 +370,17 @@ button {
     margin-top: 1rem;
 }
 
+#dayModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#modalContent {
+    max-height: 70vh; /* limit height relative to viewport */
+    overflow-y: auto; /* enable vertical scrolling */
+}
+
 .schedule-personal-toggle {
     display: flex;
     justify-content: center;
@@ -595,6 +608,18 @@ button {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1100px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 .hat-img {

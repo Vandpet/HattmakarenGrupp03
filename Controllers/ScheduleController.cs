@@ -126,7 +126,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
 
 			var unscheduled = allHatOrders
-				.Where(ho => ho.Status == "Ej Påbörjad")
+				.Where(ho => ho.Status == "Not Started")
 				.OrderBy(ho => ho.Order?.PrelDeliveryDate)
 				.ThenBy(ho => ho.OId)
 				.ToList();
@@ -164,8 +164,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 				{
                     var dayHatOrders = hatOrders
                     .Where(h => h.Date == current.Date && 
-					h.Status != "Returnerad" &&
-					h.Status != "Skickad")
+					h.Status != "Returned" &&
+					h.Status != "Shipped")
                     .ToList();
 
 					var cell = new CalendarCellViewModel
@@ -252,7 +252,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 				return NotFound();
 
 			hatOrder.Date = date;
-			hatOrder.Status = "Påbörjad";
+			hatOrder.Status = "Started";
 
 			if (IsAdmin())
 			{
@@ -303,8 +303,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             if (order == null)
                 return "order-default";
 
-            if (order.Status == "Klar" || order.Status == "Färdig" || order.Status == "Skickad" ||
-                hatOrderStatus == "Klar" || hatOrderStatus == "Färdig" || hatOrderStatus == "Skickad")
+            if (order.Status == "Klar" || order.Status == "Completed" || order.Status == "Shipped" ||
+                hatOrderStatus == "Klar" || hatOrderStatus == "Completed" || hatOrderStatus == "Shipped")
                 return "order-default";
 
             var daysLeft = (order.PrelDeliveryDate.Date - DateTime.Today).Days;

@@ -256,7 +256,13 @@ namespace HattmakarenWebbAppGrupp03.Data
                 PicturePath = "/uploads/740ccec0-24a4-4e2f-915a-e34cd28a3ff9.jpg",
                 Description = "Testhatt",
                 KN_Number = "6504 00 00",
-                KN_Description = "Färdiga flätade hattar och huvudbonader"
+                KN_Description = "Felt hat bodies and unshaped hat forms."
+            };
+
+            var hatMaterial = new HatMaterial
+            {
+                Hat = hat,
+                Material = material
             };
 
             var hat1 = new Hat
@@ -268,7 +274,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 PicturePath = "/uploads/a34ba6d8-a3c3-4c43-afeb-c493eae1b0df.webp",
                 Description = "Hundhatt, specialbeställd för hundar",
                 KN_Number = "6504 00 00",
-                KN_Description = "Färdiga flätade hattar och huvudbonader"
+                KN_Description = "Felt hat bodies and unshaped hat forms."
             };
 
             var hat2 = new Hat
@@ -280,7 +286,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 PicturePath = "",
                 Description = "En hatt utan bild",
                 KN_Number = "6504 00 00",
-                KN_Description = "Färdiga flätade hattar och huvudbonader"
+                KN_Description = "Felt hat bodies and unshaped hat forms."
             };
 
             var hat3 = new Hat
@@ -292,13 +298,13 @@ namespace HattmakarenWebbAppGrupp03.Data
                 PicturePath = "/uploads/5138f31d-9454-4155-af25-a95c4f004557.jpg",
                 Description = "Hatt för en groda. Lorem ipsum dolor sit amet.",
                 KN_Number = "6504 00 00",
-                KN_Description = "Färdiga flätade hattar och huvudbonader"
+                KN_Description = "Felt hat bodies and unshaped hat forms."
             };
 
             // --- Order ---
             var order = new Order
             {
-                Status = "Ej Påbörjad",
+                Status = "Not Started",
                 Express = false,
                 Discount = 0,
                 DiscountDesc = "",
@@ -314,13 +320,13 @@ namespace HattmakarenWebbAppGrupp03.Data
 
             var order1 = new Order
             {
-                Status = "Påbörjad",
+                Status = "Started",
                 Express = false,
                 Discount = 0,
                 DiscountDesc = "",
                 OrderDate = DateTime.Now.AddDays(-2),
                 PrelDeliveryDate = DateTime.Now.AddDays(5),
-                Description = "Order påbörjad",
+                Description = "Order Started",
                 Customer = customer,
                 CreatedBy = otto,
                 DeliveryFee = 50
@@ -328,13 +334,13 @@ namespace HattmakarenWebbAppGrupp03.Data
 
             var order2 = new Order
             {
-                Status = "Färdig",
+                Status = "Completed",
                 Express = false,
                 Discount = 0,
                 DiscountDesc = "",
                 OrderDate = DateTime.Now.AddDays(-5),
                 PrelDeliveryDate = DateTime.Now.AddDays(2),
-                Description = "Order färdig",
+                Description = "Order Completed",
                 Customer = customer,
                 CreatedBy = otto,
                 DeliveryFee = 100
@@ -342,13 +348,13 @@ namespace HattmakarenWebbAppGrupp03.Data
 
             var order3 = new Order
             {
-                Status = "Skickad",
+                Status = "Shipped",
                 Express = true,
                 Discount = 10,
                 DiscountDesc = "Test rabatt",
                 OrderDate = DateTime.Now.AddDays(-10),
                 PrelDeliveryDate = DateTime.Now.AddDays(-1),
-                Description = "Order skickad",
+                Description = "Order Shipped",
                 Customer = customer,
                 CreatedBy = otto,
                 DeliveryFee = 150
@@ -359,7 +365,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Hat = hat,
                 Order = order,
                 Employee = otto,
-                Status = "Ej Påbörjad",
+                Status = "Not Started",
                 Date = DateTime.Now.AddDays(0),
                 Amount = 1
             };
@@ -369,7 +375,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Hat = hat,
                 Order = order1,
                 Employee = otto,
-                Status = "Påbörjad",
+                Status = "Started",
                 Date = DateTime.Now.AddDays(0),
                 Amount = 1
             };
@@ -379,7 +385,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Hat = hat,
                 Order = order2,
                 Employee = otto,
-                Status = "Färdig",
+                Status = "Completed",
                 Date = DateTime.Now.AddDays(1),
                 Amount = 2
             };
@@ -389,7 +395,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Hat = hat,
                 Order = order3,
                 Employee = otto,
-                Status = "Skickad",
+                Status = "Shipped",
                 Date = DateTime.Now.AddDays(2),
                 Amount = 1
             };

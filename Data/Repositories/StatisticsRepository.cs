@@ -36,7 +36,7 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             }
 
             var totalSoldHats = await _db.HatOrders
-                    .Where(ho => ho.Status == "Skickad")
+                    .Where(ho => ho.Status == "Shipped")
                     .ToListAsync(); ;
             
             if (period != "all")
@@ -58,7 +58,7 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
         public async Task<int> getTotalRevenue(string period = "all")
         {
             var totalRevenue = await _db.HatOrders
-                .Where(ho => ho.Status == "Skickad")
+                .Where(ho => ho.Status == "Shipped")
                 .Include(ho => ho.Hat)
                 .ToListAsync();
 

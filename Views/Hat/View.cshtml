@@ -58,7 +58,7 @@
 					<div class="d-flex gap-2">
 						<a asp-controller="Order" asp-action="Details" asp-route-oId="@Model.PreviousOrder.OId" class="btn rosa fw-bold" style="margin: 0 0.5rem 1rem 0;">Back</a>
 						@if (Model.HatOrder.Status == "Shipped" && 
-						(Model.PreviousOrder.Status == "Shipped" || Model.PreviousOrder.Status == "Partially Returned"))
+						(Model.PreviousOrder.Status == "Shipped" || Model.PreviousOrder.Status == "Partly Returned"))
 						{
 							<form asp-controller="Hat" asp-action="ReturnOrder" asp-route-oId="@Model.PreviousOrder.OId" asp-route-hId="@Model.HatOrder.HId" method="post">
 								<button type="submit" class="btn rosa fw-bold">Return Product</button>
