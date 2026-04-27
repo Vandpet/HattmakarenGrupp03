@@ -151,7 +151,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 Name = model.Name.Trim(),
                 Description = model.Description?.Trim() ?? string.Empty,
                 Date = model.Date,
-                EId = model.EId
+                EId = model.EId,
+                Time = model.Time
             };
 
             _context.CustomActivities.Add(activity);

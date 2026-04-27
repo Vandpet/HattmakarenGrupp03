@@ -13,6 +13,7 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
         [Required(ErrorMessage = "Datum måste väljas")]
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
+        public TimeSpan? Time { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Du måste välja en anställd")]
         public int EId { get; set; }

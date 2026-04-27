@@ -216,6 +216,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             if (orderToSend == null) return NotFound();
             
             orderToSend.Status = "Skickad";
+            orderToSend.SentDate = DateTime.Now;
 
             var hatOrderList = await _hatOrderRepo.GetByOrderIdAsync(oId);
             foreach (var hatOrder in hatOrderList)

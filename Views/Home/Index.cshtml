@@ -1,8 +1,109 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.DashViewModel
+
+@{
+    ViewData["Title"] = "Startsida";
+    var userName = Context.Session.GetString("Name") ?? "användare";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div id="content">
+
+    <h2 class="my-4 text-center">Välkommen @userName!</h2>
+
+    <div class="stats-container mb-4">
+        <div class="stats-card rosa">
+            <span class="stats-label">Dagens försäljning</span>
+            <span class="stats-value">@Model.TodaySales.ToString("C0")</span>
+        </div>
+
+        <div class="stats-card ljuslila text-white">
+            <span class="stats-label">Kvartalets försäljning</span>
+            <span class="stats-value">@Model.QuarterSales.ToString("C0")</span>
+        </div>
+    </div>
+
+    <div class="home-today-grid">
+
+        <div class="calendar-panel shadow-sm mt-4">
+            <h4 class="mb-3">Dagens aktiviteter på schemat</h4>
+
+            @if (!Model.TodayActivities.Any())
+            {
+                <div class="empty-box">
+                    Inga aktiviteter i schemat idag.
+                </div>
+            }
+            else
+            {
+                @foreach (var item in Model.TodayActivities)
+                {
+                    <div class="task-card order-default">
+                        <div class="task-card-title">
+                            @item.Title
+                        </div>
+
+                        @if (item.Time.HasValue)
+                        {
+                            <div class="task-card-sub">
+                                Tid: @item.Time.Value.ToString(@"hh\:mm")
+                            </div>
+                        }
+
+                        <div class="task-card-sub">
+                            @item.Type
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(item.EmployeeName))
+                        {
+                            <div class="task-card-sub">
+                                @item.EmployeeName
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="calendar-panel shadow-sm mt-4">
+            <h4 class="mb-3">Dagens arbetsuppgifter</h4>
+
+            @if (!Model.TodayOrderTasks.Any())
+            {
+                <div class="empty-box">
+                    Inga arbetsuppgifter idag.
+                </div>
+            }
+            else
+            {
+                @foreach (var item in Model.TodayOrderTasks)
+                {
+                    <div class="task-card order-default">
+                        <div class="task-card-title">
+                            @if (item.Amount > 1)
+                            {
+                                <span>@item.Amount x </span>
+                            }
+                            @item.Title
+                        </div>
+
+                        <div class="task-card-sub">
+                            @item.Type
+                        </div>
+
+                        <div class="task-card-status">
+                            @item.Status
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(item.EmployeeName))
+                        {
+                            <div class="task-card-sub">
+                                @item.EmployeeName
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+
+    </div>
+
 </div>

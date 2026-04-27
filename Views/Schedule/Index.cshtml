@@ -262,6 +262,13 @@
     <input type="hidden" name="viewMode" value="@Model.ViewMode" />
 </form>
 
+<form id="deleteActivityForm" method="post" asp-action="DeleteActivity">
+    <input type="hidden" name="activityId" id="deleteActivityId" />
+    <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
+    <input type="hidden" name="targetDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
+    <input type="hidden" name="viewMode" value="@Model.ViewMode" />
+</form>
+
 @section Scripts {
     <script>
         let draggedOrderId = null;
@@ -387,15 +394,28 @@
                         : "Saknas";
 
 
-                            div.innerHTML = `
-                    <div><strong><h5>${ev.Amount} x ${ev.HatName}</h5></strong></div>
-                    <div><h6>Order ${ev.OrderId}</h6></div>
-                    <div>Beräknad leverans: ${deliveryText}</div>
-                    <div>${ev.EmployeeName}</div>
-                    <button class="btn btn-danger btn-sm"  onclick="unassignTask(${ev.OrderId}, ${ev.HatId})">Oschemalägg</button>
-                    <button class="btn btn-success" onclick="markDone(${ev.OrderId}, ${ev.HatId})">Klar</button>
-                    <hr style="margin:0;">
-                    `;
+                      if (ev.EventType === "Activity") {
+                                div.innerHTML = `
+                                    <div><strong><h5>${ev.HatName}</h5></strong></div>
+                                    <div>Arbetsuppgift</div>
+                                    <div>${ev.EmployeeName ?? ""}</div>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteActivity(${ev.ActivityId})">
+                                        Ta bort
+                                    </button>
+                                    <hr style="margin:0;">
+                                `;
+                            }
+                      else {
+                                        div.innerHTML = `
+                                            <div><strong><h5>${ev.Amount} x ${ev.HatName}</h5></strong></div>
+                                            <div><h6>Order ${ev.OrderId}</h6></div>
+                                            <div>Beräknad leverans: ${deliveryText}</div>
+                                            <div>${ev.EmployeeName}</div>
+                                            <button class="btn btn-danger btn-sm" onclick="unassignTask(${ev.OrderId}, ${ev.HatId})">Oschemalägg</button>
+                                            <button class="btn btn-success" onclick="markDone(${ev.OrderId}, ${ev.HatId})">Klar</button>
+                                            <hr style="margin:0;">
+                                        `;
+                                    }
 
                     container.appendChild(div);
                 });
@@ -418,6 +438,11 @@
             document.getElementById("doneHatId").value = hatId;
 
             document.getElementById("doneForm").submit();
+        }
+
+        function deleteActivity(activityId) {
+            document.getElementById("deleteActivityId").value = activityId;
+            document.getElementById("deleteActivityForm").submit();
         }
 
                 function openTaskModal(element) {
