@@ -11,17 +11,7 @@
         padding: 0;
     }
 
-    /* 2. GÖM SIDEBAREN (Samma logik som i View-vyn) */
-    #sidebar, .sidebar, nav.flex-column {
-        position: fixed !important;
-        left: -250px !important; /* Flyttar ut den till vänster */
-        top: 0;
-        height: 100vh;
-        width: 250px;
-        transition: all 0.3s ease;
-        z-index: 9999 !important;
-        display: block !important;
-    }
+    
 
         /* Visa sidebaren när den är aktiv (om du använder hamburger-knapp) */
         #sidebar.active, .sidebar.active {

@@ -1,0 +1,97 @@
+﻿@media (max-width: 768px) {
+
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    #content {
+        margin-left: 0px !important;
+    }
+
+    /* =========================
+       RUBRIK
+       ========================= */
+    h2 {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    /* =========================
+       STATS (överst)
+       ========================= */
+    .stats-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .stats-card {
+        width: 100%;
+        padding: 15px;
+        border-radius: 1rem;
+    }
+
+    .stats-label {
+        font-size: 0.85rem;
+    }
+
+    .stats-value {
+        font-size: 1.4rem;
+        font-weight: bold;
+    }
+
+    /* =========================
+       GRID → STACK
+       ========================= */
+    .home-today-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* =========================
+       PANELER
+       ========================= */
+    .calendar-panel {
+        width: 100%;
+        padding: 10px;
+    }
+
+        .calendar-panel h4 {
+            font-size: 1.1rem;
+        }
+
+    /* =========================
+       TASK CARDS
+       ========================= */
+    .task-card {
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .task-card-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .task-card-sub {
+        font-size: 0.8rem;
+    }
+
+    .task-card-status {
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    /* =========================
+       EMPTY STATE
+       ========================= */
+    .empty-box {
+        font-size: 0.85rem;
+        padding: 10px;
+        text-align: center;
+    }
+}

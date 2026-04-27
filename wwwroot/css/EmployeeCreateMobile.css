@@ -11,13 +11,7 @@
         padding: 0;
     }
 
-    /* Flyttar ut sidebaren utanför skärmen */
-    #sidebar, .sidebar, nav.flex-column {
-        position: fixed !important;
-        left: -250px !important;
-        z-index: 9999;
-        transition: 0.3s;
-    }
+   
 
     /* Tvingar innehållet att använda hela bredden */
     #content, .main-content, main {
