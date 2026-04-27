@@ -1,0 +1,77 @@
+﻿@model List<HattmakarenWebbAppGrupp03.ViewModels.Messages.ConversationListItemViewModel>
+<link rel="stylesheet" href="~/css/MessagesIndexMobile.css" asp-append-version="true" />
+
+@{
+    ViewData["Title"] = "Messages";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Messages</h2>
+    <a asp-action="Create" class="btn btn-rosa">New thread</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You have no conversations yet.
+    </div>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var item in Model)
+        {
+            <!-- Förbättrad layout: avatar, titel, preview, tid och olästa -->
+            <a asp-action="Thread"
+               asp-route-id="@item.ConversationId"
+               class="list-group-item list-group-item-action py-3">
+                <div class="d-flex align-items-start">
+                    <div class="me-3 flex-shrink-0">
+                        <!-- Avatar / initialer -->
+                        <div class="rounded-circle d-flex align-items-center justify-content-center text-white"
+                             style="width:44px; height:44px; background:#73147A; font-weight:600;">
+                            @((!string.IsNullOrWhiteSpace(item.DisplayName) ? item.DisplayName.Substring(0, 1).ToUpper() : "?"))
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <div class="d-flex w-100 justify-content-between mb-1">
+                            <div>
+                                <h5 class="mb-0" style="font-size:1rem;">
+                                    @item.DisplayName
+                                    @if (item.IsBroadcast)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-2">To everyone</span>
+                                    }
+                                </h5>
+                            </div>
+
+                            <small class="text-muted">
+                                @(item.LastMessageSentAtUtc?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "")
+                            </small>
+                        </div>
+
+                        <p class="mb-1 text-truncate" style="max-width:60ch;">
+                            @if (!string.IsNullOrWhiteSpace(item.LastSenderName))
+                            {
+                                <strong class="me-1">@item.LastSenderName:</strong>
+                            }
+                            @item.LastMessagePreview
+                        </p>
+
+                    </div>
+
+                    <div class="ms-3 d-flex flex-column align-items-end">
+                        @if (item.UnreadCount > 0)
+                        {
+                            <span class="badge rounded-pill text-white"
+                                  style="background:#73147A; font-weight:600;">
+                                @item.UnreadCount
+                            </span>
+                        }
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+}

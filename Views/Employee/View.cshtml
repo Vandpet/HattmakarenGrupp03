@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.Employee
 
+<link rel="stylesheet" href="~/css/EmployeeViewMobile.css" asp-append-version="true" />
+
+
 @{
     ViewData["Title"] = "Profil";
 
@@ -14,7 +17,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header ljuslila">
                     <h3 class="mb-0">Profil</h3>
                 </div>
 
@@ -52,16 +55,15 @@
 
                     <div class="d-flex gap-2 mt-4">
 
+                        <a asp-action="Index" class="btn rosa fw-bold">
+                            Tillbaka
+                        </a>
                         @if (isAdmin || isCurrentUser)
                         {
-                            <a asp-action="Edit" asp-route-id="@Model.EId" class="btn btn-primary">
+                            <a asp-action="Edit" asp-route-id="@Model.EId" class="btn rosa fw-bold">
                                 Redigera profil
                             </a>
                         }
-
-                        <a asp-action="Index" class="btn btn-outline-secondary">
-                            Tillbaka
-                        </a>
 
                     </div>
 

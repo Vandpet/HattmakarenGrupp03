@@ -1,0 +1,74 @@
+﻿/* =========================
+   MOBIL ANPASSNING (SAFE)
+   ========================= */
+
+@media (max-width: 768px) {
+
+    #content{
+        margin-left: 0px !important;
+    }
+
+    /* ===== STATS CARDS ===== */
+    .stats-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .stats-card {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* ===== FILTER ===== */
+    #filterForm select {
+        width: 100% !important;
+    }
+
+    /* ===== SORTERING ===== */
+    .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+        .btn-group .btn {
+            flex: 1 1 auto;
+            min-height: 40px;
+            font-size: 0.9rem;
+        }
+
+        /* Pil-knappen */
+        .btn-group .btn-outline-dark {
+            flex: 0 0 auto;
+        }
+
+    /* ===== TABELL (VIKTIG DEL) ===== */
+
+    /* Viktig: begränsa scroll till endast tabellen */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Se till att tabellen inte trycker ut sidan */
+    .table {
+        min-width: 600px;
+    }
+
+        /* Gör text lite mindre */
+        .table th,
+        .table td {
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+
+    /* ===== RUBRIKER ===== */
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+}

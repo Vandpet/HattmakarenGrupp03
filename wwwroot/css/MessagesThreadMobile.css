@@ -1,0 +1,110 @@
+﻿/* =========================
+   MESSAGES THREAD - MOBILE
+   ========================= */
+
+@media (max-width: 768px) {
+
+    #content {
+        margin-left: 0px !important;
+    }
+
+    html, body {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    /* ===== HEADER ===== */
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .text-muted.small {
+        font-size: 0.75rem;
+        word-break: break-word;
+    }
+
+    /* ===== CONTAINER ===== */
+    .card {
+        margin: 10px;
+        border-radius: 12px;
+    }
+
+    .card-body {
+        padding: 12px;
+    }
+
+    /* ===== MESSAGE AREA ===== */
+    .card.mb-4 .card-body {
+        min-height: auto !important;
+        max-height: 60vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ===== MESSAGE BUBBLES ===== */
+    .d-flex.mb-3 {
+        margin-bottom: 10px !important;
+    }
+
+    /* bubble */
+    .d-flex > div[style*="background"] {
+        max-width: 85% !important;
+        font-size: 0.9rem;
+        padding: 10px !important;
+        border-radius: 14px !important;
+        word-break: break-word;
+    }
+
+    /* sender row */
+    strong {
+        font-size: 0.85rem !important;
+    }
+
+    small {
+        font-size: 0.7rem !important;
+    }
+
+    /* ===== AVATAR ===== */
+    .rounded-circle {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 0.8rem;
+    }
+
+    /* ===== INPUT AREA ===== */
+    textarea.form-control {
+        font-size: 0.95rem;
+        min-height: 90px;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+    }
+
+    /* ===== BUTTONS ===== */
+    .d-flex.gap-2 {
+        flex-direction: column;
+        gap: 10px !important;
+    }
+
+    .btn {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #333;
+    }
+
+    /* ===== MESSAGE ALIGNMENT FIX ===== */
+    .justify-content-end,
+    .justify-content-start {
+        align-items: flex-end;
+    }
+
+    /* ===== PREVENT HORIZONTAL OVERFLOW ===== */
+    * {
+        box-sizing: border-box;
+    }
+}

@@ -6,16 +6,21 @@
         public bool IsAdmin { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
+        public int WeekNumber { get; set; }
+		public DateTime SelectedDate { get; set; }
+		public string ViewMode { get; set; } = "month";
 
-        public List<WeekRowViewModel> Weeks { get; set; } = new();
+
+		public List<WeekRowViewModel> Weeks { get; set; } = new();
         public List<UnscheduledTaskViewModel> UnscheduledTasks { get; set; } = new();
         public List<EmployeeViewModel> Employees { get; set; } = new();
     }
 
     public class WeekRowViewModel
     {
+        public int WeekNumber { get; set; }
         public List<CalendarCellViewModel> Days { get; set; } = new();
-    }
+    } 
 
     public class CalendarCellViewModel
     {
@@ -32,6 +37,9 @@
         public int OrderId { get; set; }
         public int HatId { get; set; }
 
+        public int? ActivityId { get; set; }
+        public string EventType { get; set; } = "Order";
+
         public string Title { get; set; } = "";
         public string HatName { get; set; } = "";
 
@@ -41,6 +49,9 @@
         public string EmployeeName { get; set; } = "";
         public int Amount { get; set; }
         public DateTime? PrelDeliveryDate { get; set; }
+
+        public string ViewMode { get; set; } = "month";
+        public TimeSpan? Time { get; set; }
     }
 
     public class UnscheduledTaskViewModel

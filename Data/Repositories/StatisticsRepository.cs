@@ -8,19 +8,43 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
     {
 
         private readonly ApplicationDbContext _db;
-        private readonly HatOrderRepository _hatOrderRepository;
-
-        public StatisticsRepository(ApplicationDbContext db, HatOrderRepository hatOrderRepository)
+        public StatisticsRepository(ApplicationDbContext db)
         {
             _db = db;
-            _hatOrderRepository = hatOrderRepository;
         }
 
-        public async Task<int> getAmoutTotalSoldHats()
+        public async Task<int> getAmoutTotalSoldHats(string period)
         {
+            DateTime now = DateTime.Now;
+            DateTime limit = now;
+
+            if (period == "month")
+            {
+                // Första dagen i innevarande månad
+                limit = new DateTime(now.Year, now.Month, 1);
+            }
+            else if (period == "quarter")
+            {
+                // Räknar ut startmånaden för kvartalet (1, 4, 7 eller 10)
+                int quarterStartMonth = ((now.Month - 1) / 3) * 3 + 1;
+                limit = new DateTime(now.Year, quarterStartMonth, 1);
+            }
+            else if (period == "year")
+            {
+                // Första dagen på året
+                limit = new DateTime(now.Year, 1, 1);
+            }
+
             var totalSoldHats = await _db.HatOrders
-                .Where(ho => ho.Status == "Skickad")
-                .ToListAsync();
+                    .Where(ho => ho.Status == "Skickad")
+                    .ToListAsync(); ;
+            
+            if (period != "all")
+            {
+                totalSoldHats = totalSoldHats
+                    .Where(ho => ho.Date >= limit)
+                    .ToList();
+            }
 
             var includeAllTotalSoldHats = 0;
 
@@ -31,13 +55,42 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             return includeAllTotalSoldHats;
         }
 
-        public async Task<int> getTotalRevenue()
+        public async Task<int> getTotalRevenue(string period = "all")
         {
             var totalRevenue = await _db.HatOrders
                 .Where(ho => ho.Status == "Skickad")
                 .Include(ho => ho.Hat)
                 .ToListAsync();
-            int totalRevenueAmount = (int)totalRevenue.Sum(ho => ho.Hat.Price * ho.Amount);
+
+            DateTime now = DateTime.Now;
+            DateTime limit = now;
+
+            if (period == "month")
+            {
+                // Första dagen i innevarande månad
+                limit = new DateTime(now.Year, now.Month, 1);
+            }
+            else if (period == "quarter")
+            {
+                // Räknar ut startmånaden för kvartalet (1, 4, 7 eller 10)
+                int quarterStartMonth = ((now.Month - 1) / 3) * 3 + 1;
+                limit = new DateTime(now.Year, quarterStartMonth, 1);
+            }
+            else if (period == "year")
+            {
+                // Första dagen på året
+                limit = new DateTime(now.Year, 1, 1);
+            }
+
+            int totalRevenueAmount = 0;
+            
+            if (period != "all")
+            {
+                totalRevenueAmount = (int)totalRevenue.Where(tr => tr.Date >= limit).Sum(ho => ho.Hat.Price * ho.Amount);
+            }else
+            {
+                totalRevenueAmount = (int)totalRevenue.Sum(ho => ho.Hat.Price * ho.Amount);
+            }
 
             return totalRevenueAmount;
 
@@ -50,10 +103,36 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<HatOrder>> GetAllHatOrdersAsync()
+        public async Task<List<HatOrder>> GetAllHatOrdersAsync(string period)
         {
-            return await _db.HatOrders
-               .ToListAsync();
+            DateTime now = DateTime.Now;
+            DateTime limit = now;
+
+            if (period == "month")
+            {
+                // Första dagen i innevarande månad
+                limit = new DateTime(now.Year, now.Month, 1);
+            }
+            else if (period == "quarter")
+            {
+                // Räknar ut startmånaden för kvartalet (1, 4, 7 eller 10)
+                int quarterStartMonth = ((now.Month - 1) / 3) * 3 + 1;
+                limit = new DateTime(now.Year, quarterStartMonth, 1);
+            }
+            else if (period == "year")
+            {
+                // Första dagen på året
+                limit = new DateTime(now.Year, 1, 1);
+            }
+
+            if (period != "all")
+            {
+                return await _db.HatOrders
+                    .Where(ho => ho.Date >= limit)
+                    .ToListAsync();
+            }
+
+            return await _db.HatOrders.ToListAsync();
         }
 
     }

@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.CustomActivity
 
+<link rel="stylesheet" href="~/css/CustomActivityView.css" asp-append-version="true" />
+
+
 @{
     ViewData["Title"] = "Arbetsuppgift";
 
@@ -21,7 +24,7 @@
                         <dd class="col-sm-8">@Model.Name</dd>
 
                         <dt class="col-sm-4">Datum</dt>
-                        <dd class="col-sm-8">@Model.Date.ToString("yyyy-MM-dd")</dd>
+                        <dd class="col-sm-8">@Model.Date</dd>
 
                         <dt class="col-sm-4">Tilldelad</dt>
                         <dd class="col-sm-8">@Model.Employee?.Name</dd>

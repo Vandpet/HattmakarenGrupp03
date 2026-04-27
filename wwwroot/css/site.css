@@ -112,13 +112,6 @@ button {
     }
 }
 
-
-/* Färg för Badge i orderöversikten */
-.bg-skickad {
-    background-color: #E9D5EA;
-
-}
-
 /* ===== SCHEMA / KALENDER ===== */
 
 .schedule-header {
@@ -242,7 +235,7 @@ button {
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: 50px repeat(7, minmax(0,1fr));
     gap: 6px;
 }
 
@@ -252,6 +245,18 @@ button {
     color: #666;
     padding: 4px 0 8px 0;
     font-size: 0.9rem;
+
+    .week-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        min-height: auto;
+    }
 }
 
 .calendar-cell {
@@ -378,6 +383,40 @@ button {
     cursor: pointer;
 }
 
+.sidebar-top {
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+/* The small placement beside the menu button when collapsed */
+.unread-collapsed {
+    display: none;
+    position: absolute;
+    top: 8px;
+    left: 0.25px;
+    z-index: 10;
+    /* tweak visual size if the component outputs link + badge */
+}
+
+/* Default: hide the in-menu placement when collapsed */
+.unread-in-menu {
+    display: none;
+}
+
+/* When the sidebar is collapsed (no .expanded) show the collapsed placement */
+.sidebar:not(.expanded) .unread-collapsed {
+    display: block;
+}
+
+/* When the sidebar is expanded, hide the collapsed placement and show the menu placement */
+.sidebar.expanded .unread-collapsed {
+    display: none;
+}
+
+.sidebar.expanded .unread-in-menu {
+    display: list-item;
+}
+
 @media (max-width: 1100px) {
     .schedule-layout {
         grid-template-columns: 1fr;
@@ -417,5 +456,155 @@ button {
     background-color: #73147A;
     color: #333;
     font-weight: bold;
+}
 
+/* Färg för Badge i orderöversikten */
+.bg-rosa {
+    background-color: #E9D5EA;
+}
+
+.bg-ljuslila {
+    background-color: #AF75B2;
+}
+
+.bg-lila {
+    background-color: #73147A;
+}
+
+.btn.rosa.fw-bold{
+    margin: 0rem;
+}
+
+/*css för statistiksidan*/
+
+.stats-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.stats-card {
+    flex: 1;
+    min-width: 200px;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.stats-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.stats-value {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+    .custom-table thead th {
+        background-color: transparent;
+        border-bottom: 2px solid #E9D5EA;
+        color: #666;
+        padding: 12px;
+        font-weight: 600;
+    }
+
+    .custom-table tbody tr {
+        background-color: #fff;
+        transition: transform 0.2s;
+    }
+
+        .custom-table tbody tr:hover {
+            background-color: #fcf8fd;
+            transform: scale(1.005);
+        }
+
+    .custom-table td {
+        padding: 15px 12px;
+        vertical-align: middle;
+        border-top: 1px solid #eee;
+    }
+
+.text-purple {
+    color: #73147A;
+}
+
+/* -- Layout för Dagvyn -- */
+/* -- Inbyggd scroll för både Vecko- och Dagvyn -- */
+.calendar-grid.view-week .calendar-cell,
+.calendar-grid.view-day .calendar-cell {
+    height: 55vh;
+    overflow-y: auto;
+}
+
+.calendar-grid.view-day {
+    display: grid;
+    grid-template-columns: 1fr; 
+
+    width: 95%;
+    max-width: 1000px; 
+    margin: 0 auto;
+}
+
+.calendar-grid.view-day .weekday {
+    text-align: center;
+    font-size: 1.3rem;
+    padding: 10px;
+}
+
+/*HatCards*/
+/*Trunkerar text över tre rader långa*/
+/*.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}*/
+
+/*Denna scale:ar gridden*/
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 16px;
+}
+
+.hat-img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+    max-width: 100%;
+}
+
+.truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+}
+.home-today-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 900px) {
+    .home-today-grid {
+        grid-template-columns: 1fr;
+    }
 }

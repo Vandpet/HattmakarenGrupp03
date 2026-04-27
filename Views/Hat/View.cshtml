@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.HatViewViewModel
 
+<link rel="stylesheet" href="~/css/ViewHatMobile.css" asp-append-version="true" />
+
+
 <div class="container mt-5">
 	<div class="row justify-content-center">
 		<div class="col-md-8 col-lg-7">
@@ -36,13 +39,15 @@
 							}
 							else
 							{
-								<a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#imageModal"
-								   data-img="@Model.Hat?.PicturePath"> Visa Bild</a>
-
-                                <img src="@Model.Hat?.PicturePath" alt="@Model.Hat?.Name" class="img-fluid" style="max-height:200px;" />     // Förhandsvisning av bilden direkt istället för knapp
-							
+								   <img src="@Model.Hat?.PicturePath" alt="@Model.Hat?.Name" class="img-fluid" style="max-height:200px;" />
 							}
 						</dd>
+
+						<dt class="col-sm-4">KN-Number</dt>
+						<dd class="col-sm-8">@Model.Hat.KN_Number</dd>
+
+						<dt class="col-sm-4">KN-Description</dt>
+						<dd class="col-sm-8">@Model.Hat.KN_Description</dd>
 
 						<dt class="col-sm-4">Beskrivning</dt>
 						<dd class="col-sm-8">@Model.Hat.Description</dd>
@@ -51,7 +56,7 @@
 					</dl>
 
 					<div class="d-flex gap-2">
-						<a asp-controller="Order" asp-action="Details" asp-route-oId="@Model.PreviousOrder.OId" class="btn rosa fw-bold m-0">Tillbaka</a>
+						<a asp-controller="Order" asp-action="Details" asp-route-oId="@Model.PreviousOrder.OId" class="btn rosa fw-bold" style="margin: 0 0.5rem 1rem 0;">Tillbaka</a>
 						@if (Model.HatOrder.Status == "Skickad" && 
 						(Model.PreviousOrder.Status == "Skickad" || Model.PreviousOrder.Status == "Delvis Returnerad"))
 						{

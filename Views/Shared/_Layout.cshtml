@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HattmakarenWebbAppGrupp03.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/SharedLayoutMobile.css" asp-append-version="true" />
+
 </head>
 <body>
  
@@ -19,10 +21,21 @@
 
     @if (isLoggedIn){
 
+    <button class="button meny-btn" id="menuToggleMobile">
+        ☰
+    </button>
+
     <div id="sidebar" class="sidebar">
-        <button class="button meny-btn" id="menuToggle">
-            ☰
-        </button>
+        <div class="sidebar-top">
+            <button class="button meny-btn" id="menuToggle">
+                ☰
+            </button>
+
+            <div class="unread-collapsed">
+                @* Shown only when sidebar is collapsed *@
+                @await Component.InvokeAsync("UnreadMessages")
+            </div>
+        </div>
 
         <ul class="nav flex-column">
 
@@ -59,6 +72,12 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="Statistics" asp-action="Index">
+                    <span class="menu-text">Statistics</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Schedule" asp-action="Index">
                     <span class="menu-text">Schema</span>
                 </a>
@@ -85,6 +104,22 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                           asp-controller="Email"
+                           asp-action="Index">
+                        <span class="menu-text">Mail Inbox</span>
+                    </a>
+                </li>
+
+
+                
+                    <li class="nav-item unread-in-menu">
+                        @* Shown only when sidebar is expanded *@
+                        @await Component.InvokeAsync("UnreadMessages")
+                    </li>
+              
+
             <li class="nav-item">
                 <a asp-controller="Auth" asp-action="Logout" class="nav-link text-white">
                     <span class="menu-text">Logga ut</span>
@@ -107,11 +142,6 @@
     </div>
 
     }
-
-
-
-
-
     <div id="content" class="container">
         <main role="main" class="pb-3">
             @RenderBody()

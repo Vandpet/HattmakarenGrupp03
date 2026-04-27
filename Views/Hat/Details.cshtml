@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.Hat
 
+<link rel="stylesheet" href="~/css/DetailsHatMobile.css" asp-append-version="true" />
+
+
 @{
     ViewData["Title"] = "Visa hatt";
 }
@@ -8,7 +11,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header ljuslila">
                     <h3 class="mb-0">@Model.Name</h3>
                 </div>
 
@@ -35,6 +38,12 @@
 
                         <dt class="col-sm-4">Standard</dt>
                         <dd class="col-sm-8">@(Model.StandardHat ? "Ja" : "Nej")</dd>
+
+                        <dt class="col-sm-4">KN-Number</dt>
+                        <dd class="col-sm-8">@Model.KN_Number</dd>
+
+                        <dt class="col-sm-4">KN-Description</dt>
+                        <dd class="col-sm-8">@Model.KN_Description</dd>
 
                         <dt class="col-sm-4">Beskrivning</dt>
                         <dd class="col-sm-8">@Model.Description</dd>
@@ -64,9 +73,8 @@
 
                     </dl>
                     <div class="mt-3">
-                        <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
-                        <a asp-action="Edit" asp-route-id="@Model.HId" class="btn btn-primary">Redigera</a>
-                        <a asp-action="Delete" asp-route-id="@Model.HId" class="btn btn-danger">Ta bort</a>
+                        <a asp-action="Index" class="btn rosa fw-bold">Tillbaka</a>
+                        <a asp-action="Edit" asp-route-id="@Model.HId" class="btn rosa fw-bold">Redigera</a>
                     </div>
                 </div>
             </div>

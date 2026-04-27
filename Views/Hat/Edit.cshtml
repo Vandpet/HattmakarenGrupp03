@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.Hat
 
+<link rel="stylesheet" href="~/css/EditHatMobile.css" asp-append-version="true" />
+
+
 @{
     ViewData["Title"] = "Redigera hatt";
     int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");

@@ -30,6 +30,19 @@
         </div>
 
         <div class="form-group mb-3">
+            <label for="SelectedKN">Välj ett KN-Nummer</label>
+
+            <select asp-for="SelectedKN" class="form-control">
+                <option value="">-- Välj KN-nummer --</option>
+                @foreach (var item in Model.KN_options)
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+            <span asp-validation-for="SelectedKN" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
             <label asp-for="Description">Beskrivning</label>
             <textarea asp-for="Description" class="form-control" rows="3"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
@@ -60,8 +73,8 @@
 
     <!-- KNAPPAR -->
     <div class="form-group">
-        <button type="submit" class="btn btn-primary" id="saveCustomHatBtn">Spara hatt</button>
-        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Avbryt</a>
+        <button type="submit" class="btn rosa fw-bold" id="saveCustomHatBtn">Spara hatt</button>
+        <a asp-action="Index" asp-controller="Hat" class="btn rosa fw-bold">Avbryt</a>
     </div>
 
 </form>
