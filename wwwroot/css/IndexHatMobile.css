@@ -97,6 +97,23 @@
         font-size: 0.9rem;
         min-height: 45px;
     }
+    /* 5. HAT GRID - låst kortbredd */
+    #hatGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 280px);
+        gap: 16px;
+        justify-content: center;
+        align-items: start;
+    }
+
+    #hatGrid .grid-item {
+            width: 280px;
+            max-width: 280px;
+            min-width: 280px;
+            height: 500px;
+            min-height: 500px;
+            max-height: 500px;
+        }
 
         /* Specialhantering för bild */
         td img {
@@ -163,4 +180,22 @@
             align-items: flex-start;
             text-align: left;
         }
+
 }
+
+#hatGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    gap: 20px;
+    justify-content: center;
+    align-items: start;
+}
+
+    #hatGrid .grid-item {
+        width: 300px !important;
+        max-width: 300px !important;
+        min-width: 300px !important;
+        height: 570px;
+        min-height: 570px;
+        max-height: 570px;
+    }

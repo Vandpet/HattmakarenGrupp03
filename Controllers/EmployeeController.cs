@@ -69,6 +69,18 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             return View();
         }
+        private bool IsValidPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return false;
+            }
+
+            bool hasUpperCase = password.Any(char.IsUpper);
+            bool hasSpecialCharacter = password.Any(ch => !char.IsLetterOrDigit(ch));
+
+            return hasUpperCase && hasSpecialCharacter;
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -83,6 +95,13 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             if (!ModelState.IsValid)
             {
+
+                return View(model);
+            }
+
+            if (!IsValidPassword(model.Password))
+            {
+                ModelState.AddModelError("Password", "Lösenordet måste innehålla minst en stor bokstav och ett specialtecken.");
                 return View(model);
             }
 
@@ -210,6 +229,12 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             if (!string.IsNullOrWhiteSpace(model.NewPassword))
             {
+                if (!IsValidPassword(model.NewPassword))
+                {
+                    ModelState.AddModelError("NewPassword", "Lösenordet måste innehålla minst en stor bokstav och ett specialtecken.");
+                    return View(model);
+                }
+
                 employee.PasswordHash = _passwordHasher.HashPassword(employee, model.NewPassword);
             }
 
@@ -301,6 +326,12 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             if (!ModelState.IsValid)
             {
+                return View(model);
+            }
+
+            if (!IsValidPassword(model.Password))
+            {
+                ModelState.AddModelError("Password", "Lösenordet måste innehålla minst en stor bokstav och ett specialtecken.");
                 return View(model);
             }
 
