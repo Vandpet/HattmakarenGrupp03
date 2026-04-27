@@ -1,0 +1,95 @@
+﻿/* =========================
+   ORDER INDEX - MOBILE FIX
+   ========================= */
+
+@media (max-width: 768px) {
+
+    #content {
+        margin-left: 0px !important;
+    }
+
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* ===== CONTENT WRAPPER ===== */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* ===== HEADER ===== */
+    .d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    /* ===== FILTER BUTTONS ===== */
+    form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+        form label.btn {
+            flex: 1 1 48%;
+            font-size: 0.85rem;
+            padding: 10px;
+            text-align: center !important;
+            white-space: normal;
+        }
+
+    /* ===== TABLE WRAPPER (VIKTIG DEL) ===== */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+        /* hindrar layout från att tryckas ihop */
+        table thead,
+        table tbody,
+        table tr {
+            width: 100%;
+        }
+
+        table th,
+        table td {
+            white-space: nowrap;
+            font-size: 0.8rem;
+            padding: 6px 8px;
+        }
+
+    /* gör tabellen mer kompakt */
+    table {
+       /* min-width: 900px;*/ /* scroll istället för squish */
+    }
+
+    /* ===== BADGES ===== */
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    /* ===== KNAPPGRUPP ===== */
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+        .btn-group .btn {
+            width: 100%;
+        }
+
+    /* ===== CREATE BUTTON ===== */
+    .btn-success {
+        width: 100%;
+        min-height: 44px;
+    }
+}

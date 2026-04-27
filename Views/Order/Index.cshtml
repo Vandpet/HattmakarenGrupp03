@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Order>
+
+<link rel="stylesheet" href="~/css/OrderIndexMobile.css" asp-append-version="true" />
+@*Lade också till <div class="table-responsive"></div> på tabellen*@
+
 @{
 	var selected = ViewBag.Filter as string;
 }
@@ -44,6 +48,7 @@
 
 </div>
 
+<div class="table-responsive">
 <table class="table table-hover">
     <thead class="thead-dark">
         <tr>
@@ -94,6 +99,7 @@
         }
     </tbody>
 </table>
+</div>
 
 @if (!Model.Any())
 {

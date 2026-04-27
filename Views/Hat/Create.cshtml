@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.HatCreateViewModel
 
+<link rel="stylesheet" href="~/css/CreateHatMobile.css" asp-append-version="true" />
+
+
 @{
     bool isEdit = ViewBag.IsEdit == true;
     ViewData["Title"] = isEdit ? "Edit Hat" : "Create Hat";
@@ -160,8 +163,8 @@
 
     <!-- BUTTONS -->
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Save Hat</button>
-        <a asp-action="Index" asp-controller="Hat" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn rosa fw-bold">Save Hat</button>
+        <a asp-action="Index" asp-controller="Hat" class="btn rosa fw-bold">Cancel</a>
     </div>
 
 </form>

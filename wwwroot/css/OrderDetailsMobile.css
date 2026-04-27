@@ -1,0 +1,144 @@
+﻿/* =========================
+   ORDER DETAILS - MOBILE
+   ========================= */
+
+@media (max-width: 768px) {
+
+    #content {
+        margin-left: 0px;
+    }
+
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* ===== TOP HEADER ===== */
+    .d-flex.justify-content-between.align-items-center.my-4 {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+
+        .d-flex.justify-content-between.align-items-center.my-4 > div {
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    /* top action buttons */
+    .d-flex.gap-2 {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* ===== ORDER CARD ===== */
+    .card {
+        width: 100% !important;
+        border-radius: 1rem !important;
+    }
+
+    .card-header,
+    .card-body,
+    .card-footer {
+        padding: 12px !important;
+    }
+
+        /* split columns stack */
+        .card-header .row {
+            flex-direction: column;
+        }
+
+        .card-header .col-md-6 {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+    /* price section */
+    .card-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .card-footer > div {
+            width: 100%;
+        }
+
+    /* ===== ORDER CONTENT HEADER ===== */
+    .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+
+        /* button group under order content */
+        .d-flex.justify-content-between.align-items-center > div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+    /* ===== TABLE SCROLL FIX ===== */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+        min-width: 700px;
+    }
+
+        .table th,
+        .table td {
+            white-space: nowrap;
+            font-size: 0.85rem;
+            padding: 6px 8px;
+        }
+
+    /* clickable rows still work */
+    table tr {
+        font-size: 0.9rem;
+    }
+
+    /* ===== BADGES ===== */
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    /* ===== MODALS ===== */
+    .modal-dialog {
+        margin: 10px;
+    }
+
+    .modal-content {
+        border-radius: 1rem;
+    }
+
+    /* ===== TEXT ===== */
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    h5 {
+        font-size: 1.1rem;
+    }
+
+    /* ===== IMAGE BUTTON ===== */
+    .btn.btn-sm {
+        width: auto;
+        min-height: auto;
+    }
+
+    /* ===== EXTRA SAFETY ===== */
+    body {
+        overflow-x: hidden;
+    }
+}

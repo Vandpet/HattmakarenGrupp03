@@ -1,4 +1,5 @@
 ﻿@model HattmakarenWebbAppGrupp03.ViewModels.Messages.ConversationThreadViewModel
+<link rel="stylesheet" href="~/css/MessagesThreadMobile.css" asp-append-version="true" />
 
 @{
     ViewData["Title"] = "Conversation";
@@ -28,7 +29,7 @@
         {
             @foreach (var message in Model.Messages)
             {
-                <!-- Meddelandebubblor: egna högerställda, andras vänsterställda -->
+                <!-- Message bubbles: mine right-aligned, others left-aligned -->
                 <div class="d-flex mb-3 @(message.IsMine ? "justify-content-end" : "justify-content-start")">
                     @if (!message.IsMine)
                     {
@@ -60,8 +61,8 @@
             <input type="hidden" name="conversationId" value="@Model.ConversationId" />
 
             <div class="mb-3">
-                <label for="newMessageContent" class="form-label">Svara</label>
-                <textarea name="newMessageContent" id="newMessageContent" class="form-control" rows="4" placeholder="Skriv ett meddelande..."></textarea>
+                <label for="newMessageContent" class="form-label">Reply</label>
+                <textarea name="newMessageContent" id="newMessageContent" class="form-control" rows="4" placeholder="Write a message..."></textarea>
             </div>
 
             <div class="d-flex gap-2">

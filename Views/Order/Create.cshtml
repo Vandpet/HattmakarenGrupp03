@@ -1,5 +1,9 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.CreateOrderViewModel
 
+<link rel="stylesheet" href="~/css/OrderCreateMobile.css" asp-append-version="true" />
+@* Lade också till <dv class="table-responsive"></dv> på både standardhattabellen och specialhattabellen
+ *@
+
 <h2>Skapa ny order (Lagerförda modeller)</h2>
 
 <form asp-action="Create" method="post">
@@ -18,6 +22,7 @@
 		<div asp-validation-summary="ModelOnly"></div>
 	</div>
 
+	<div class="table-responsive">
 	<table class="table">
 		<thead>
 			<tr>
@@ -45,8 +50,10 @@
 			}
 		</tbody>
 	</table>
+	</div>
 
 	<h4>Specialbeställda hattar</h4>
+	<div class="table-responsive">
 	<table class="table" id="customHatsTable">
 		<thead>
 			<tr>
@@ -59,6 +66,7 @@
 		<tbody>
 		</tbody>
 	</table>
+	</div>
 
 
 	<div>

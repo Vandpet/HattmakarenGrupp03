@@ -91,6 +91,15 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                           asp-controller="Email"
+                           asp-action="Index">
+                        <span class="menu-text">Mail Inbox</span>
+                    </a>
+                </li>
+
+
                 
                     <li class="nav-item">
                         @await Component.InvokeAsync("UnreadMessages")

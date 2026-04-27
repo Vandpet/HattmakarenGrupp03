@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.Employee
 
+<link rel="stylesheet" href="~/css/EmployeeDeleteMobile.css" asp-append-version="true" />
+
+
 @{
     ViewData["Title"] = "Ta bort användare";
 }
@@ -46,8 +49,8 @@
 
                     <form asp-action="Delete" method="post">
                         <input type="hidden" name="id" value="@Model.EId" />
-                        <button type="submit" class="btn btn-danger">Ja, ta bort</button>
-                        <a asp-action="Index" class="btn btn-outline-secondary">Avbryt</a>
+                        <button type="submit" class="btn btn-danger m-0">Ja, ta bort</button>
+                        <a asp-action="Index" class="btn rosa fw-bold">Avbryt</a>
                     </form>
                 </div>
             </div>

@@ -1,0 +1,163 @@
+﻿/* ==========================================
+   CUSTOMER INDEX - MOBILE CARD VIEW
+   ========================================== */
+
+@media (max-width: 768px) {
+    /* 1. RESET & SIDEBAR HIDE */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100%;
+    }
+
+    /* Göm sidebaren utanför skärmen */
+    #sidebar, .sidebar, nav.flex-column {
+        position: fixed !important;
+        left: -250px !important;
+        z-index: 9999;
+        transition: 0.3s;
+    }
+
+    #content, .main-content, main {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    /* 2. HEADER & KNAPP */
+    .container.mt-5 {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        margin-top: 20px !important;
+    }
+
+    .d-flex.justify-content-between {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 15px;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 1.5rem;
+    }
+
+    .btn-success {
+        width: 100%;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 3. GÖR OM TABELL TILL KORT */
+    .card {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .card-body {
+        padding: 0 !important;
+    }
+
+    table, thead, tbody, th, td, tr {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* Dölj tabellens rubrikrad */
+    thead {
+        display: none;
+    }
+
+    /* Varje kundrad blir ett vitt kort */
+    tr {
+        background: #fff;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border: 1px solid #eee;
+    }
+
+    /* Styla cellerna */
+    td {
+        border: none !important;
+        padding: 8px 5px !important;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px dashed #eee !important;
+        font-size: 0.9rem;
+    }
+
+        /* Ta bort sista bordern och justera åtgärdsknappar */
+        td:last-child {
+            border-bottom: none !important;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Lägg till etiketter för vad varje värde är */
+        td:nth-of-type(1):before {
+            content: "ID:";
+            font-weight: bold;
+            color: #8e44ad;
+        }
+
+        td:nth-of-type(2):before {
+            content: "Namn:";
+            font-weight: bold;
+            color: #8e44ad;
+        }
+
+        td:nth-of-type(3):before {
+            content: "Adress:";
+            font-weight: bold;
+            color: #8e44ad;
+        }
+
+        td:nth-of-type(4):before {
+            content: "Telefon:";
+            font-weight: bold;
+            color: #8e44ad;
+        }
+
+        td:nth-of-type(5):before {
+            content: "E-post:";
+            font-weight: bold;
+            color: #8e44ad;
+        }
+
+        td:nth-of-type(6):before {
+            content: "Land:";
+            font-weight: bold;
+            color: #8e44ad;
+        }
+
+        td:nth-of-type(7):before {
+            content: "Stad:";
+            font-weight: bold;
+            color: #8e44ad;
+        }
+
+        td:nth-of-type(8):before {
+            content: "Språk:";
+            font-weight: bold;
+            color: #8e44ad;
+        }
+
+    /* Knappar för Åtgärder */
+    .gap-2 {
+        width: 100%;
+        flex-direction: row; /* Behåller knappar bredvid varandra på samma rad */
+        justify-content: space-around;
+    }
+
+    .btn-sm {
+        flex: 1;
+        padding: 10px 5px;
+        font-size: 0.8rem;
+    }
+}

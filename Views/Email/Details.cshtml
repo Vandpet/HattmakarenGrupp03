@@ -1,0 +1,37 @@
+﻿@model HattmakarenWebbAppGrupp03.Models.Email
+
+<link rel="stylesheet" href="~/css/EmailDetailsMobile.css" asp-append-version="true" />
+
+
+@{
+    ViewData["Title"] = "Email Details";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm" style="border-left: 5px solid #8e44ad;">
+        <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 style="color: #8e44ad;">@Model.Subject</h2>
+                <span class="badge" style="background-color: #f8bbd0; color: #ad1457;">
+                    @Model.ReceivedDate.ToString("yyyy-MM-dd HH:mm")
+                </span>
+            </div>
+            <p class="text-muted mb-0"><strong>From:</strong> @Model.SenderEmail</p>
+        </div>
+        <div class="card-body" style="background-color: #fffafb; min-height: 300px; white-space: pre-wrap;">
+            @Model.Body
+        </div>
+        <div class="card-footer bg-white text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+        
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+    }
+</style>
