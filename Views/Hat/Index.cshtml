@@ -90,6 +90,9 @@
                 </div>
 </div>
 
+        }
+    </div>
+
 @section Scripts {
     <script>
             function normalizeText(text) {
@@ -111,11 +114,11 @@
                     const matchesSearch = cardText.includes(searchValue);
                     const matchesStandardFilter = showSpecial || isStandard;
 
-        if (matchesSearch && matchesStandardFilter) {
-                card.classList.remove("d-none");
-            } else {
-                card.classList.add("d-none");
-            }
+                    if (matchesSearch && matchesStandardFilter) {
+                        card.classList.remove("d-none");
+                            } else {
+                        card.classList.add("d-none");
+                    }
                 });
             }
 
