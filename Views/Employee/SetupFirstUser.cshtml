@@ -9,60 +9,60 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow">
                 <div class="card-header ljuslila">
-                    <h3 class="mb-0">Skapa första användaren</h3>
+                    <h3 class="mb-0">Create first user</h3>
                 </div>
 
                 <div class="card-body">
                     <p class="text-muted">
-                        Ingen användare finns i databasen ännu. Skapa första användaren här.
+                        No users exist in the database yet. Create the first user here.
                     </p>
 
                     <form asp-action="SetupFirstUser" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="mb-3">
-                            <label asp-for="Name" class="form-label">Namn</label>
+                            <label asp-for="Name" class="form-label">Name</label>
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Adress" class="form-label">Adress</label>
+                            <label asp-for="Adress" class="form-label">Address</label>
                             <input asp-for="Adress" class="form-control" />
                             <span asp-validation-for="Adress" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="PhoneNr" class="form-label">Telefonnummer</label>
+                            <label asp-for="PhoneNr" class="form-label">Phone Number</label>
                             <input asp-for="PhoneNr" class="form-control" />
                             <span asp-validation-for="PhoneNr" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label">E-post</label>
+                            <label asp-for="Email" class="form-label">Email</label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="accesslevel" class="form-label">Accessnivå</label>
+                            <label asp-for="accesslevel" class="form-label">Access Level</label>
                             <input asp-for="accesslevel" class="form-control" value="10" />
                             <span asp-validation-for="accesslevel" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Username" class="form-label">Användarnamn</label>
+                            <label asp-for="Username" class="form-label">Username</label>
                             <input asp-for="Username" class="form-control" />
                             <span asp-validation-for="Username" class="text-danger"></span>
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="Password" class="form-label">Lösenord</label>
+                            <label asp-for="Password" class="form-label">Password</label>
                             <input asp-for="Password" class="form-control" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
-                        <button type="submit" class="btn rosa w-100">Skapa första användaren</button>
+                        <button type="submit" class="btn rosa w-100">Create first user</button>
                     </form>
                 </div>
             </div>

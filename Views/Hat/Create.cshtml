@@ -23,9 +23,9 @@
         <input asp-for="HId" type="hidden" />
         }
 
-        <div class="form-group form-check mb-3">
-            <input asp-for="StandardHat" class="form-check-input" type="checkbox" />
-            <label asp-for="StandardHat" class="form-check-label">Standard model</label>
+        <div class="d-flex align-items-center gap-2 px-3 py-1 bg-rosa form-switch mb-3" style="width: fit-content; border-radius: 1rem;">
+            <input asp-for="StandardHat" class="form-check-input m-0" type="checkbox" />
+            <label asp-for="StandardHat" class="mb-0">Standard model</label>
         </div>
 
         <div class="form-group mb-3">
@@ -85,10 +85,10 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="SelectedKN">Välj ett KN-Nummer</label>
+            <label for="SelectedKN">Choose KN-Nummer</label>
 
             <select asp-for="SelectedKN" class="form-control">
-                <option value="">-- Välj KN-nummer --</option>
+                <option value="">-- Choose KN-number --</option>
                 @foreach (var item in Model.KN_options)
                 {
                     <option value="@item">@item</option>
@@ -98,7 +98,7 @@
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Description">Beskrivning</label>
+            <label asp-for="Description">Description</label>
             <textarea asp-for="Description" class="form-control" rows="3"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>

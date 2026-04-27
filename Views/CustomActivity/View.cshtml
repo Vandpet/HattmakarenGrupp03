@@ -15,32 +15,32 @@
         <div class="col-md-8 col-lg-7">
             <div class="card shadow">
                 <div class="card-header ljuslila">
-                    <h3 class="mb-0">Arbetsuppgift</h3>
+                    <h3 class="mb-0">Task</h3>
                 </div>
 
                 <div class="card-body">
                     <dl class="row">
-                        <dt class="col-sm-4">Namn</dt>
+                        <dt class="col-sm-4">Name</dt>
                         <dd class="col-sm-8">@Model.Name</dd>
 
-                        <dt class="col-sm-4">Datum</dt>
-                        <dd class="col-sm-8">@Model.Date</dd>
+                        <dt class="col-sm-4">Date</dt>
+                        <dd class="col-sm-8">@(Model.Date?.ToString("yyyy-MM-dd") ?? "")</dd>
 
-                        <dt class="col-sm-4">Tilldelad</dt>
+                        <dt class="col-sm-4">Assigned to</dt>
                         <dd class="col-sm-8">@Model.Employee?.Name</dd>
 
-                        <dt class="col-sm-4">Beskrivning</dt>
+                        <dt class="col-sm-4">Description</dt>
                         <dd class="col-sm-8">@Model.Description</dd>
 
                         @if (isAdmin)
                         {
-                            <dt class="col-sm-4">Anställd-ID</dt>
+                            <dt class="col-sm-4">Employee-ID</dt>
                             <dd class="col-sm-8">@Model.EId</dd>
                         }
                     </dl>
 
                     <div class="d-flex gap-2">
-                        <a asp-action="Index" class="btn rosa fw-bold m-0">Tillbaka</a>
+                        <a asp-action="Index" class="btn rosa fw-bold m-0">Back</a>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow">
                 <div class="card-header ljuslila">
-                    <h3 class="mb-0">Redigera användare</h3>
+                    <h3 class="mb-0">Edit user</h3>
                 </div>
 
                 <div class="card-body">
@@ -24,25 +24,25 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="mb-3">
-                            <label asp-for="Name" class="form-label">Namn</label>
+                            <label asp-for="Name" class="form-label">Name</label>
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Adress" class="form-label">Adress</label>
+                            <label asp-for="Adress" class="form-label">Address</label>
                             <input asp-for="Adress" class="form-control" />
                             <span asp-validation-for="Adress" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="PhoneNr" class="form-label">Telefonnummer</label>
+                            <label asp-for="PhoneNr" class="form-label">Phone Number</label>
                             <input asp-for="PhoneNr" class="form-control" />
                             <span asp-validation-for="PhoneNr" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label">E-post</label>
+                            <label asp-for="Email" class="form-label">Email</label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
@@ -50,28 +50,28 @@
                         @if (isAdmin)
                         {
                             <div class="mb-3">
-                                <label asp-for="accesslevel" class="form-label">Accessnivå</label>
+                                <label asp-for="accesslevel" class="form-label">Access Level</label>
                                 <input asp-for="accesslevel" class="form-control" />
                                 <span asp-validation-for="accesslevel" class="text-danger"></span>
                             </div>
                         }
 
                         <div class="mb-3">
-                            <label asp-for="Username" class="form-label">Användarnamn</label>
+                            <label asp-for="Username" class="form-label">Username</label>
                             <input asp-for="Username" class="form-control" />
                             <span asp-validation-for="Username" class="text-danger"></span>
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="NewPassword" class="form-label">Nytt lösenord</label>
+                            <label asp-for="NewPassword" class="form-label">New Password</label>
                             <input asp-for="NewPassword" class="form-control" />
                             <span asp-validation-for="NewPassword" class="text-danger"></span>
-                            <div class="form-text">Lämna tomt om lösenordet inte ska ändras.</div>
+                            <div class="form-text">Leave empty if the password shall not be changed.</div>
                         </div>
 
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn rosa fw-bold">Spara ändringar</button>
-                            <a asp-action="Index" class="btn rosa fw-bold">Avbryt</a>
+                            <button type="submit" class="btn rosa fw-bold">Save changes</button>
+                            <a asp-action="Index" class="btn rosa fw-bold">Cancel</a>
                         </div>
                     </form>
                 </div>
