@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HattmakarenWebbAppGrupp03.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HattmakarenWebbAppGrupp03.Models
@@ -34,6 +35,8 @@ namespace HattmakarenWebbAppGrupp03.Models
         // Relationer
         //public ICollection<Hat>? Hats { get; set; }
         public ICollection<OrderOfMaterials>? MaterialOrders { get; set; }
-        public ICollection<HatOrder>? HatOrders { get; set; }
+
+        public ICollection<HatOrder> HatOrders { get; set; } = new List<HatOrder>();
+        //public ICollection<HatOrder>? HatOrders { get; set; }
     }
 }
