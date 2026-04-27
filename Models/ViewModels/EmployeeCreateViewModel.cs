@@ -26,7 +26,7 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 
         [Required]
         [DataType(DataType.Password)]
-        [MinLength(6)]
+        [MinLength(8)]
         public string Password { get; set; } = string.Empty;
     }
 }

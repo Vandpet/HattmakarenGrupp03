@@ -101,7 +101,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             if (!IsValidPassword(model.Password))
             {
-                ModelState.AddModelError("Password", "Lösenordet måste innehålla minst en stor bokstav och ett specialtecken.");
+                ModelState.AddModelError("Password", "Lösenordet måste innehålla minst en stor bokstav, ett specialtecken och vara minst åtta tecken långt.");
                 return View(model);
             }
 
@@ -231,7 +231,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 if (!IsValidPassword(model.NewPassword))
                 {
-                    ModelState.AddModelError("NewPassword", "Lösenordet måste innehålla minst en stor bokstav och ett specialtecken.");
+                    ModelState.AddModelError("NewPassword", "Lösenordet måste innehålla minst en stor bokstav, ett specialtecken och vara minst åtta tecken långt.");
                     return View(model);
                 }
 
@@ -331,7 +331,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             if (!IsValidPassword(model.Password))
             {
-                ModelState.AddModelError("Password", "Lösenordet måste innehålla minst en stor bokstav och ett specialtecken.");
+                ModelState.AddModelError("Password", "Lösenordet måste innehålla minst en stor bokstav, ett specialtecken och vara minst åtta tecken långt.");
                 return View(model);
             }
 
