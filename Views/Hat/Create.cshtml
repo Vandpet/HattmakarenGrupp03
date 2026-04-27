@@ -23,8 +23,9 @@
         <input asp-for="HId" type="hidden" />
         }
 
-        <div class="d-flex align-items-center gap-2 px-3 py-1 bg-rosa form-switch mb-3" style="width: fit-content; border-radius: 1rem;">
-            <input asp-for="StandardHat" class="form-check-input m-0" type="checkbox" />
+        @* CHECKBOX *@
+        <div class="d-flex align-items-center gap-2 px-3 py-1 bg-rosa form-switch mb-3 border-5" style="width: fit-content; border-radius: 1rem;">
+            <input asp-for="StandardHat" class="form-check-input m-0" type="checkbox" id="standardHatToggle"/>
             <label asp-for="StandardHat" class="mb-0">Standard model</label>
         </div>
 
@@ -40,10 +41,31 @@
             <span asp-validation-for="Price" class="text-danger"></span>
         </div>
 
+        @* STORLEK *@
         <div class="form-group mb-3">
-            <label asp-for="Size">Size</label>
-            <input asp-for="Size" class="form-control" />
-            <span asp-validation-for="Size" class="text-danger"></span>
+            <label asp-for="Size">Size
+                <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" data-bs-placement="right"
+                   title="Standard sizes represent the hat’s inner lining length (XS–XL). Custom hats use free text, preferably describing dimensions such as inner circumference, outer width, and height.">
+                </i>
+            </label>
+
+            @* TEXTINPUT *@
+            <input asp-for="Size" id="size-text" class="form-control" />
+
+            @* DROPBOX *@
+            <select asp-for="Size" id="size-select" class="form-control d-none">
+                <option value="">-- Choose Size --</option>
+                @foreach (var item in Model.SizeOptions)
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+
+            <div class="d-flex flex-column"> @* Div här så att de inte ligger inline med varannn *@
+                <small id="size-help" class="text-muted">Standard models have set sizes.</small>
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+
         </div>
 
         <div class="form-group mb-3">
@@ -184,6 +206,8 @@
 </div>
 
 @section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
     <script>
         function addMaterial() {
             const container = document.getElementById("materials-container");
@@ -234,7 +258,42 @@
                 });
             });
         }
-    </script>
 
-    @await Html.PartialAsync("_ValidationScriptsPartial")
+        document.addEventListener("DOMContentLoaded", function () {
+
+            //Sätter igång tooltip:en bredvid Size.
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            .forEach(el => new bootstrap.Tooltip(el));
+
+            const checkbox = document.getElementById("standardHatToggle");
+            const textInput = document.getElementById("size-text");
+            const selectInput = document.getElementById("size-select");
+			const sizeHelp = document.getElementById("size-help");
+
+            function updateSizeField() {
+                if (checkbox.checked) {
+                    selectInput.classList.remove("d-none");
+                    textInput.classList.add("d-none");
+                    sizeHelp.classList.remove("d-none");
+
+					textInput.disabled = true;
+		            selectInput.disabled = false;
+                }
+                else {
+                    textInput.classList.remove("d-none");
+                    selectInput.classList.add("d-none");
+                    sizeHelp.classList.add("d-none");
+
+                    textInput.disabled = false;
+                    selectInput.disabled = true;
+                }
+            }
+
+            // Körs när man kommer in på sidan eftersom checkboxen är förifylld.
+            updateSizeField();
+
+            // Checkboxen kör metoden vid ändring
+            checkbox.addEventListener("change", updateSizeField);
+        });
+    </script>
 }
