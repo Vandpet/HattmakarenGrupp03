@@ -18,7 +18,11 @@
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Size">Size</label>
+            <label asp-for="Size">Size
+				<i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-delay='{"show":0, "hide":0}'
+                   title="Custom hats use free text, preferably describing dimensions such as inner circumference, outer width, and height.">
+                </i>
+            </label>
             <input asp-for="Size" class="form-control" />
             <span asp-validation-for="Size" class="text-danger"></span>
         </div>
@@ -74,7 +78,7 @@
     <!-- KNAPPAR -->
     <div class="form-group">
         <button type="submit" class="btn rosa fw-bold" id="saveCustomHatBtn">Save hat</button>
-        <a asp-action="Index" asp-controller="Hat" class="btn rosa fw-bold">Cancel</a>
+        <button type="button" class="btn rosa fw-bold" data-bs-dismiss="modal">Cancel</button>
     </div>
 
 </form>
@@ -92,4 +96,3 @@
         </button>
     </div>
 </div>
-

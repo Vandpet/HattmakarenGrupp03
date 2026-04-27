@@ -4,130 +4,131 @@
 
 
 @{
-    ViewData["Title"] = "Hats";
-    int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
+	ViewData["Title"] = "Hats";
+	int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
 }
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Hats</h2>
-        <div class="d-flex gap-2">
-            <a asp-controller="Hat" asp-action="Create" class="btn btn-rosa">New Hat</a>
-        </div>
-    </div>
-
-    <div class="card shadow">
-        <div class="card-header ljuslila text-white">
-            <div class="row g-2 align-items-center">
-                <div class="col-md-6">
-                    <input type="text" id="hatSearch" class="form-control" placeholder="Search hats..." />
-                </div>
-
-                <div class="col-md-6 d-flex justify-content-md-end align-items-center">
-                    <div class="form-check form-switch mb-0 d-flex align-items-center gap-2">
-                        <input class="form-check-input mt-0"
-                               type="checkbox"
-                               id="showSpecialHats"
-                               style="cursor:pointer; border-color:white;" />
-                        <label class="form-check-label text-white mb-0" for="showSpecialHats" style="cursor:pointer;">
-                            Show special hats
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="grid-container" id="hatGrid">
-        @foreach (var hat in Model)
-        {
-            <div class="d-flex flex-column align-items-center p-2 card shadow grid-item" data-standard="@hat.StandardHat.ToString().ToLower()">
-
-                @* BILD *@
-                <div class="card p-2">
-                    @if (!string.IsNullOrWhiteSpace(hat.PicturePath))
-                    {
-                        <img src="@hat.PicturePath" alt="@hat.Name" class="hat-img shadow" />
-                    }
-                    else
-                    {
-                        <img src="/uploads/36bf70c5-8064-45e2-a730-d779ff0bf64f.jpg" alt="Image unavailable" class="hat-img shadow" />
-                    }
-                </div>
-
-                @* NAME *@
-                <div class="mt-2">
-                    <h4>@hat.Name</h4>
-                </div>
-
-                @* INFO *@
-                <div class="d-flex flex-row w-100 justify-content-around my-2">
-                    <div class="d-flex flex-column">
-                        <span><strong>Id:</strong> @hat.HId</span>
-                        @* <span><strong>Name:</strong> @hat.Name</span> *@
-                        <span><strong>Size:</strong> @hat.Size</span>
-                    </div>
-
-                    <div class="d-flex flex-column">
-                        <span><strong>Price:</strong> @hat.Price.ToString("C")</span>
-                        <span class="badge bg-ljuslila text-black">
-                            @(hat.StandardHat ? "Standard hat" : "Special hat")
-                        </span>
-                    </div>
-                </div>
-
-                @* BESKRIVNING *@
-                <div class="d-flex justify-content-center card mb-2" style="width: 90%">
-                    <p class="m-1 truncate-3 text-muted">
-                        @hat.Description
-                    </p>
-                </div>
-
-                @* KNAPPAR *@
-                <div class="w-100 d-flex justify-content-around mt-auto">
-                    <a asp-action="Details" asp-route-id="@hat.HId" class="btn btn-sm btn-rosa py-1 px-3" style="width: 45%;">View</a>
-                    <a asp-action="Edit" asp-route-id="@hat.HId" class="btn btn-sm btn-rosa py-1 px-3" style="width: 45%;">Edit</a>
-                </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<h2 class="mb-0">Hats</h2>
+	<div class="d-flex gap-2">
+		<a asp-controller="Hat" asp-action="Create" class="btn btn-rosa">New Hat</a>
+	</div>
 </div>
 
-        }
-    </div>
+<div class="card shadow">
+	<div class="card-header ljuslila text-white">
+		<div class="row g-2 align-items-center">
+			<div class="col-md-6">
+				<input type="text" id="hatSearch" class="form-control" placeholder="Search hats..." />
+			</div>
+
+			<div class="col-md-6 d-flex justify-content-md-end align-items-center">
+				<div class="form-check form-switch mb-0 d-flex align-items-center gap-2">
+					<input class="form-check-input mt-0"
+						   type="checkbox"
+						   id="showSpecialHats"
+						   style="cursor:pointer; border-color:white;" />
+					<label class="form-check-label text-white mb-0" for="showSpecialHats" style="cursor:pointer;">
+						Show special hats
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<div class="grid-container" id="hatGrid">
+		@foreach (var hat in Model)
+		{
+		<div class="d-flex flex-column align-items-center p-2 card shadow grid-item" data-standard="@hat.StandardHat.ToString().ToLower()">
+
+				@* BILD *@
+				<div class="card p-2">
+					@if (!string.IsNullOrWhiteSpace(hat.PicturePath))
+					{
+						<img src="@hat.PicturePath" alt="@hat.Name" class="hat-img shadow" />
+					}
+					else
+					{
+						<img src="/uploads/36bf70c5-8064-45e2-a730-d779ff0bf64f.jpg" alt="Image unavailable" class="hat-img shadow" />
+					}
+				</div>
+
+				@* NAME *@
+				<div class="mt-2" style="max-width: 90%">
+					<h4 class="truncate-1">@hat.Name</h4>
+				</div>
+
+				@* INFO *@
+				<div class="d-flex flex-row w-100 justify-content-around my-2">
+					<div class="d-flex flex-column" style="max-width:45%">
+						<span class="truncate-1"><strong>Id:</strong> @hat.HId</span>
+						<span class="truncate-1"><strong>Size:</strong> @hat.Size</span>
+					</div>
+
+					<div class="d-flex flex-column" style="max-width:45%">
+						<span class="truncate-1"><strong>Price:</strong> @hat.Price.ToString("C")</span>
+						<span class="badge bg-ljuslila text-black">
+							@(hat.StandardHat ? "Standard hat" : "Special hat")
+						</span>
+					</div>
+				</div>
+
+				@* BESKRIVNING *@
+				<div class="d-flex justify-content-center card mb-2" style="width: 90%">
+					<p class="m-1 truncate-3 text-muted">
+						@hat.Description
+					</p>
+				</div>
+
+				@* KNAPPAR *@
+				<div class="w-100 d-flex justify-content-around mt-auto">
+					<a asp-action="Details" asp-route-id="@hat.HId" class="btn rosa fw-bold py-1 px-3" style="width: 45%;">View</a>
+					<a asp-action="Edit" asp-route-id="@hat.HId" class="btn rosa fw-bold py-1 px-3" style="width: 45%;">Edit</a>
+				</div>
+
+			</div>
+		}
+	</div>
+</div>
 
 @section Scripts {
-    <script>
-            function normalizeText(text) {
-                return (text || "")
-                    .toLowerCase()
-                    .replace(/\s/g, "")     // remove all whitespace
-                    .replace(/,/g, ".");    // convert comma to dot
-            }
+	<script>
+		function normalizeText(text) {
+			return (text || "")
+				.toLowerCase()
+				.replace(/\s/g, "")     // remove all whitespace
+				.replace(/,/g, ".");    // convert comma to dot
+		}
 
-            function filterHats() {
-                const searchValue = normalizeText(document.getElementById("hatSearch").value);
-                const showSpecial = document.getElementById("showSpecialHats").checked;
-                const cards = document.querySelectorAll("#hatGrid .grid-item");
+		function filterHats() {
+			const searchValue = normalizeText(document.getElementById("hatSearch").value);
+			const showSpecial = document.getElementById("showSpecialHats").checked;
+			const cards = document.querySelectorAll("#hatGrid .grid-item");
 
-                cards.forEach(card => {
-                    const isStandard = card.dataset.standard === "true";
-                    const cardText = normalizeText(card.innerText);
+			cards.forEach(card => {
+				const isStandard = card.dataset.standard === "true";
+				const cardText = normalizeText(card.innerText);
 
-                    const matchesSearch = cardText.includes(searchValue);
-                    const matchesStandardFilter = showSpecial || isStandard;
+				console.log(normalizeText(card.innerText));
 
-                    if (matchesSearch && matchesStandardFilter) {
-                        card.classList.remove("d-none");
-                            } else {
-                        card.classList.add("d-none");
-                    }
-                });
-            }
+				const matchesSearch = cardText.includes(searchValue);
+				const matchesStandardFilter = showSpecial || isStandard;
 
-            document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("hatSearch").addEventListener("input", filterHats);
-            document.getElementById("showSpecialHats").addEventListener("change", filterHats);
+				if (matchesSearch && matchesStandardFilter) {
+					card.classList.remove("d-none");
+						} else {
+					card.classList.add("d-none");
+				}
+			});
+		}
+
+		document.addEventListener("DOMContentLoaded", function () {
+		document.getElementById("hatSearch").addEventListener("input", filterHats);
+		document.getElementById("showSpecialHats").addEventListener("change", filterHats);
 
 
-                filterHats();
-            });
-    </script>
+			filterHats();
+		});
+	</script>
 }
