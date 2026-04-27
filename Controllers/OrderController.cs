@@ -216,6 +216,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             if (orderToSend == null) return NotFound();
             
             orderToSend.Status = "Skickad";
+            orderToSend.SentDate = DateTime.Now;
 
             var hatOrderList = await _hatOrderRepo.GetByOrderIdAsync(oId);
             foreach (var hatOrder in hatOrderList)
@@ -324,6 +325,11 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         {
             var order = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
             if (order == null) return NotFound();
+
+            //Markera som nedladdad och spara
+            order.Downloaded = true;
+            await _orderRepo.UpdateAsync(order);
+
 
             // Fetch hat orders with materials included
             var hatOrders = await _context.HatOrders

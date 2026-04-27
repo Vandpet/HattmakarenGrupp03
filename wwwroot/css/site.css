@@ -383,6 +383,40 @@ button {
     cursor: pointer;
 }
 
+.sidebar-top {
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+/* The small placement beside the menu button when collapsed */
+.unread-collapsed {
+    display: none;
+    position: absolute;
+    top: 8px;
+    left: 0.25px;
+    z-index: 10;
+    /* tweak visual size if the component outputs link + badge */
+}
+
+/* Default: hide the in-menu placement when collapsed */
+.unread-in-menu {
+    display: none;
+}
+
+/* When the sidebar is collapsed (no .expanded) show the collapsed placement */
+.sidebar:not(.expanded) .unread-collapsed {
+    display: block;
+}
+
+/* When the sidebar is expanded, hide the collapsed placement and show the menu placement */
+.sidebar.expanded .unread-collapsed {
+    display: none;
+}
+
+.sidebar.expanded .unread-in-menu {
+    display: list-item;
+}
+
 @media (max-width: 1100px) {
     .schedule-layout {
         grid-template-columns: 1fr;
@@ -562,4 +596,15 @@ button {
     width: 100%;
     min-width: 0;
     justify-content: center;
+}
+.home-today-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 900px) {
+    .home-today-grid {
+        grid-template-columns: 1fr;
+    }
 }

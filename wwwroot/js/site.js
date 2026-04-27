@@ -40,3 +40,18 @@
     });
 });
 
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const materialBtn = document.getElementById("materialPdfBtn");
+
+    if (materialBtn) {
+        materialBtn.addEventListener("click", function () {
+            materialBtn.textContent = "Materiallista redan nedladdad. Ladda ner igen.";
+            materialBtn.classList.remove("rosa");
+            materialBtn.style.backgroundColor = "#aaa";
+            materialBtn.style.color = "white";
+        });
+    }
+
+});

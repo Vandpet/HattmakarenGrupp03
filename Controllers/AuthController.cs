@@ -66,7 +66,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             HttpContext.Session.SetInt32("AccessLevel", employee.accesslevel);
             HttpContext.Session.SetString("Name", employee.Name);
 
-            return RedirectToAction("Index", "Order");
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Logout()
