@@ -6,34 +6,34 @@
     <div class="card p-3 mb-4">
 
         <div class="form-group mb-3">
-            <label asp-for="Name">Namn</label>
+            <label asp-for="Name">Name</label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Price">Pris</label>
+            <label asp-for="Price">Price</label>
             <input asp-for="Price" class="form-control" type="number" step="0.01" />
             <span asp-validation-for="Price" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Size">Storlek</label>
+            <label asp-for="Size">Size</label>
             <input asp-for="Size" class="form-control" />
             <span asp-validation-for="Size" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="ImageFile">Bild</label>
+            <label asp-for="ImageFile">Image</label>
             <input asp-for="ImageFile" type="file" class="form-control" />
             <span asp-validation-for="ImageFile" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label for="SelectedKN">Välj ett KN-Nummer</label>
+            <label for="SelectedKN">Select a KN Number</label>
 
             <select asp-for="SelectedKN" class="form-control">
-                <option value="">-- Välj KN-nummer --</option>
+                <option value="">-- Select KN Number --</option>
                 @foreach (var item in Model.KN_options)
                 {
                     <option value="@item">@item</option>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Description">Beskrivning</label>
+            <label asp-for="Description">Description</label>
             <textarea asp-for="Description" class="form-control" rows="3"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
@@ -58,23 +58,23 @@
 
             <!-- första raden -->
             <div class="material-item border p-2 mb-3">
-                <input name="Materials[0].Name" class="form-control mb-1" placeholder="Namn" />
-                <input name="Materials[0].Amount" class="form-control mb-1" placeholder="Mängd" type="number" step="0.01" />
-                <input name="Materials[0].MeasuringUnits" class="form-control mb-1" placeholder="Enhet" />
-                <input name="Materials[0].Price" class="form-control mb-1" placeholder="Pris" type="number" step="0.01" />
+                <input name="Materials[0].Name" class="form-control mb-1" placeholder="Name" />
+                <input name="Materials[0].Amount" class="form-control mb-1" placeholder="Amount" type="number" step="0.01" />
+                <input name="Materials[0].MeasuringUnits" class="form-control mb-1" placeholder="Unit" />
+                <input name="Materials[0].Price" class="form-control mb-1" placeholder="Price" type="number" step="0.01" />
             </div>
 
         </div>
 
         <button type="button" class="btn btn-success" id="addMaterialBtn">
-            + Lägg till nytt material
+            + Add New Material
         </button>
     </div>
 
     <!-- KNAPPAR -->
     <div class="form-group">
-        <button type="submit" class="btn rosa fw-bold" id="saveCustomHatBtn">Spara hatt</button>
-        <a asp-action="Index" asp-controller="Hat" class="btn rosa fw-bold">Avbryt</a>
+        <button type="submit" class="btn rosa fw-bold" id="saveCustomHatBtn">Save hat</button>
+        <a asp-action="Index" asp-controller="Hat" class="btn rosa fw-bold">Cancel</a>
     </div>
 
 </form>
@@ -82,13 +82,13 @@
 <!-- TEMPLATE (viktig fix för stabil binding) -->
 <div id="material-template" style="display:none;">
     <div class="material-item border p-2 mb-3">
-        <input class="form-control mb-1 name" placeholder="Namn" />
-        <input class="form-control mb-1 amount" placeholder="Mängd" type="number" step="0.01" />
-        <input class="form-control mb-1 unit" placeholder="Enhet" />
-        <input class="form-control mb-1 price" placeholder="Pris" type="number" step="0.01" />
-        
+        <input class="form-control mb-1 name" placeholder="Name" />
+        <input class="form-control mb-1 amount" placeholder="Amount" type="number" step="0.01" />
+        <input class="form-control mb-1 unit" placeholder="Unit" />
+        <input class="form-control mb-1 price" placeholder="Price" type="number" step="0.01" />
+
         <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn">
-            Ta bort
+            Remove
         </button>
     </div>
 </div>

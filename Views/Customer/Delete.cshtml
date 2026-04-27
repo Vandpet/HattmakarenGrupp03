@@ -12,48 +12,48 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow border-danger">
                 <div class="card-header bg-danger text-white">
-                    <h3 class="mb-0">Ta bort kund</h3>
+                    <h3 class="mb-0">Remove customer</h3>
                 </div>
 
                 <div class="card-body">
                     <p class="mb-4">
-                        Är du säker på att du vill ta bort denna kund?
+                        Are you sure you want to remove this customer?
                     </p>
 
                     <div class="alert alert-warning">
-                        Användaren tas inte bort ur databasen permanent, utan döljs bara från systemet.
+                        The customer will not be permanently removed from the database, but will only be hidden from the system.
                     </div>
 
                     <dl class="row">
                         <dt class="col-sm-4">ID</dt>
                         <dd class="col-sm-8">@Model.CId</dd>
 
-                        <dt class="col-sm-4">Namn</dt>
+                        <dt class="col-sm-4">Name</dt>
                         <dd class="col-sm-8">@Model.Name</dd>
 
-                        <dt class="col-sm-4">Adress</dt>
+                        <dt class="col-sm-4">Address</dt>
                         <dd class="col-sm-8">@Model.Adress</dd>
 
-                        <dt class="col-sm-4">Telefon</dt>
+                        <dt class="col-sm-4">Phone number</dt>
                         <dd class="col-sm-8">@Model.PhoneNr</dd>
                         
-                        <dt class="col-sm-4">E-post</dt>
+                        <dt class="col-sm-4">Email</dt>
                         <dd class="col-sm-8"><a href="mailto:@Model.Email">@Model.Email</a></dd>
 
-                        <dt class="col-sm-4">Land</dt>
+                        <dt class="col-sm-4">Country</dt>
                         <dd class="col-sm-8">@Model.Country</dd>
 
-                        <dt class="col-sm-4">Stad</dt>
+                        <dt class="col-sm-4">City</dt>
                         <dd class="col-sm-8">@Model.City</dd>
 
-                        <dt class="col-sm-4">Språk</dt>
+                        <dt class="col-sm-4">Language</dt>
                         <dd class="col-sm-8">@Model.Language</dd>
                     </dl>
 
                     <form asp-action="Delete" method="post">
                         <input type="hidden" name="id" value="@Model.CId" />
-                        <button type="submit" class="btn btn-outline-danger m-0">Ja, ta bort</button>
-                        <a asp-action="Index" class="btn rosa fw-bold">Avbryt</a>
+                        <button type="submit" class="btn btn-outline-danger m-0">Yes, remove</button>
+                        <a asp-action="Index" class="btn rosa fw-bold">Cancel</a>
                     </form>
                 </div>
             </div>

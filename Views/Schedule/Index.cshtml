@@ -20,7 +20,7 @@
             <input type="checkbox" name="personal" value="true"
             @(Model.IsPersonal ? "checked" : null)
                    onchange="this.form.submit()" />
-            <span>Visa bara min planering</span>
+            <span>Show only my tasks</span>
         </label>
     </form>
 </div>
@@ -50,10 +50,10 @@
 {
     <div id="employeeModal" class="modal-overlay" style="display:none;">
         <div class="modal-box">
-            <h3>Välj anställd</h3>
+            <h3>Select Employee</h3>
 
             <select id="modalEmployeeSelect" class="form-control">
-                <option value="">-- Välj anställd --</option>
+                <option value="">-- Select Employee --</option>
                 @foreach (var emp in Model.Employees)
                 {
                     <option value="@emp.Id">@emp.Name</option>
@@ -62,11 +62,11 @@
 
             <div class="modal-actions">
                 <button type="button" onclick="confirmAssignment()" class="btn btn-primary">
-                    Bekräfta
+                    Confirm
                 </button>
 
                 <button type="button" onclick="closeModal()" class="btn btn-secondary">
-                    Avbryt
+                    Cancel
                 </button>
             </div>
         </div>
@@ -75,11 +75,11 @@
 
 <div class="schedule-layout">
     <aside class="task-panel drop-unscheduled">
-        <h4>Ej schemalagda</h4>
+        <h4>Unscheduled</h4>
 
         @if (!Model.UnscheduledTasks.Any())
         {
-            <div class="empty-box">Inga oschemalagda uppgifter.</div>
+            <div class="empty-box">No unscheduled tasks.</div>
         }
         else
         {
@@ -100,11 +100,11 @@
 
         @if (task.ColorClass == "order-orange")
         {
-            <div class="task-card-warning">Bör skickas snart</div>
+            <div class="task-card-warning">To be shipped soon</div>
         }
         else if (task.ColorClass == "order-red")
         {
-            <div class="task-card-warning urgent">Bör skickas genast!</div>
+            <div class="task-card-warning urgent">Must be shipped immediately!</div>
         }
 
     </div>
@@ -122,21 +122,21 @@
                    asp-route-viewMode="month"
                    asp-route-personal="@Model.IsPersonal"
                    class="btn @(Model.ViewMode == "month" ? "btn-lila" : "btn-rosa")"
-                   style="@(Model.ViewMode == "month" ? "color: white;" : "")">Månad</a>
+                   style="@(Model.ViewMode == "month" ? "color: white;" : "")">Month</a>
 
                 <a asp-action="Index"
                    asp-route-targetDate="@Model.SelectedDate.ToString("yyyy-MM-dd")"
                    asp-route-viewMode="week"
                    asp-route-personal="@Model.IsPersonal"
                    class="btn @(Model.ViewMode == "week" ? "btn-lila" : "btn-rosa")"
-                   style="@(Model.ViewMode == "week" ? "color: white;" : "")">Vecka</a>
+                   style="@(Model.ViewMode == "week" ? "color: white;" : "")">Week</a>
 
                 <a asp-action="Index"
                    asp-route-targetDate="@Model.SelectedDate.ToString("yyyy-MM-dd")"
                    asp-route-viewMode="day"
                    asp-route-personal="@Model.IsPersonal"
                    class="btn @(Model.ViewMode == "day" ? "btn-lila" : "btn-rosa")"
-                   style="@(Model.ViewMode == "day" ? "color: white;" : "")">Dag</a>
+                   style="@(Model.ViewMode == "day" ? "color: white;" : "")">Day</a>
             </div>
         </div>
 
@@ -144,13 +144,13 @@
             @if (Model.ViewMode != "day")
             {
                 <div class="weekday weeknumber-header">v.</div>
-                <div class="weekday">Mån</div>
-                <div class="weekday">Tis</div>
-                <div class="weekday">Ons</div>
-                <div class="weekday">Tors</div>
-                <div class="weekday">Fre</div>
-                <div class="weekday">Lör</div>
-                <div class="weekday">Sön</div>
+                <div class="weekday">Mon</div>
+                <div class="weekday">Tue</div>
+                <div class="weekday">Wed</div>
+                <div class="weekday">Thu</div>
+                <div class="weekday">Fri</div>
+                <div class="weekday">Sat</div>
+                <div class="weekday">Sun</div>
             }
             else
             {
@@ -181,11 +181,11 @@
                         @if (Model.ViewMode == "month")
                         {
                             //månad visa bara en uppgift
-                            var ev = day.Events.FirstOrDefault(e => e.Status != "Färdig") ?? day.Events.FirstOrDefault();
+                            var ev = day.Events.FirstOrDefault(e => e.Status != "Done") ?? day.Events.FirstOrDefault();
                             
                             if (ev != null)
                             {
-                                var statusClass = ev.Status == "Färdig" ? "event-done" : "";
+                                var statusClass = ev.Status == "Done" ? "event-done" : "";
                                 <div class="event @statusClass @ev.ColorClass task-card"
                                      draggable="true"
                                      data-order-id="@ev.OrderId"
@@ -198,7 +198,7 @@
                             
                             if (day.Events.Count > 1)
                             {
-                                <div class="more">+@(day.Events.Count - 1) fler</div>
+                                <div class="more">+@(day.Events.Count - 1) more</div>
                             }
                         }
                         else
@@ -206,7 +206,7 @@
                             // vecka och dag loopa igenom och visa alla uppgifter
                             foreach (var ev in day.Events)
                             {
-                                var statusClass = ev.Status == "Färdig" ? "event-done" : "";
+                                var statusClass = ev.Status == "Done" ? "event-done" : "";
                                 <div class="event @statusClass @ev.ColorClass task-card"
                                      draggable="true"
                                      data-order-id="@ev.OrderId"
@@ -234,7 +234,7 @@
         <div id="modalContent"></div>
 
         <button onclick="closeDayModal()" class="btn btn-secondary">
-            Stäng
+            Close
         </button>
     </div>
 </div>
@@ -383,7 +383,7 @@
                     const div = document.createElement("div");
                     div.classList.add("event");
 
-                    if (ev.Status === "Färdig") {
+                    if (ev.Status === "Done") {
                         div.classList.add("event-done");
                     }
                     else {
