@@ -49,17 +49,17 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             // 3. Filtrera baserat på vald knapp
             orders = filter switch
             {
-                "påbörjade" => orders.Where(o => o.Status == "Påbörjad").ToList(),
-                "avslutade" => orders.Where(o => o.Status == "Skickad").ToList(),
-                "ej-påbörjade" => orders.Where(o => o.Status == "Ej Påbörjad").ToList(),
-                "färdig" => orders.Where(o => o.Status == "Färdig").ToList(),
-                "returnerad" => orders.Where(o => o.Status == "Helt Returnerad" || o.Status == "Delvis Returnerad").ToList(),
-                "alla-ordrar" => orders.OrderBy(o => o.OrderDate).ToList(),
-                _ => orders //"nyligen"
+                "not-started" => orders.Where(o => o.Status == "Not Started").ToList(),
+                "started" => orders.Where(o => o.Status == "Started").ToList(),
+                "completed" => orders.Where(o => o.Status == "Completed").ToList(),
+                "shipped" => orders.Where(o => o.Status == "Shipped").ToList(),
+                "returned" => orders.Where(o => o.Status == "Fully Returned" || o.Status == "Partly Returned").ToList(),
+                "all-orders" => orders.OrderBy(o => o.OrderDate).ToList(),
+                _ => orders //"recently-added"
             };
 
             //Defaultfilter
-            if (string.IsNullOrEmpty(filter)) filter = "nyligen";
+            if (string.IsNullOrEmpty(filter)) filter = "recently-added";
             ViewBag.Filter = filter;
 
             return View(orders);
@@ -118,7 +118,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     CustomerId = (int)model.SelectedCustomerId!, //Om vi kommer in här så är den inte null.
                     CreatedById = currentEmployeeId.Value, // Här mappar vi inloggad användare!
                     //Price = totalPrice, Denna sätts senare här under!
-                    Status = "Ej Påbörjad",
+                    Status = "Not Started",
                     Express = model.IsExpress,
                     Discount = model.Discount,
                     DiscountDesc = model.DiscountDesc ?? "Ingen beskrivning tillgänglig",
@@ -215,13 +215,13 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var orderToSend = await _orderRepo.GetByIdAsync(oId);
             if (orderToSend == null) return NotFound();
             
-            orderToSend.Status = "Skickad";
+            orderToSend.Status = "Shipped";
             orderToSend.SentDate = DateTime.Now;
 
             var hatOrderList = await _hatOrderRepo.GetByOrderIdAsync(oId);
             foreach (var hatOrder in hatOrderList)
             {
-                hatOrder.Status = "Skickad";
+                hatOrder.Status = "Shipped";
                 await _hatOrderRepo.UpdateAsync(hatOrder);
             }
             

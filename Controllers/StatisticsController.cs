@@ -26,7 +26,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
 
             var stats = allHatOrders
-                .Where(ho => ho.Status == "Skickad")
+                .Where(ho => ho.Status == "Shipped")
                 .GroupBy(ho => new { ho.HId, ho.Hat.Name, ho.Hat.Price })
                 .Select(g => new HatStatisticsRow
                 {

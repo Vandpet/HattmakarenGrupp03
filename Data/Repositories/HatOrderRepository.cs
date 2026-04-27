@@ -98,56 +98,56 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
         // Dessa metoder används i kalendern
         public async Task ChangeToNotStartedAsync(HatOrder hatOrder)
         {
-            hatOrder.Status = "Ej Påbörjad";
+            hatOrder.Status = "Not Started";
             hatOrder.Date = null;
             hatOrder.EId = null;
             await _db.SaveChangesAsync();
 
             var order = await _orderRepository.GetByIdAsync(hatOrder.OId);
 
-            // Om en hatorder på ordern inte är färdig längre blir order.status automatiskt inte färdig längre.
-            if (order.Status != "Påbörjad") order.Status = "Påbörjad";
+            // Om en hatorder på ordern inte är Completed längre blir order.status automatiskt inte Completed längre.
+            if (order.Status != "Started") order.Status = "Started";
 
-            // Kolla om alla hattar i ordern är Ej Påbörjade
+            // Kolla om alla hattar i ordern är Not Started
             var hatOrders = await GetByOrderIdAsync(hatOrder.OId);
-            if (hatOrders.All(ho => ho.Status == "Ej Påbörjad")) order.Status = "Ej Påbörjad";
+            if (hatOrders.All(ho => ho.Status == "Not Started")) order.Status = "Not Started";
 
             await _db.SaveChangesAsync();
         }
         public async Task ChangeToStartedAsync(HatOrder hatOrder)
         {
-            hatOrder.Status = "Påbörjad";
+            hatOrder.Status = "Started";
             await _db.SaveChangesAsync();
             var order = await _orderRepository.GetByIdAsync(hatOrder.OId);
-            order.Status = "Påbörjad";
+            order.Status = "Started";
             await _db.SaveChangesAsync();
         }
         public async Task ChangeToCompletedAsync(HatOrder hatOrder)
         {
-            hatOrder.Status = "Färdig";
+            hatOrder.Status = "Completed";
             await _db.SaveChangesAsync();
 
             var order = await _orderRepository.GetByIdAsync(hatOrder.OId);
 
-            // Kolla om alla hattar i ordern är färdiga
+            // Kolla om alla hattar i ordern är Completed
             var hatOrders = await GetByOrderIdAsync(hatOrder.OId);
-            if (hatOrders.All(ho => ho.Status == "Färdig"))
+            if (hatOrders.All(ho => ho.Status == "Completed"))
             {
-                order.Status = "Färdig";
+                order.Status = "Completed";
                 await _db.SaveChangesAsync();
             }
         }
         public async Task ChangeToReturnedAsync(HatOrder hatOrder)
         {
-            hatOrder.Status = "Returnerad";
+            hatOrder.Status = "Returned";
             await _db.SaveChangesAsync();
 
             var order = await _orderRepository.GetByIdAsync(hatOrder.OId);
 
             var hatOrders = await GetByOrderIdAsync(hatOrder.OId);
-            // Om alla hatordrar på ordern är returnerad blir order.status automatiskt returnerad.
-            if (hatOrders.All(ho => ho.Status == "Returnerad")) order.Status = "Helt Returnerad";
-            else order.Status = "Delvis Returnerad"; // Om inte alla är returnerade men en är det så är ordern delvis returnerad.
+            // Om alla hatordrar på ordern är Returned blir order.status automatiskt Returned.
+            if (hatOrders.All(ho => ho.Status == "Returned")) order.Status = "Fully Returned";
+            else order.Status = "Partly Returned"; // Om inte alla är Returned men en är det så är ordern Partly Returned.
 
             await _db.SaveChangesAsync();
         }

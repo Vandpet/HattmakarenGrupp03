@@ -11,32 +11,32 @@
 
 <div>
     <form method="get" asp-controller="Order" asp-action="Index">
-        <label class="btn text-start @(selected == "nyligen" ? "btn-ljuslila" : "btn-rosa")">
-            <input type="radio" name="filter" value="nyligen" onchange="this.form.submit()" class="d-none" />
+        <label class="btn text-start @(selected == "recently-added" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="recently-added" onchange="this.form.submit()" class="d-none" />
             Recently Added
         </label>
-        <label class="btn text-start @(selected == "ej-påbörjade" ? "btn-ljuslila" : "btn-rosa")">
-            <input type="radio" name="filter" value="ej-påbörjade" onchange="this.form.submit()" class="d-none" />
+        <label class="btn text-start @(selected == "not-started" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="not-started" onchange="this.form.submit()" class="d-none" />
             Not Started
         </label>
-        <label class="btn text-start @(selected == "påbörjade" ? "btn-ljuslila" : "btn-rosa")">
-            <input type="radio" name="filter" value="påbörjade" onchange="this.form.submit()" class="d-none" />
+        <label class="btn text-start @(selected == "started" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="started" onchange="this.form.submit()" class="d-none" />
             Started
         </label>
-        <label class="btn text-start @(selected == "färdig" ? "btn-ljuslila" : "btn-rosa")">
-            <input type="radio" name="filter" value="färdig" onchange="this.form.submit()" class="d-none" />
+        <label class="btn text-start @(selected == "completed" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="completed" onchange="this.form.submit()" class="d-none" />
             Completed
         </label>
-        <label class="btn text-start @(selected == "avslutade" ? "btn-ljuslila" : "btn-rosa")">
-            <input type="radio" name="filter" value="avslutade" onchange="this.form.submit()" class="d-none" />
+        <label class="btn text-start @(selected == "shipped" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="shipped" onchange="this.form.submit()" class="d-none" />
             Shipped
         </label>
-        <label class="btn text-start @(selected == "returnerad" ? "btn-ljuslila" : "btn-rosa")">
-            <input type="radio" name="filter" value="returnerad" onchange="this.form.submit()" class="d-none" />
+        <label class="btn text-start @(selected == "returned" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="returned" onchange="this.form.submit()" class="d-none" />
             Returned
         </label>
-        <label class="btn text-start @(selected == "alla-ordrar" ? "btn-ljuslila" : "btn-rosa")">
-            <input type="radio" name="filter" value="alla-ordrar" onchange="this.form.submit()" class="d-none" />
+        <label class="btn text-start @(selected == "all-orders" ? "btn-ljuslila" : "btn-rosa")">
+            <input type="radio" name="filter" value="all-orders" onchange="this.form.submit()" class="d-none" />
             All
         </label>
     </form>
@@ -104,19 +104,19 @@
 @functions {
     public string ColorForBadge(string itemStatus)
     {
-        if (itemStatus == "Ej Påbörjad")
+        if (itemStatus == "Not Started")
         {
             return "bg-secondary";
         }
-        else if (itemStatus == "Påbörjad")
+        else if (itemStatus == "Started")
         {
             return "bg-primary";
         }
-        else if (itemStatus == "Färdig")
+        else if (itemStatus == "Completed")
         {
             return "bg-success";
         }
-        else // if (itemStatus == "Skickad")
+        else // if (itemStatus == "Shipped" or partly or fully returned)
         {
             return "bg-rosa text-dark";
 

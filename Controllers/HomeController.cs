@@ -36,9 +36,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 .Include(h => h.Employee)
                 .Where(h => h.Date.HasValue
                          && h.Date.Value.Date == today
-                         && h.Status != "Färdig"
-                         && h.Status != "Skickad"
-                         && h.Status != "Returnerad"
+                         && h.Status != "Completed"
+                         && h.Status != "Shipped"
+                         && h.Status != "Returned"
                          && h.EId == currentEmployeeId.Value)
                 .ToListAsync();
 
@@ -60,14 +60,14 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             // Dagens försäljning
             var todaySales = await _context.Orders
-                .Where(o => o.Status == "Skickad"
+                .Where(o => o.Status == "Shipped"
                          && o.SentDate >= today
                          && o.SentDate < today.AddDays(1))
                 .SumAsync(o => o.Price);
 
             // Kvartalets försäljning
             var quarterSales = await _context.Orders
-                .Where(o => o.Status == "Skickad"
+                .Where(o => o.Status == "Shipped"
                          && o.OrderDate >= quarterStart
                          && o.OrderDate < quarterEnd)
                 .SumAsync(o => o.Price);
