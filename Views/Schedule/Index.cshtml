@@ -4,10 +4,9 @@
 
 @{
     ViewData["Title"] = "Schema";
-
     DateTime prevDate = Model.ViewMode == "day" ? Model.SelectedDate.AddDays(-1) :
                         (Model.ViewMode == "week" ? Model.SelectedDate.AddDays(-7) : Model.SelectedDate.AddMonths(-1));
-
+    
     DateTime nextDate = Model.ViewMode == "day" ? Model.SelectedDate.AddDays(1) :
                         (Model.ViewMode == "week" ? Model.SelectedDate.AddDays(7) : Model.SelectedDate.AddMonths(1));
 }
@@ -18,26 +17,16 @@
         <input type="hidden" name="viewMode" value="@Model.ViewMode" />
 
         <label class="switch-label">
-            <input type="checkbox"
-                   name="personal"
-                   value="true"
+            <input type="checkbox" name="personal" value="true"
             @(Model.IsPersonal ? "checked" : null)
                    onchange="this.form.submit()" />
             <span>Show only my tasks</span>
-
-            <span>Visa bara min planering</span>
         </label>
     </form>
 </div>
 
 <div class="schedule-header">
-    <a class="calendar-nav-btn"
-           asp-action="Index"
-           asp-route-targetDate="@prevDate.ToString("yyyy-MM-dd")"
-           asp-route-viewMode="@Model.ViewMode"
-           asp-route-personal="@Model.IsPersonal">
-        ‹
-    </a>
+    <a class="calendar-nav-btn" asp-action="Index" asp-route-targetDate="@prevDate.ToString("yyyy-MM-dd")" asp-route-viewMode="@Model.ViewMode" asp-route-personal="@Model.IsPersonal">‹</a>
 
     <h2 class="schedule-title" style="margin: 0 1rem; text-align: center; min-width: 200px; text-transform: capitalize;">
         @if (Model.ViewMode == "month")
@@ -54,13 +43,7 @@
         }
     </h2>
 
-    <a class="calendar-nav-btn"
-           asp-action="Index"
-           asp-route-targetDate="@nextDate.ToString("yyyy-MM-dd")"
-           asp-route-viewMode="@Model.ViewMode"
-           asp-route-personal="@Model.IsPersonal">
-        ›
-    </a>
+    <a class="calendar-nav-btn" asp-action="Index" asp-route-targetDate="@nextDate.ToString("yyyy-MM-dd")" asp-route-viewMode="@Model.ViewMode" asp-route-personal="@Model.IsPersonal">›</a>
 </div>
 
 @if (Model.IsAdmin)
@@ -71,8 +54,6 @@
 
             <select id="modalEmployeeSelect" class="form-control">
                 <option value="">-- Select Employee --</option>
-                <option value="">-- Välj anställd --</option>
-
                 @foreach (var emp in Model.Employees)
                 {
                     <option value="@emp.Id">@emp.Name</option>
@@ -129,36 +110,11 @@
     </div>
 }
             
-            @foreach (var task in Model.UnscheduledTasks)
-            {
-                var taskJson = System.Text.Json.JsonSerializer.Serialize(task);
-
-                <div class="task-card @task.ColorClass"
-                     draggable="true"
-                     data-order-id="@task.OrderId"
-                     data-hat-id="@task.HatId"
-                     data-task='@Html.Raw(taskJson)'
-                     onclick="openTaskModal(this)">
-
-                    <div class="task-card-title">@task.Title</div>
-                    <div class="task-card-sub">@task.HatName</div>
-                    <div class="task-card-status">@task.Status</div>
-
-                    @if (task.ColorClass == "order-orange")
-                    {
-                        <div class="task-card-warning">Bör skickas snart</div>
-                    }
-                    else if (task.ColorClass == "order-red")
-                    {
-                        <div class="task-card-warning urgent">Bör skickas genast!</div>
-                    }
-                </div>
-            }
         }
     </aside>
 
     <section class="calendar-panel">
-
+    
         <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
             <div class="btn-group">
                 <a asp-action="Index"
@@ -181,31 +137,6 @@
                    asp-route-personal="@Model.IsPersonal"
                    class="btn @(Model.ViewMode == "day" ? "btn-lila" : "btn-rosa")"
                    style="@(Model.ViewMode == "day" ? "color: white;" : "")">Day</a>
-                       asp-route-targetDate="@Model.SelectedDate.ToString("yyyy-MM-dd")"
-                       asp-route-viewMode="month"
-                       asp-route-personal="@Model.IsPersonal"
-                       class="btn @(Model.ViewMode == "month" ? "btn-lila" : "btn-rosa")"
-                       style="@(Model.ViewMode == "month" ? "color: white;" : "")">
-                    Månad
-                </a>
-
-                <a asp-action="Index"
-                       asp-route-targetDate="@Model.SelectedDate.ToString("yyyy-MM-dd")"
-                       asp-route-viewMode="week"
-                       asp-route-personal="@Model.IsPersonal"
-                       class="btn @(Model.ViewMode == "week" ? "btn-lila" : "btn-rosa")"
-                       style="@(Model.ViewMode == "week" ? "color: white;" : "")">
-                    Vecka
-                </a>
-
-                <a asp-action="Index"
-                       asp-route-targetDate="@Model.SelectedDate.ToString("yyyy-MM-dd")"
-                       asp-route-viewMode="day"
-                       asp-route-personal="@Model.IsPersonal"
-                       class="btn @(Model.ViewMode == "day" ? "btn-lila" : "btn-rosa")"
-                       style="@(Model.ViewMode == "day" ? "color: white;" : "")">
-                    Dag
-                </a>
             </div>
         </div>
 
@@ -244,6 +175,7 @@
                          data-events='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(day.Events))'
                          onclick="openDayModal(this)">
 
+
                         <div class="date">@day.Date.Day</div>
 
                         @if (Model.ViewMode == "month")
@@ -262,42 +194,8 @@
                                     <div class="event-sub">Order @ev.OrderId</div>
                                     <div class="event-sub"><small>@ev.EmployeeName</small></div>
                                 </div>
-                            var ev = day.Events.FirstOrDefault(e => e.Status != "Färdig") ?? day.Events.FirstOrDefault();
-
-                            if (ev != null)
-                            {
-                                var statusClass = ev.Status == "Färdig" ? "event-done" : "";
-
-                                if (ev.EventType == "Activity")
-                                {
-                                    <div class="event @statusClass @ev.ColorClass">
-                                        <div class="event-title">@ev.HatName</div>
-
-                                        @if (ev.Time.HasValue)
-                                        {
-                                            <div class="event-sub">
-                                                @ev.Time.Value.ToString(@"hh\:mm")
-                                            </div>
-                                        }
-
-                                        <div class="event-sub">Aktivitet</div>
-                                        <div class="event-sub"><small>@ev.EmployeeName</small></div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="event @statusClass @ev.ColorClass task-card"
-                                         draggable="true"
-                                         data-order-id="@ev.OrderId"
-                                         data-hat-id="@ev.HatId">
-
-                                        <div class="event-title">@ev.Amount x @ev.HatName</div>
-                                        <div class="event-sub">Order @ev.OrderId</div>
-                                        <div class="event-sub"><small>@ev.EmployeeName</small></div>
-                                    </div>
-                                }
                             }
-
+                            
                             if (day.Events.Count > 1)
                             {
                                 <div class="more">+@(day.Events.Count - 1) more</div>
@@ -305,6 +203,7 @@
                         }
                         else
                         {
+                            // vecka och dag loopa igenom och visa alla uppgifter
                             foreach (var ev in day.Events)
                             {
                                 var statusClass = ev.Status == "Done" ? "event-done" : "";
@@ -317,39 +216,6 @@
                                     <div class="event-sub">Order @ev.OrderId</div>
                                     <div class="event-sub"><small>@ev.EmployeeName</small></div>
                                 </div>
-                                var statusClass = ev.Status == "Färdig" ? "event-done" : "";
-
-                                if (ev.EventType == "Activity")
-                                {
-                                    <div class="event @statusClass @ev.ColorClass"
-                                         style="margin-bottom: 5px;">
-
-                                        <div class="event-title">@ev.HatName</div>
-
-                                        @if (ev.Time.HasValue)
-                                        {
-                                            <div class="event-sub">
-                                                @ev.Time.Value.ToString(@"hh\:mm")
-                                            </div>
-                                        }
-
-                                        <div class="event-sub">Aktivitet</div>
-                                        <div class="event-sub"><small>@ev.EmployeeName</small></div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="event @statusClass @ev.ColorClass task-card"
-                                         draggable="true"
-                                         data-order-id="@ev.OrderId"
-                                         data-hat-id="@ev.HatId"
-                                         style="margin-bottom: 5px;">
-
-                                        <div class="event-title">@ev.Amount x @ev.HatName</div>
-                                        <div class="event-sub">Order @ev.OrderId</div>
-                                        <div class="event-sub"><small>@ev.EmployeeName</small></div>
-                                    </div>
-                                }
                             }
                         }
                     </div>
@@ -357,6 +223,8 @@
             }
         </div>
     </section>
+   
+
 </div>
 
 <div id="dayModal" class="modal-overlay" style="display:none;">
@@ -374,24 +242,22 @@
 <form id="dropForm" method="post" asp-action="AssignTaskToDate">
     <input type="hidden" name="orderId" id="dropOrderId" />
     <input type="hidden" name="hatId" id="dropHatId" />
-    <input type="hidden" name="employeeId" id="dropEmployeeId" />
+    <input type="hidden" name="employeeId" id="dropEmployeeId" /> <!-- 🔥 NY -->
     <input type="hidden" name="date" id="dropDate" />
     <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
-    <input type="hidden" name="targetDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
-    <input type="hidden" name="viewMode" value="@Model.ViewMode" />
+    <input type="hidden" name="year" value="@Model.Year" />
+    <input type="hidden" name="month" value="@Model.Month" />
 </form>
-
 <form id="unscheduleForm" method="post" asp-action="UnassignTask">
     <input type="hidden" name="orderId" id="unscheduleOrderId" />
     <input type="hidden" name="hatId" id="unscheduleHatId" />
     <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
-    <input type="hidden" name="targetDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
-    <input type="hidden" name="viewMode" value="@Model.ViewMode" />
+    <input type="hidden" name="year" value="@Model.Year" />
+    <input type="hidden" name="month" value="@Model.Month" />
 </form>
-
 <form id="doneForm" method="post" asp-action="MarkDone">
-    <input type="hidden" name="orderId" id="doneOrderId" />
-    <input type="hidden" name="hatId" id="doneHatId" />
+    <input type="hidden" name="orderId" id="doneOrderId"/>
+    <input type="hidden" name="hatId" id="doneHatId"/>
     <input type="hidden" name="personal" value="@Model.IsPersonal.ToString().ToLower()" />
     <input type="hidden" name="targetDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
     <input type="hidden" name="viewMode" value="@Model.ViewMode" />
@@ -417,7 +283,7 @@
             });
         });
 
-        document.querySelectorAll('.drop-zone').forEach(zone => {
+               document.querySelectorAll('.drop-zone').forEach(zone => {
             zone.addEventListener('dragover', e => {
                 e.preventDefault();
                 zone.classList.add('drag-hover');
@@ -433,18 +299,18 @@
 
                 if (!draggedOrderId || !draggedHatId) return;
 
-                selectedDate = zone.dataset.date;
+                        selectedDate = zone.dataset.date;
 
-                if (@Model.IsAdmin.ToString().ToLower()) {
-                    openModal();
-                }
-                else {
-                    document.getElementById("dropOrderId").value = draggedOrderId;
-                    document.getElementById("dropHatId").value = draggedHatId;
-                    document.getElementById("dropDate").value = selectedDate;
-                    document.getElementById("dropEmployeeId").value = 0;
-                    document.getElementById("dropForm").submit();
-                }
+                    if (@Model.IsAdmin.ToString().ToLower()) {
+                       openModal();
+                     }              
+                        else {
+                                document.getElementById("dropOrderId").value = draggedOrderId;
+                                document.getElementById("dropHatId").value = draggedHatId;
+                                document.getElementById("dropDate").value = selectedDate;
+                                document.getElementById("dropEmployeeId").value = 0;
+                                document.getElementById("dropForm").submit();
+        }
             });
         });
 
@@ -472,7 +338,7 @@
                 document.getElementById("unscheduleForm").submit();
             });
         }
-
+       
         function openModal() {
             document.getElementById("employeeModal").style.display = "flex";
         }
@@ -499,6 +365,7 @@
         }
 
         function openDayModal(element) {
+
             const date = element.dataset.date;
             const events = JSON.parse(element.dataset.events || "[]");
 
@@ -508,48 +375,48 @@
             container.innerHTML = "";
 
             if (events.length === 0) {
-                container.innerHTML = "<p>Inga uppgifter denna dag</p>";
-            }
-            else {
+                container.innerHTML = "<p>Inga hattar denna dag</p>";
+            } else {
+
                 events.forEach(ev => {
+
                     const div = document.createElement("div");
                     div.classList.add("event");
 
                     if (ev.Status === "Done") {
                         div.classList.add("event-done");
                     }
+                    else {
+                        div.classList.remove("event-done")
+                    }
 
-                    const deliveryText = ev.PrelDeliveryDate
-                        ? new Date(ev.PrelDeliveryDate).toLocaleDateString('sv-SE')
+                        const deliveryText = ev.PrelDeliveryDate ? 
+                            new Date(ev.PrelDeliveryDate).toLocaleDateString('sv-SE')
                         : "Saknas";
 
-                    const timeText = ev.Time
-                        ? ev.Time.substring(0, 5)
-                        : "";
 
-                    if (ev.EventType === "Activity") {
-                        div.innerHTML = `
-                            <div><strong><h5>${ev.HatName}</h5></strong></div>
-                            ${timeText ? `<div>Tid: ${timeText}</div>` : ""}
-                            <div>Arbetsuppgift</div>
-                            <div>${ev.EmployeeName ?? ""}</div>
-                            <button class="btn btn-danger btn-sm" onclick="deleteActivity(${ev.ActivityId})">
-                                Ta bort
-                            </button>
-                            <hr style="margin:0;">
-                        `;
-                    }
-                    else {
-                        div.innerHTML = `
-                            <div><strong><h5>${ev.Amount} x ${ev.HatName}</h5></strong></div>
-                            <div><h6>Order ${ev.OrderId}</h6></div>
-                            <div>Beräknad leverans: ${deliveryText}</div>
-                            <div>${ev.EmployeeName}</div>
-                            <button class="btn btn-danger btn-sm" onclick="unassignTask(${ev.OrderId}, ${ev.HatId})">Oschemalägg</button>
-                            <button class="btn btn-success" onclick="markDone(${ev.OrderId}, ${ev.HatId})">Klar</button>
-                            <hr style="margin:0;">
-                        `;
-                    }
+                      if (ev.EventType === "Activity") {
+                                div.innerHTML = `
+                                    <div><strong><h5>${ev.HatName}</h5></strong></div>
+                                    <div>Arbetsuppgift</div>
+                                    <div>${ev.EmployeeName ?? ""}</div>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteActivity(${ev.ActivityId})">
+                                        Ta bort
+                                    </button>
+                                    <hr style="margin:0;">
+                                `;
+                            }
+                      else {
+                                        div.innerHTML = `
+                                            <div><strong><h5>${ev.Amount} x ${ev.HatName}</h5></strong></div>
+                                            <div><h6>Order ${ev.OrderId}</h6></div>
+                                            <div>Beräknad leverans: ${deliveryText}</div>
+                                            <div>${ev.EmployeeName}</div>
+                                            <button class="btn btn-danger btn-sm" onclick="unassignTask(${ev.OrderId}, ${ev.HatId})">Oschemalägg</button>
+                                            <button class="btn btn-success" onclick="markDone(${ev.OrderId}, ${ev.HatId})">Klar</button>
+                                            <hr style="margin:0;">
+                                        `;
+                                    }
 
                     container.appendChild(div);
                 });
@@ -559,6 +426,7 @@
         }
 
         function unassignTask(orderId, hatId) {
+
             document.getElementById("unscheduleOrderId").value = orderId;
             document.getElementById("unscheduleHatId").value = hatId;
 
@@ -566,6 +434,7 @@
         }
 
         function markDone(orderId, hatId) {
+
             document.getElementById("doneOrderId").value = orderId;
             document.getElementById("doneHatId").value = hatId;
 
@@ -577,7 +446,7 @@
             document.getElementById("deleteActivityForm").submit();
         }
 
-        function openTaskModal(element) {
+                function openTaskModal(element) {
             const task = JSON.parse(element.dataset.task || "{}");
 
             const deliveryText = task.PrelDeliveryDate
@@ -605,4 +474,6 @@
             document.getElementById("dayModal").style.display = "none";
         }
     </script>
+    
+
 }
