@@ -1,13 +1,15 @@
 ﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Order>
+
+<link rel="stylesheet" href="~/css/OrderIndexMobile.css" asp-append-version="true" />
+@*Lade också till <div class="table-responsive"></div> på tabellen*@
+
 @{
 	var selected = ViewBag.Filter as string;
 }
-<div class="d-flex justify-content-between align-items-center my-3">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Order Overview</h2>
     <a asp-action="Create" class="btn btn-success">New Order +</a>
 </div>
-
-
 
 <div>
     <form method="get" asp-controller="Order" asp-action="Index">
@@ -43,7 +45,8 @@
 
 </div>
 
-<table class="table table-striped table-hover mt-1">
+<div class="table-responsive">
+<table class="table table-hover">
     <thead class="thead-dark">
         <tr>
             <th>Order nr</th>
@@ -93,6 +96,7 @@
         }
     </tbody>
 </table>
+</div>
 
 @if (!Model.Any())
 {
@@ -116,7 +120,7 @@
         }
         else // if (itemStatus == "Shipped")
         {
-            return "bg-rosa text-dark";
+            return "bg-skickad text-dark";
 
         }
     }

@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Customer>
 
+<link rel="stylesheet" href="~/css/CustomerIndexMobile.css" asp-append-version="true" />
+
+
 @{
 	ViewData["Title"] = "Kunder";
 	int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");

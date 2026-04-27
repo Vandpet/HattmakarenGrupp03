@@ -1,5 +1,8 @@
 ﻿@model HattmakarenWebbAppGrupp03.Models.ViewModels.EmployeeEditViewModel
 
+<link rel="stylesheet" href="~/css/EmployeeEditMobile.css" asp-append-version="true" />
+
+
 @{
     ViewData["Title"] = "Redigera användare";
     int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");

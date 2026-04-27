@@ -1,0 +1,124 @@
+﻿/* ==========================================
+   CUSTOM ACTIVITY INDEX - MOBILE FIX
+   ========================================== */
+
+@media (max-width: 768px) {
+
+    /* Tvingar innehållet att ta hela bredden oavsett sidebar */
+    .container.mt-5 {
+        margin-left: 0 !important;
+        margin-right: 10 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    html, body {
+        max-width: 100%;
+        margin-right: 20px;
+        overflow-x: hidden;
+    }
+
+    /* ===== HEADER & KNAPP ===== */
+    /* Staplar rubrik och "Ny arbetsuppgift"-knapp vertikalt */
+    .d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 15px;
+    }
+
+    h2.mb-0 {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    /* Gör knappen stor och enkel att trycka på */
+    .btn-success {
+        width: 100%;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ===== TABELL-HANTERING ===== */
+    /* Gör att tabellen kan scrollas i sidled istället för att tryckas ihop */
+    .card-body {
+        padding: 5px !important;
+        overflow-x: auto;
+    }
+
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+        /* Hindrar att innehållet i cellerna radbryts fult */
+        table th,
+        table td {
+            white-space: nowrap;
+            font-size: 0.85rem;
+            padding: 10px 8px !important;
+        }
+
+            /* Ger beskrivningskolumnen lite extra bredd så den går att läsa */
+            table td:nth-child(4) {
+                min-width: 250px;
+                white-space: normal; /* Tillåter radbrytning bara i beskrivningen */
+            }
+
+    /* ===== BADGES & TEXT ===== */
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    /* Gör raderna högre för att underlätta klick på mobil */
+    table tbody tr {
+        min-height: 50px;
+    }
+
+    /* ==========================================
+   FIX FÖR TABELL SOM FÖRSVINNER PÅ HÖGER SIDA
+   ========================================== */
+
+@media (max-width: 768px) {
+    /* Förhindra att hela hemsidan kan vickas i sidled */
+    html, body {
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* Gör kortets innehåll scrollbart internt */
+    .card-body {
+        padding: 0 !important; /* Ger mer plats */
+        overflow-x: auto !important; /* Detta skapar scrollen för tabellen */
+        display: block;
+        -webkit-overflow-scrolling: touch; /* Gör scrollen mjuk på iPhone */
+    }
+
+    /* Tvinga tabellen att behålla en läsbar bredd */
+    table {
+        min-width: 700px !important; /* Hindrar tabellen från att klämmas ihop */
+        width: 100%;
+        margin-bottom: 0 !important;
+    }
+
+    /* Styla cellerna så de blir rymliga nog för fingrar */
+    table th, table td {
+        padding: 12px 10px !important;
+        font-size: 0.85rem;
+    }
+
+    /* Snygg lila scrollbar för att visa användaren att man kan scrolla */
+    .card-body::-webkit-scrollbar {
+        height: 6px;
+    }
+    .card-body::-webkit-scrollbar-thumb {
+        background: #8e44ad; /* Din lila färg */
+        border-radius: 10px;
+    }
+}
+}
