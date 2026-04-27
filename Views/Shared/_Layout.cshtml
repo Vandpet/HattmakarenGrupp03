@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HattmakarenWebbAppGrupp03.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/SharedLayoutMobile.css" asp-append-version="true" />
+
 </head>
 <body>
  
@@ -18,6 +20,10 @@
     }
 
     @if (isLoggedIn){
+
+    <button class="button meny-btn" id="menuToggleMobile">
+        ☰
+    </button>
 
     <div id="sidebar" class="sidebar">
         <button class="button meny-btn" id="menuToggle">

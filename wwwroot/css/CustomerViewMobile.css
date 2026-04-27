@@ -11,13 +11,7 @@
         padding: 0;
     }
 
-    /* Göm sidebaren helt på mobil */
-    #sidebar, .sidebar, nav.flex-column {
-        position: fixed !important;
-        left: -250px !important;
-        z-index: 9999;
-        transition: 0.3s;
-    }
+    
 
     /* Tvinga innehållet att börja från vänsterkanten */
     #content, .main-content, main {
@@ -77,7 +71,6 @@
     dt.col-sm-4 {
         width: 100% !important;
         font-weight: bold;
-        color: #0d6efd; /* Bootstrap primary-blå */
         font-size: 0.85rem;
         text-transform: uppercase;
         margin-top: 15px;
