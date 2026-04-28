@@ -84,6 +84,29 @@
 
 					</div>
 
+					<div class="dropdown d-inline">
+						<button class="btn btn-rosa dropdown-toggle" type="button" data-bs-toggle="dropdown">
+							@(ViewBag.SelectedCustomerName ?? "Alla kunder")
+						</button>
+
+						<ul class="dropdown-menu">
+							<li>
+								<button type="submit" name="customerId" value="" class="dropdown-item">
+									Alla kunder
+								</button>
+							</li>
+
+							@foreach (var customer in Model.Customers)
+							{
+								<li>
+									<button type="submit" name="customerId" value="@customer.CId" class="dropdown-item">
+										@customer.Name
+									</button>
+								</li>
+							}
+						</ul>
+					</div>
+
 				</form>
 
 			</div>

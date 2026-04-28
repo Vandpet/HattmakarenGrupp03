@@ -1,4 +1,5 @@
 ﻿using HattmakarenWebbAppGrupp03.Models;
+using iText.Commons.Actions.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
@@ -132,7 +133,10 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
                     .ToListAsync();
             }
 
-            return await _db.HatOrders.ToListAsync();
+            return await _db.HatOrders
+                .Include(ho => ho.Order)
+                .Include(ho => ho.Hat)
+                .ToListAsync();
         }
 
     }
