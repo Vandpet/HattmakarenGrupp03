@@ -195,7 +195,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Adress = "Testgatan 1",
                 PhoneNr = "0700000000",
                 Email = "Otto@hatmakarna.se",
-                accesslevel = 9,
+                accesslevel = 10,
                 Username = "Otto"
             };
 
@@ -205,12 +205,12 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Adress = "Testgatan 1",
                 PhoneNr = "0700000000",
                 Email = "Otto@hatmakarna.se",
-                accesslevel = 10,
+                accesslevel = 1,
                 Username = "Felicia"
             };
-            otto.PasswordHash = _passwordHasher.HashPassword(otto, "asdasd");
+            otto.PasswordHash = _passwordHasher.HashPassword(otto, "ASDASDASD!");
 
-            felicia.PasswordHash = _passwordHasher.HashPassword(felicia, "123123");
+            felicia.PasswordHash = _passwordHasher.HashPassword(felicia, "ASDASDASD!");
 
 
 
