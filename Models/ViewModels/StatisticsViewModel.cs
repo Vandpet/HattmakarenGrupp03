@@ -3,7 +3,7 @@
     public class StatisticsViewModel
     {
         public int TotalSoldHats { get; set; } = 0;
-        public int TotalRevenue { get; set; } = 0;
+        public decimal TotalRevenue { get; set; } = 0;
         public IEnumerable<HatStatisticsRow> hatStats { get; set; } = new List<HatStatisticsRow>();
         public IEnumerable<Customer> Customers { get; set; } = new List<Customer>();
 
