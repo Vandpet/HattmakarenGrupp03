@@ -196,7 +196,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 .Where(ho => selectedOrderIds.Contains(ho.OId))
                 .ToListAsync();
 
-            // Aggregate materials across all selected orders
+      
             var materials = hatOrders
                 .Where(ho => ho.Hat?.Materials != null)
                 .SelectMany(ho => ho.Hat.Materials.Select(hm => new
@@ -214,6 +214,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 })
                 .OrderBy(m => m.Name)
                 .ToList();
+
 
             var boldFont = iText.Kernel.Font.PdfFontFactory.CreateFont(
                 iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
@@ -253,6 +254,16 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 doc.Add(new Paragraph("Inga material hittades för valda ordrar."));
             }
+
+            var ordersToMark = await _context.Orders
+        .Where(o => selectedOrderIds.Contains(o.OId))
+        .ToListAsync();
+
+            foreach (var order in ordersToMark)
+            {
+                order.Downloaded = true;
+            }
+            await _context.SaveChangesAsync();
 
             doc.Close();
 
