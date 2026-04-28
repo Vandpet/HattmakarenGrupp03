@@ -323,6 +323,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         // Material PDF downloader
         public async Task<IActionResult> DownloadMaterialsPdf(int oId)
         {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
             var order = await _orderRepo.GetOrderByIdWithCustomerAndCreatorAsync(oId);
             if (order == null) return NotFound();
 

@@ -23,6 +23,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
         public async Task<IActionResult> Index(string period = "all", string sort = "sales", string direction = "desc", int? customerId = null)
         {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
             var revenue = await _statisticsRepository.getTotalRevenue(period);
             var totalSoldHats = await _statisticsRepository.getAmoutTotalSoldHats(period);
             var allHats = await _statisticsRepository.GetAllHatsAsync();
