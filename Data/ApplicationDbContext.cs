@@ -246,6 +246,31 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Price = 50m
             };
 
+            var material1 = new Material
+            {
+                Name = "Hundläder",
+                Amount = 100,
+                MeasuringUnits = "meter",
+                Price = 50m
+            };
+
+            var material2 = new Material
+            {
+                Name = "Spökmaterial",
+                Amount = 100,
+                MeasuringUnits = "meter",
+                Price = 50m
+            };
+
+            var material3 = new Material
+            {
+                Name = "Läder",
+                Amount = 100,
+                MeasuringUnits = "meter",
+                Price = 50m
+            };
+
+
             // --- Hat (adjust if your model differs) ---
             var hat = new Hat
             {
@@ -299,6 +324,24 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Description = "Hatt för en groda. Lorem ipsum dolor sit amet.",
                 KN_Number = "6504 00 00",
                 KN_Description = "Felt hat bodies and unshaped hat forms."
+            };
+
+            var hatMaterial1 = new HatMaterial
+            {
+                Hat = hat1,
+                Material = material1
+            };
+
+            var hatMaterial2 = new HatMaterial
+            {
+                Hat = hat2,
+                Material = material2
+            };
+
+            var hatMaterial3 = new HatMaterial
+            {
+                Hat = hat3,
+                Material = material3
             };
 
             // --- Order ---
@@ -360,6 +403,66 @@ namespace HattmakarenWebbAppGrupp03.Data
                 DeliveryFee = 150
             };
 
+            var order4 = new Order
+            {
+                Status = "Shipped",
+                Express = false,
+                Discount = 0,
+                DiscountDesc = "Test rabatt",
+                OrderDate = DateTime.Now.AddDays(-100),
+                PrelDeliveryDate = DateTime.Now.AddDays(-1),
+                Description = "Order Shipped",
+                Customer = customer,
+                CreatedBy = otto,
+                DeliveryFee = 150,
+                Price = 350
+            };
+
+            var order5 = new Order
+            {
+                Status = "Shipped",
+                Express = false,
+                Discount = 0,
+                DiscountDesc = "Test rabatt",
+                OrderDate = DateTime.Now.AddDays(-30),
+                PrelDeliveryDate = DateTime.Now.AddDays(-1),
+                Description = "Order Shipped",
+                Customer = customer,
+                CreatedBy = otto,
+                DeliveryFee = 150,
+                Price = 350
+            };
+
+            var order6 = new Order
+            {
+                Status = "Shipped",
+                Express = false,
+                Discount = 0,
+                DiscountDesc = "Test rabatt",
+                OrderDate = DateTime.Now.AddDays(-400),
+                PrelDeliveryDate = DateTime.Now.AddDays(-1),
+                Description = "Order Shipped",
+                Customer = customer,
+                CreatedBy = otto,
+                DeliveryFee = 150,
+                Price = 350
+            };
+
+            var order7 = new Order
+            {
+                Status = "Shipped",
+                Express = false,
+                Discount = 0,
+                DiscountDesc = "Test rabatt",
+                OrderDate = DateTime.Now.AddDays(-200),
+                PrelDeliveryDate = DateTime.Now.AddDays(-1),
+                Description = "Order Shipped",
+                Customer = customer,
+                CreatedBy = otto,
+                DeliveryFee = 150,
+                Price = 350
+            };
+
             var hatorder = new HatOrder
             {
                 Hat = hat,
@@ -400,6 +503,48 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Amount = 1
             };
 
+            var hatOrder4 = new HatOrder
+            {
+                Hat = hat,
+                Order = order4,
+                Employee = otto,
+                Status = "Shipped",
+                Date = DateTime.Now.AddDays(-100),
+                Amount = 1
+            };
+
+            var hatOrder5 = new HatOrder
+            {
+                Hat = hat2,
+                Order = order5,
+                Employee = otto,
+                Status = "Shipped",
+                Date = DateTime.Now.AddDays(-30),
+                Amount = 1
+            };
+
+            var hatOrder6 = new HatOrder
+            {
+                Hat = hat2,
+                Order = order6,
+                Employee = otto,
+                Status = "Shipped",
+                Date = DateTime.Now.AddDays(-400),
+                Amount = 1
+            };
+
+            var hatOrder7 = new HatOrder
+            {
+                Hat = hat3,
+                Order = order7,
+                Employee = otto,
+                Status = "Shipped",
+                Date = DateTime.Now.AddDays(-200),
+                Amount = 1
+            };
+
+                
+
 
             // --- Add everything ---
             context.AddRange(
@@ -411,14 +556,26 @@ namespace HattmakarenWebbAppGrupp03.Data
                 hat1,
                 hat2,
                 hat3,
+                hatMaterial,
+                hatMaterial1,
+                hatMaterial2,
+                hatMaterial3,
                 order,
                 order1,
                 order2,
                 order3,
+                order4,
+                order5,
+                order6,
+                order7,
                 hatorder,
                 hatOrder1,
                 hatOrder2,
-                hatOrder3
+                hatOrder3,
+                hatOrder4,
+                hatOrder5,
+                hatOrder6,
+                hatOrder7
             );
 
             await context.SaveChangesAsync();
