@@ -4,7 +4,7 @@
 
 
 @{
-    ViewData["Title"] = "Arbetsuppgifter";
+    ViewData["Title"] = "Tasks";
 
     int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");
     bool isAdmin = currentAccessLevel != null && currentAccessLevel >= 10;
@@ -41,7 +41,7 @@
 
                             <td>@activity.Name</td>
 
-                            <td>@activity.Date</td>
+                            <td>@(activity.Date?.ToString("yyyy-MM-dd") + " " + activity.Time?.ToString(@"hh\:mm"))</td>
 
                             <td>
                                 @{
