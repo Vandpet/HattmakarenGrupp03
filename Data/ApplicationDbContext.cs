@@ -400,7 +400,8 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Description = "Order Shipped",
                 Customer = customer,
                 CreatedBy = otto,
-                DeliveryFee = 150
+                DeliveryFee = 150,
+                SentDate = DateTime.Now.AddDays(-9)
             };
 
             var order4 = new Order
@@ -415,7 +416,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Customer = customer,
                 CreatedBy = otto,
                 DeliveryFee = 150,
-                Price = 350
+                SentDate = DateTime.Now.AddDays(-99)
             };
 
             var order5 = new Order
@@ -430,7 +431,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Customer = customer,
                 CreatedBy = otto,
                 DeliveryFee = 150,
-                Price = 350
+                SentDate = DateTime.Now.AddDays(-29)
             };
 
             var order6 = new Order
@@ -445,7 +446,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Customer = customer,
                 CreatedBy = otto,
                 DeliveryFee = 150,
-                Price = 350
+                SentDate = DateTime.Now.AddDays(-399)
             };
 
             var order7 = new Order
@@ -460,7 +461,7 @@ namespace HattmakarenWebbAppGrupp03.Data
                 Customer = customer,
                 CreatedBy = otto,
                 DeliveryFee = 150,
-                Price = 350
+                SentDate = DateTime.Now.AddDays(-199)
             };
 
             var hatorder = new HatOrder
@@ -585,6 +586,10 @@ namespace HattmakarenWebbAppGrupp03.Data
             await _hatOrderRepo.SetPriceOnOrderAsync(order1.OId);
             await _hatOrderRepo.SetPriceOnOrderAsync(order2.OId);
             await _hatOrderRepo.SetPriceOnOrderAsync(order3.OId);
+            await _hatOrderRepo.SetPriceOnOrderAsync(order4.OId);
+            await _hatOrderRepo.SetPriceOnOrderAsync(order5.OId);
+            await _hatOrderRepo.SetPriceOnOrderAsync(order6.OId);
+            await _hatOrderRepo.SetPriceOnOrderAsync(order7.OId);
             await context.SaveChangesAsync();
         }
     }
