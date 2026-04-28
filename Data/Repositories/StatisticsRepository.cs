@@ -56,11 +56,12 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
             return includeAllTotalSoldHats;
         }
 
-        public async Task<int> getTotalRevenue(string period = "all")
+        public async Task<decimal> getTotalRevenue(string period = "all")
         {
             var totalRevenue = await _db.HatOrders
                 .Where(ho => ho.Status == "Shipped")
                 .Include(ho => ho.Hat)
+                .Include(ho => ho.Order)
                 .ToListAsync();
 
             DateTime now = DateTime.Now;
@@ -83,14 +84,14 @@ namespace HattmakarenWebbAppGrupp03.Data.Repositories
                 limit = new DateTime(now.Year, 1, 1);
             }
 
-            int totalRevenueAmount = 0;
+            decimal totalRevenueAmount = 0;
             
             if (period != "all")
             {
-                totalRevenueAmount = (int)totalRevenue.Where(tr => tr.Date >= limit).Sum(ho => ho.Hat.Price * ho.Amount);
+                totalRevenueAmount = (decimal)totalRevenue.Where(tr => tr.Date >= limit).Sum(ho => ho.Order.Price);
             }else
             {
-                totalRevenueAmount = (int)totalRevenue.Sum(ho => ho.Hat.Price * ho.Amount);
+                totalRevenueAmount = (decimal)totalRevenue.Sum(ho => ho.Order.Price);
             }
 
             return totalRevenueAmount;
