@@ -5,8 +5,8 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
     public class HatCreateViewModel
     {
         [StringLength(50)]
-        [RegularExpression(@"^[a-zA-ZåäöÅÄÖ]+$",
-        ErrorMessage = "Name can only contain letters.")]
+        [RegularExpression(@"^[a-zA-ZåäöÅÄÖ ]+$",
+        ErrorMessage = "Name can only contain letters and spaces.")]
         public string Name { get; set; }
         public decimal Price { get; set; }
         [StringLength(50)]
@@ -26,6 +26,6 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 
         // användaren fyller i dessa
         public List<MaterialCreateViewModel> Materials { get; set; } = new();
-        public List<string> MeasuringUnits { get; set; } = new List<string> { "kvadratmeter", "centimeter", "meter", "gram", "kilogram", "styck" };
+        public List<string> MeasuringUnits { get; set; } = new List<string> { "m²", "cm", "m", "g", "kg", "pcs" };
     }
 }
