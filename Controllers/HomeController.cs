@@ -80,8 +80,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 todayActivitiesList.Add(new TodayScheduleItemViewModel
                 {
                     Title = activity.Name,
-                    Type = "Schema",
-                    Status = "Planerad",
+                    Type = "Schedule",
+                    Status = "Planned",
                     EmployeeName = activity.Employee?.Name ?? "",
                     Amount = 1,
                     Time = activity.Time
@@ -95,7 +95,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 todayOrderTasks.Add(new TodayScheduleItemViewModel
                 {
-                    Title = task.Hat?.Name ?? "Hattuppgift",
+                    Title = task.Hat?.Name ?? "Hat Task",
                     Type = $"Order {task.OId}",
                     Status = task.Status,
                     EmployeeName = task.Employee?.Name ?? "",

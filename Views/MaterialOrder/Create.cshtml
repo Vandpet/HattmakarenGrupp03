@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Order>
 
-<h2>Ny materialbeställning</h2>
+<h2>New Material Order</h2>
 
-<a asp-controller="MaterialOrder" asp-action="Index" class="btn btn-secondary mb-3">
-    Tillbaka
+<a asp-controller="MaterialOrder" asp-action="Index" class="btn rosa fw-bold mb-3">
+    Back
 </a>
 
 <form asp-controller="MaterialOrder" asp-action="Preview" method="post">
@@ -12,12 +12,12 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Välj</th>
-                <th>Ordernr</th>
-                <th>Kund</th>
-                <th>Datum</th>
-                <th>Leverans</th>
-                <th>Antal hattar</th>
+                <th>Select</th>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Delivery Date</th>
+                <th>Amount of Hats</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -41,17 +41,17 @@
     </table>
 
     <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-success">
-            Sammanställ material
+        <button type="submit" class="btn rosa fw-bold">
+            Summarize material
         </button>
         <button type="submit"
                 formaction="@Url.Action("DownloadCombinedMaterialsPdf", "MaterialOrder")"
-                class="btn btn-primary">
-            Ladda ner PDF
+                class="btn rosa fw-bold">
+            Download PDF
         </button>
     </div>
 
-    @* <button type="submit" class="btn btn-success">
-        Sammanställ material
+    @* <button type="submit" class="btn rosa fw-bold">
+        Summarize material
     </button> *@
 </form>
