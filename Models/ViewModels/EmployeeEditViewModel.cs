@@ -27,7 +27,7 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
         public string Username { get; set; } = string.Empty;
 
         [DataType(DataType.Password)]
-        [RegularExpression(@"^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$", ErrorMessage = "Must be at least 8 characters, include one uppercase letter and one special character")]
-        public string NewPassword { get; set; } = string.Empty;
+        [RegularExpression(@"^$|^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$", ErrorMessage = "Must be at least 8 characters, include one uppercase letter and one special character")]
+        public string? NewPassword { get; set; }
     }
 }
