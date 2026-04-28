@@ -41,7 +41,7 @@
 
 	<div class="calendar-panel shadow-sm">
 		<h4 class="mb-3">Sales per Product</h4>
-		<div class="table-responsive">
+		<div class="table-responsive" style="min-height: 500px;">
 
 			<div>
 				<form method="get" asp-controller="Statistics" asp-action="Index" class="mb-3">
@@ -86,13 +86,13 @@
 
 					<div class="dropdown d-inline">
 						<button class="btn btn-rosa dropdown-toggle" type="button" data-bs-toggle="dropdown">
-							@(ViewBag.SelectedCustomerName ?? "Alla kunder")
+							@(ViewBag.SelectedCustomerName ?? "All Customers")
 						</button>
 
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto; z-index: 1;">
 							<li>
 								<button type="submit" name="customerId" value="" class="dropdown-item">
-									Alla kunder
+									All Customers
 								</button>
 							</li>
 

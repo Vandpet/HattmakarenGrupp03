@@ -74,7 +74,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
 
             //Kunder
-            var customers = await _context.Customers.ToListAsync();
+            var customers = await _context.Customers.OrderBy(c => c.Name).ToListAsync();
 
             ViewBag.SelectedCustomer = customerId;
 
