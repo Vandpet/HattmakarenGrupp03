@@ -23,9 +23,9 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
 
         public string Description { get; set; }
 
+
         // användaren fyller i dessa
         public List<MaterialCreateViewModel> Materials { get; set; } = new();
-       
+        public List<string> MeasuringUnits { get; set; } = new List<string> { "kvadratmeter", "centimeter", "meter", "gram", "kilogram", "styck" };
     }
-
 }
