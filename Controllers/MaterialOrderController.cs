@@ -28,7 +28,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var materialOrders = await _context.MaterialOrders
                 .ToListAsync();
 
-            return View(materialOrders);
+            return RedirectToAction("Create", "MaterialOrder");
+            //return View(materialOrders);
         }
 
         public async Task<IActionResult> Create()

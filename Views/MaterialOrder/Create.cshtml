@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.Order>
 
-<h2>New Material Order</h2>
+<h2 class="my-3">New Material Order</h2>
 
-<a asp-controller="MaterialOrder" asp-action="Index" class="btn rosa fw-bold mb-3">
+@* <a asp-controller="MaterialOrder" asp-action="Index" class="btn rosa fw-bold mb-3">
     Back
-</a>
+</a> *@
 
 <form asp-controller="MaterialOrder" asp-action="Preview" method="post">
     @Html.AntiForgeryToken()
