@@ -1,5 +1,9 @@
 ﻿using HattmakarenWebbAppGrupp03.Data;
 using HattmakarenWebbAppGrupp03.Models;
+using iText.Commons.Actions.Contexts;
+using iText.Kernel.Pdf;
+using iText.Layout.Element;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -171,6 +175,92 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DownloadCombinedMaterialsPdf(List<int> selectedOrderIds)
+        {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null)
+                return RedirectToAction("Login", "Auth");
+
+            if (selectedOrderIds == null || !selectedOrderIds.Any())
+            {
+                TempData["ErrorMessage"] = "Du måste välja minst en order.";
+                return RedirectToAction(nameof(Create));
+            }
+
+            var hatOrders = await _context.HatOrders
+                .Include(ho => ho.Hat)
+                    .ThenInclude(h => h.Materials)
+                        .ThenInclude(hm => hm.Material)
+                .Include(ho => ho.Order)
+                .Where(ho => selectedOrderIds.Contains(ho.OId))
+                .ToListAsync();
+
+            // Aggregate materials across all selected orders
+            var materials = hatOrders
+                .Where(ho => ho.Hat?.Materials != null)
+                .SelectMany(ho => ho.Hat.Materials.Select(hm => new
+                {
+                    hm.Material.Name,
+                    hm.Material.MeasuringUnits,
+                    Amount = hm.Material.Amount * ho.Amount
+                }))
+                .GroupBy(m => new { m.Name, m.MeasuringUnits })
+                .Select(g => new
+                {
+                    Name = g.Key.Name,
+                    Unit = g.Key.MeasuringUnits,
+                    TotalAmount = g.Sum(x => x.Amount)
+                })
+                .OrderBy(m => m.Name)
+                .ToList();
+
+            var boldFont = iText.Kernel.Font.PdfFontFactory.CreateFont(
+                iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
+
+            using var ms = new MemoryStream();
+            var writer = new PdfWriter(ms);
+            var pdf = new PdfDocument(writer);
+            var doc = new iText.Layout.Document(pdf);
+
+            doc.Add(new Paragraph("Materialsammanställning")
+                .SetFontSize(20).SetFont(boldFont));
+
+            doc.Add(new Paragraph($"Datum: {DateTime.Today:yyyy-MM-dd}"));
+            doc.Add(new Paragraph($"Inkluderade ordrar: {string.Join(", ", selectedOrderIds)}"));
+            doc.Add(new Paragraph(" "));
+
+            if (materials.Any())
+            {
+                doc.Add(new Paragraph("Totalt material")
+                    .SetFontSize(14).SetFont(boldFont));
+
+                var table = new iText.Layout.Element.Table(3).UseAllAvailableWidth();
+                table.AddHeaderCell("Material");
+                table.AddHeaderCell("Total mängd");
+                table.AddHeaderCell("Enhet");
+
+                foreach (var m in materials)
+                {
+                    table.AddCell(m.Name);
+                    table.AddCell(m.TotalAmount.ToString("0.##"));
+                    table.AddCell(m.Unit ?? "-");
+                }
+
+                doc.Add(table);
+            }
+            else
+            {
+                doc.Add(new Paragraph("Inga material hittades för valda ordrar."));
+            }
+
+            doc.Close();
+
+            var orderIds = string.Join("-", selectedOrderIds);
+            return File(ms.ToArray(), "application/pdf", $"material_bestallning_{orderIds}.pdf");
+        }
+
+
     }
 
 
@@ -181,4 +271,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         public string MaterialName { get; set; } = string.Empty;
         public int Quantity { get; set; }
     }
-}
+
+
+
+    }
