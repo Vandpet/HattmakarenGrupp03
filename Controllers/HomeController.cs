@@ -29,6 +29,10 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             var today = DateTime.Today;
 
+            int diff = ((int)today.DayOfWeek + 6) % 7;
+            var weekStart = today.AddDays(-diff);
+            var weekEnd = weekStart.AddDays(7);
+
             // Dagens order-/hattuppgifter för inloggad användare
             var todayHatOrders = await _context.HatOrders
                 .Include(h => h.Hat)
@@ -65,11 +69,17 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                          && o.SentDate < today.AddDays(1))
                 .SumAsync(o => o.Price);
 
+            var weekSales = await _context.Orders
+                .Where(o => o.Status == "Shipped"
+                         && o.SentDate >= weekStart
+                         && o.SentDate < weekEnd)
+                .SumAsync(o => o.Price);
+
             // Kvartalets försäljning
             var quarterSales = await _context.Orders
                 .Where(o => o.Status == "Shipped"
-                         && o.OrderDate >= quarterStart
-                         && o.OrderDate < quarterEnd)
+                         && o.SentDate >= quarterStart
+                         && o.SentDate < quarterEnd)
                 .SumAsync(o => o.Price);
 
             // Lista för Dagens schema = bara CustomActivities
@@ -80,8 +90,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 todayActivitiesList.Add(new TodayScheduleItemViewModel
                 {
                     Title = activity.Name,
-                    Type = "Schema",
-                    Status = "Planerad",
+                    Type = "Schedule",
+                    Status = "Planned",
                     EmployeeName = activity.Employee?.Name ?? "",
                     Amount = 1,
                     Time = activity.Time
@@ -95,7 +105,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             {
                 todayOrderTasks.Add(new TodayScheduleItemViewModel
                 {
-                    Title = task.Hat?.Name ?? "Hattuppgift",
+                    Title = task.Hat?.Name ?? "Hat Task",
                     Type = $"Order {task.OId}",
                     Status = task.Status,
                     EmployeeName = task.Employee?.Name ?? "",
@@ -106,6 +116,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             var model = new DashViewModel
             {
                 TodaySales = todaySales,
+                WeekSales = weekSales,
                 QuarterSales = quarterSales,
                 TodayActivities = todayActivitiesList,
                 TodayOrderTasks = todayOrderTasks

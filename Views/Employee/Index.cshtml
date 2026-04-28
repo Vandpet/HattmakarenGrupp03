@@ -54,7 +54,16 @@
 							<td>@employee.Username</td>
 							@if (isAdmin)
 							{
-								<td>@employee.accesslevel</td>
+								<td>
+									@if (employee.accesslevel >= 10)
+									{
+										<span class="badge bg-danger">Admin</span>
+									}
+									else
+									{
+										<span class="badge bg-secondary">User</span>
+									}
+								</td>
 
 							}
 							<td>

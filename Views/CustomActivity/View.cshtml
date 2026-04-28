@@ -26,6 +26,9 @@
                         <dt class="col-sm-4">Date</dt>
                         <dd class="col-sm-8">@(Model.Date?.ToString("yyyy-MM-dd") ?? "")</dd>
 
+                        <dt class="col-sm-4">Time</dt>
+                        <dd class="col-sm-8">@(Model.Time?.ToString(@"hh\:mm") ?? "No time set for this task.")</dd>
+
                         <dt class="col-sm-4">Assigned to</dt>
                         <dd class="col-sm-8">@Model.Employee?.Name</dd>
 

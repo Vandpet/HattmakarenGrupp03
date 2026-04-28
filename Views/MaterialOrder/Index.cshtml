@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<HattmakarenWebbAppGrupp03.Models.MaterialOrder>
 
-<h2>Materialbeställningar</h2>
+<h2>Material Orders</h2>
 
 <a asp-controller="MaterialOrder" asp-action="Create" class="btn btn-success mb-3">
-    Ny materialbeställning +
+    New Material Order +
 </a>
 
 <table class="table table-hover">
@@ -11,7 +11,7 @@
         <tr>
             <th>ID</th>
             <th>Status</th>
-            <th>Hantera</th>
+            <th>Manage</th>
         </tr>
     </thead>
     <tbody>
@@ -22,11 +22,11 @@
                 <td>
                     @if (item.Printed)
                     {
-                        <span class="badge bg-success">Beställd</span>
+                        <span class="badge bg-success">Ordered</span>
                     }
                     else
                     {
-                        <span class="badge bg-secondary">Ej beställd</span>
+                        <span class="badge bg-secondary">Not Ordered</span>
                     }
                 </td>
                 <td>
@@ -35,7 +35,7 @@
                         <form asp-controller="MaterialOrder" asp-action="MarkAsSent" method="post">
                             <input type="hidden" name="id" value="@item.MoId" />
                             <button type="submit" class="btn btn-sm btn-outline-success">
-                                Markera som beställd
+                                Mark as Ordered
                             </button>
                         </form>
                     }
