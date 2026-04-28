@@ -40,7 +40,18 @@
         </tbody>
     </table>
 
-    <button type="submit" class="btn btn-success">
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success">
+            Sammanställ material
+        </button>
+        <button type="submit"
+                formaction="@Url.Action("DownloadCombinedMaterialsPdf", "MaterialOrder")"
+                class="btn btn-primary">
+            Ladda ner PDF
+        </button>
+    </div>
+
+    @* <button type="submit" class="btn btn-success">
         Sammanställ material
-    </button>
+    </button> *@
 </form>
