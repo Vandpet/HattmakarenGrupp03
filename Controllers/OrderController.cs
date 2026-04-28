@@ -107,7 +107,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
             if (!hasAnyHat)
             {
-                ModelState.AddModelError(string.Empty, "Du måste välja minst en hatt.");
+                ModelState.AddModelError(string.Empty, "You have to select at least one hat.");
             }
 
             if (ModelState.IsValid)
@@ -121,10 +121,10 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                     Status = "Not Started",
                     Express = model.IsExpress,
                     Discount = model.Discount,
-                    DiscountDesc = model.DiscountDesc ?? "Ingen beskrivning tillgänglig",
+                    DiscountDesc = model.DiscountDesc ?? "No description available.",
                     OrderDate = DateTime.Now,
                     PrelDeliveryDate = model.PrelDeliveryDate,
-                    Description = model.Description ?? "Ingen beskrivning tillgänglig",
+                    Description = model.Description ?? "No description available.",
                     DeliveryFee = model.DeliveryFee
                 };
 
