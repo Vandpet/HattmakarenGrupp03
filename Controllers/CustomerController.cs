@@ -56,17 +56,6 @@ namespace HattmakarenWebbAppGrupp03.Controllers
                 return View(model);
             }
 
-            string name = model.Name.Trim();
-
-            bool nameExists = _context.Customers
-                .Any(c => c.Name.ToLower() == name.ToLower());
-
-            if (nameExists)
-            {
-                ModelState.AddModelError("Name", "Namnet är redan upptaget.");
-                return View(model);
-            }
-
             var customer = new Customer
             {
                 Name = model.Name.Trim(),
@@ -184,18 +173,6 @@ namespace HattmakarenWebbAppGrupp03.Controllers
             if (customer == null)
             {
                 return NotFound();
-            }
-
-            string name = (model.Name ?? string.Empty).Trim();
-
-            bool nameExists = _context.Customers.Any(c =>
-                c.CId != model.CId &&
-                c.Name.ToLower() == name.ToLower());
-
-            if (nameExists)
-            {
-                ModelState.AddModelError("Name", "Kundnamnet är redan upptaget.");
-                return View(model);
             }
 
             customer.Name = model.Name?.Trim();
