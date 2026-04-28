@@ -19,13 +19,13 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
         public async Task<IActionResult> Index()
         {
+            await SyncEmails();
+
             // Hämtar alla sparade mail från databasen, nyaste först
             var email = await _context.Email
                 .OrderByDescending(e => e.ReceivedDate)
                 .ToListAsync();
-            await SyncEmails();
             return View(email);
-
         }
 
         public async Task<IActionResult> SyncEmails()
