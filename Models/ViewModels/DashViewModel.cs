@@ -3,6 +3,7 @@
         public class DashViewModel
         {
             public decimal TodaySales { get; set; }
+            public decimal WeekSales { get; set; } 
             public decimal QuarterSales { get; set; }
 
             public List<TodayScheduleItemViewModel> TodayActivities { get; set; } = new();
