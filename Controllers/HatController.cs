@@ -85,6 +85,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(HatCreateViewModel vm)
         {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
             if (!ModelState.IsValid)
             {
                 foreach (var error in ModelState)

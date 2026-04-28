@@ -35,8 +35,7 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
 		public async Task<IActionResult> Index(bool personal = false, DateTime? targetDate = null, string viewMode = "month")
 		{
-			if (HttpContext.Session.GetInt32("EmployeeId") == null)
-				return RedirectToAction("Login", "Auth");
+			if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
 
 			int currentEmployeeId = HttpContext.Session.GetInt32("EmployeeId")!.Value;
 
@@ -245,7 +244,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 			DateTime? targetDate = null,
 			string viewMode = "month")
 		{
-			var hatOrder = await _context.HatOrders
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
+            var hatOrder = await _context.HatOrders
 				.FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
 
 			if (hatOrder == null)
@@ -282,7 +283,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 			DateTime? targetDate = null,
 			string viewMode = "month")
 		{
-			var hatOrder = await _context.HatOrders
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
+            var hatOrder = await _context.HatOrders
 				.FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
 
 			if (hatOrder == null)
@@ -326,7 +329,9 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 			DateTime? targetDate = null,
 			string viewMode = "month")
 		{
-			var hatOrder = await _context.HatOrders
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
+            var hatOrder = await _context.HatOrders
 				.FirstOrDefaultAsync(h => h.OId == orderId && h.HId == hatId);
 
 			if (hatOrder == null)
@@ -349,6 +354,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
     DateTime? targetDate = null,
     string viewMode = "month")
         {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
             var activity = await _context.CustomActivities
                 .FirstOrDefaultAsync(a => a.AId == activityId);
 

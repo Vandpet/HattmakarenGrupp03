@@ -19,17 +19,21 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
+            await SyncEmails();
+
             // Hämtar alla sparade mail från databasen, nyaste först
             var email = await _context.Email
                 .OrderByDescending(e => e.ReceivedDate)
                 .ToListAsync();
-            await SyncEmails();
             return View(email);
-
         }
 
         public async Task<IActionResult> SyncEmails()
         {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
             var latestEmails = await _emailService.GetLatestEmailsAsync();
 
             foreach (var email in latestEmails)
@@ -46,6 +50,8 @@ namespace HattmakarenWebbAppGrupp03.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Auth");
+
             if (id == null)
             {
                 return NotFound();
