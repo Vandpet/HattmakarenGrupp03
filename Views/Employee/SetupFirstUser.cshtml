@@ -58,7 +58,19 @@
 
                         <div class="mb-4">
                             <label asp-for="Password" class="form-label">Password</label>
-                            <input asp-for="Password" class="form-control" />
+
+                            <div class="input-group">
+                                <input asp-for="Password" type="password" class="form-control" id="passwordInput" />
+
+                                <button type="button" class="btn btn-secondary" id="generatePasswordBtn">
+                                    Generate
+                                </button>
+
+                                <button type="button" class="btn btn-outline-secondary" id="togglePasswordBtn">
+                                    Show
+                                </button>
+                            </div>
+
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
@@ -71,7 +83,54 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById("generatePasswordBtn").addEventListener("click", function () {
+            const password = generatePassword(12);
+            document.getElementById("passwordInput").value = password;
+        });
+
+        function generatePassword(length) {
+            const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const lowercase = "abcdefghijklmnopqrstuvwxyz";
+            const numbers = "0123456789";
+            const special = "!#$%&*?-_";
+            const all = uppercase + lowercase + numbers + special;
+
+            let password = "";
+
+            password += getRandomChar(uppercase);
+            password += getRandomChar(special);
+
+            while (password.length < length) {
+                password += getRandomChar(all);
+            }
+
+            return shuffleString(password);
+        }
+
+        function getRandomChar(chars) {
+            return chars[Math.floor(Math.random() * chars.length)];
+        }
+
+        function shuffleString(str) {
+            return str
+                .split("")
+                .sort(() => Math.random() - 0.5)
+                .join("");
+        }
+
+                document.getElementById("togglePasswordBtn").addEventListener("click", function () {
+            const input = document.getElementById("passwordInput");
+
+            if (input.type === "password") {
+                input.type = "text";
+                this.textContent = "Hide";
+            } else {
+                input.type = "password";
+                this.textContent = "Show";
+            }
+        });
+    </script>
 }
