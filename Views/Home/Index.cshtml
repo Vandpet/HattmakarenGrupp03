@@ -2,27 +2,27 @@
 <link rel="stylesheet" href="~/css/HomeIndex.css" asp-append-version="true" />
 
 @{
-    ViewData["Title"] = "Startsida";
-    var userName = Context.Session.GetString("Name") ?? "användare";
+    ViewData["Title"] = "Home";
+    var userName = Context.Session.GetString("Name") ?? "user";
 }
 
 <div id="content">
 
-    <h2 class="my-4 text-center">Välkommen @userName!</h2>
+    <h2 class="my-4 text-center">Welcome, @userName!</h2>
 
     <div class="stats-container mb-4">
         <div class="stats-card rosa">
-            <span class="stats-label">Dagens försäljning</span>
+            <span class="stats-label">Today's Sales</span>
             <span class="stats-value">@Model.TodaySales.ToString("C0")</span>
         </div>
 
         <div class="stats-card ljuslila text-white">
-            <span class="stats-label">Veckans försäljning</span>
+            <span class="stats-label">This Week's Sales</span>
             <span class="stats-value">@Model.WeekSales.ToString("C0")</span>
         </div>
 
         <div class="stats-card ljuslila text-white">
-            <span class="stats-label">Kvartalets försäljning</span>
+            <span class="stats-label">This Quarter's Sales</span>
             <span class="stats-value">@Model.QuarterSales.ToString("C0")</span>
         </div>
     </div>
@@ -30,12 +30,12 @@
     <div class="home-today-grid">
 
         <div class="calendar-panel shadow-sm mt-4">
-            <h4 class="mb-3">Dagens aktiviteter på schemat</h4>
+            <h4 class="mb-3">Today's Scheduled Activities</h4>
 
             @if (!Model.TodayActivities.Any())
             {
                 <div class="empty-box">
-                    Inga aktiviteter i schemat idag.
+                    No scheduled activities today.
                 </div>
             }
             else
@@ -50,7 +50,7 @@
                         @if (item.Time.HasValue)
                         {
                             <div class="task-card-sub">
-                                Tid: @item.Time.Value.ToString(@"hh\:mm")
+                                Time: @item.Time.Value.ToString(@"hh\:mm")
                             </div>
                         }
 
@@ -70,12 +70,12 @@
         </div>
 
         <div class="calendar-panel shadow-sm mt-4">
-            <h4 class="mb-3">Dagens arbetsuppgifter</h4>
+            <h4 class="mb-3">Today's assigned orders</h4>
 
             @if (!Model.TodayOrderTasks.Any())
             {
                 <div class="empty-box">
-                    Inga arbetsuppgifter idag.
+                    No assigned orders today.
                 </div>
             }
             else
