@@ -45,8 +45,11 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="accesslevel" class="form-label">Access Level</label>
-                            <input asp-for="accesslevel" class="form-control" value="10" />
+                            <label asp-for="accesslevel" class="form-label">Role</label>
+                            <select class="form-control" disabled>
+                            <option value="10" selected>Admin</option>
+                            </select>
+                            <input type="hidden" asp-for="accesslevel" value="10" />
                             <span asp-validation-for="accesslevel" class="text-danger"></span>
                         </div>
 
