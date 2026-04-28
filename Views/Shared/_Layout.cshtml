@@ -1,159 +1,166 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HattmakarenWebbAppGrupp03</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HattmakarenWebbAppGrupp03.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/SharedLayoutMobile.css" asp-append-version="true" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - HattmakarenWebbAppGrupp03</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/HattmakarenWebbAppGrupp03.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/SharedLayoutMobile.css" asp-append-version="true" />
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+	<!-- Bootstrap Icons -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
 </head>
 <body>
- 
-    @{
-        int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");
-        int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
-        bool isAdmin = currentAccessLevel != null && currentAccessLevel >= 10;
+
+	@{
+		int? currentAccessLevel = Context.Session.GetInt32("AccessLevel");
+		int? currentEmployeeId = Context.Session.GetInt32("EmployeeId");
+		bool isAdmin = currentAccessLevel != null && currentAccessLevel >= 10;
 		bool isLoggedIn = currentEmployeeId != null;
-    }
+	}
 
-    @if (isLoggedIn){
+	@if (isLoggedIn)
+	{
 
-    <button class="button meny-btn" id="menuToggleMobile">
-        ☰
-    </button>
+		<button class="button meny-btn" id="menuToggleMobile">
+			☰
+		</button>
 
-    <div id="sidebar" class="sidebar">
-        <div class="sidebar-top">
-            <button class="button meny-btn" id="menuToggle">
-                ☰
-            </button>
+		<div id="sidebar" class="sidebar">
+			<div class="sidebar-top">
+				<button class="button meny-btn" id="menuToggle">
+					☰
+				</button>
 
-            <div class="unread-collapsed">
-                @* Shown only when sidebar is collapsed *@
-                @await Component.InvokeAsync("UnreadMessages")
-            </div>
-        </div>
+				<div class="unread-collapsed">
+					@* Shown only when sidebar is collapsed *@
+					@await Component.InvokeAsync("UnreadMessages")
+				</div>
+			</div>
 
-        <ul class="nav flex-column">
+			<ul class="nav flex-column">
 
-            <h3>Meny</h3>
+				<h3>Meny</h3>
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Home" asp-action="Index">
-                    <span class="menu-text">Home</span>
-                </a>
-            </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="Home" asp-action="Index">
+						<span class="menu-text">Home</span>
+					</a>
+				</li>
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Order" asp-action="Create">
-                    <span class="menu-text">New Order</span>
-                </a>
-            </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="Order" asp-action="Create">
+						<span class="menu-text">New Order</span>
+					</a>
+				</li>
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Customer" asp-action="Create">
-                    <span class="menu-text">Register Customer</span>
-                </a>
-            </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="Customer" asp-action="Create">
+						<span class="menu-text">Register Customer</span>
+					</a>
+				</li>
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Order" asp-action="Index">
-                    <span class="menu-text">Orders</span>
-                </a>
-            </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="Order" asp-action="Index">
+						<span class="menu-text">Orders</span>
+					</a>
+				</li>
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Hat" asp-action="Index">
-                    <span class="menu-text">Hats</span>
-                </a>
-            </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="MaterialOrder" asp-action="Index">
+						<span class="menu-text">Materialbeställningar</span>
+					</a>
+				</li>
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Statistics" asp-action="Index">
-                    <span class="menu-text">Statistics</span>
-                </a>
-            </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="Hat" asp-action="Index">
+						<span class="menu-text">Hats</span>
+					</a>
+				</li>
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Schedule" asp-action="Index">
-                    <span class="menu-text">Schedule</span>
-                </a>
-            </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="Statistics" asp-action="Index">
+						<span class="menu-text">Statistics</span>
+					</a>
+				</li>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="CustomActivity" asp-action="Index">
-                        <span class="menu-text">Tasks</span>
-                    </a>
-                </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="Schedule" asp-action="Index">
+						<span class="menu-text">Schedule</span>
+					</a>
+				</li>
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-controller="Employee" asp-action="Index">
-                    <span class="menu-text">Users</span>
-                </a>
-            </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="CustomActivity" asp-action="Index">
+						<span class="menu-text">Tasks</span>
+					</a>
+				</li>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white"
-                       asp-controller="Employee"
-                       asp-action="View"
-                       asp-route-id="@currentEmployeeId">
-                        <span class="menu-text">Profile</span>
-                    </a>
-                </li>
+				<li class="nav-item">
+					<a class="nav-link text-white" asp-controller="Employee" asp-action="Index">
+						<span class="menu-text">Users</span>
+					</a>
+				</li>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white"
-                           asp-controller="Email"
-                           asp-action="Index">
-                        <span class="menu-text">Mail Inbox</span>
-                    </a>
-                </li>
+				<li class="nav-item">
+					<a class="nav-link text-white"
+					   asp-controller="Employee"
+					   asp-action="View"
+					   asp-route-id="@currentEmployeeId">
+						<span class="menu-text">Profile</span>
+					</a>
+				</li>
 
-
-                
-                    <li class="nav-item unread-in-menu">
-                        @* Shown only when sidebar is expanded *@
-                        @await Component.InvokeAsync("UnreadMessages")
-                    </li>
-              
-
-            <li class="nav-item">
-                <a asp-controller="Auth" asp-action="Logout" class="nav-link text-white">
-                    <span class="menu-text">Logout</span>
-                </a>
-            </li>
+				<li class="nav-item">
+					<a class="nav-link text-white"
+					   asp-controller="Email"
+					   asp-action="Index">
+						<span class="menu-text">Mail Inbox</span>
+					</a>
+				</li>
 
 
-            @if (isAdmin)
-            {
-                <h3>Admin</h3>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="Employee" asp-action="Create">
-                        <span class="menu-text">Create User</span>
-                    </a>
-                </li>
-            }
+				<li class="nav-item unread-in-menu">
+					@* Shown only when sidebar is expanded *@
+					@await Component.InvokeAsync("UnreadMessages")
+				</li>
 
-        </ul>
-    </div>
 
-    }
-    <div id="content" class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+				<li class="nav-item">
+					<a asp-controller="Auth" asp-action="Logout" class="nav-link text-white">
+						<span class="menu-text">Logout</span>
+					</a>
+				</li>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+				@if (isAdmin)
+				{
+					<h3>Admin</h3>
+
+					<li class="nav-item">
+						<a class="nav-link text-white" asp-controller="Employee" asp-action="Create">
+							<span class="menu-text">Create User</span>
+						</a>
+					</li>
+				}
+
+			</ul>
+		</div>
+
+	}
+	<div id="content" class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
