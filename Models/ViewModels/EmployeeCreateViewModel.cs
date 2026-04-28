@@ -11,6 +11,7 @@ namespace HattmakarenWebbAppGrupp03.Models.ViewModels
         public string Adress { get; set; } = string.Empty;
 
         [Required]
+        [RegularExpression(@"^\+?[0-9\s\-]{7,15}$", ErrorMessage = "Invalid phone number")]
         public string PhoneNr { get; set; } = string.Empty;
 
         [Required]
