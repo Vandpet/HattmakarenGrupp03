@@ -668,3 +668,11 @@ button {
         grid-template-columns: 1fr;
     }
 }
+
+#generateNewPasswordBtn{
+    margin: 0;
+}
+
+#toggleNewPasswordBtn {
+    margin: 0;
+}
